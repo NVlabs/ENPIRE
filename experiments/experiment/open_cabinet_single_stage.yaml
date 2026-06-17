@@ -1,0 +1,62 @@
+# @package _global_
+# Ablation: single-stage code_generator (no skill library, no two-stage decomposition).
+# Compare against open_cabinet.yaml (two-stage: skill_author + assembly_generator).
+# Everything else is held constant: env, seeds, LLM, oracle_api, reflection.
+name: open_cabinet_single_stage
+task: "Open the cabinet door."
+max_iterations: 5
+
+env:
+  name: "robocasa:OpenCabinet"
+  layout_id: 3
+  style_id: 5
+  seed: 42
+  camera_height: 256
+  camera_width: 256
+
+policy:
+  backend: grootpool
+  model: n15
+  endpoint: "tcp://127.0.0.1:7070"
+
+runtime:
+  agent_name: demo
+
+steps:
+  - observer
+  - code_generator
+  - executor
+  - reward_evaluator
+  - self_reflection
+
+code_generator:
+  prompt:
+    - system/robotics_engineer
+    - system/coding_style
+    - embodiment/robocasa_panda
+  context_robot_state: true
+  context_task_info: true
+  require_thoughts: true
+  retry:
+    failure_first: true
+    include_previous_code: true
+    include_previous_thoughts: true
+    include_all_history: true
+    max_history_chars: 8000
+
+reflection:
+  prompt:
+    - system/composite_reflection
+  strategy: composite
+  cameras: [top, wrist]
+
+oracle_api: true
+
+skill_library:
+  enabled: false
+
+recording:
+  enabled: true
+  per_iteration: true
+
+reflect: true

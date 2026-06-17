@@ -1,0 +1,24 @@
+<mujoco model="hinge_cab">
+  <asset>
+    <texture file="visuals/wood1.png" type="cube" name="tex"/>
+    <material name="mat" shininess="0.1" texture="tex"/>
+  </asset>
+  <default>
+    <default class="cab">
+      <geom group="0" density="10"/>
+    </default>
+    <default class="region">
+      <geom group="1" conaffinity="0" contype="0" rgba="0 1 0 0"/>
+    </default>
+  </default>
+  <worldbody>
+    <body>
+      <body name="object">
+        <!-- exterior bounding box points -->
+        <geom class="region" name="reg_main" type="box" pos="0.0 0.0 0.0" size="0.0001 0.0001 0.0001"/>
+        <!-- interior bounding box points -->
+        <geom class="region" name="reg_int" type="box" pos="0.0 0.0 0.0" size="0.0001 0.0001 0.0001"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

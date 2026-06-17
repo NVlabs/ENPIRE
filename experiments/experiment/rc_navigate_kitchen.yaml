@@ -1,0 +1,57 @@
+# @package _global_
+# Atomic task: robot navigates to a target fixture sampled per episode
+# (microwave / sink / stove / fridge / …).  RoboCasa's runtime sets the
+# per-episode language as  "Navigate to the <target_fixture.nat_lang>."
+# (see robocasa/environments/kitchen/atomic/kitchen_navigate.py:121) —
+# we keep a generic canonical description here; the oracle / agent can
+# either use this as-is or read the actual ep_meta["lang"] at reset time.
+
+name: navigate_kitchen
+task: "Navigate to the specified kitchen fixture."
+max_iterations: 5
+
+env:
+  name: "robocasa:NavigateKitchen"   # registered in robocasa.__init__
+  layout_id: 3
+  style_id: 5
+  seed: 42
+
+runtime:
+  agent_name: demo
+
+steps:
+  - observer
+  - code_generator
+  - executor
+  - reward_evaluator
+  - self_reflection
+
+code_generator:
+  prompt:
+    - system/robotics_engineer
+    - embodiment/robocasa_panda
+    - task/robocasa_pick_place
+  context_robot_state: true
+  context_task_info: true
+  context_tool_history: true
+  tool_history_max_chars: 3000
+  require_thoughts: true
+  retry:
+    failure_first: true
+    include_previous_code: true
+    include_previous_thoughts: true
+    include_all_history: true
+    max_history_chars: 8000
+
+reflection:
+  prompt:
+    - system/composite_reflection
+  strategy: composite
+  cameras: [top, wrist]
+  vlm_backend: gemini
+
+recording:
+  enabled: true
+  per_iteration: true
+
+reflect: true

@@ -1,0 +1,14 @@
+
+# sudo apt update
+# sudo apt install portaudio19-dev python3-pyaudio alsa-utils
+
+PyAudio==0.2.14
+faster-whisper==1.1.1
+pvporcupine==1.9.5
+webrtcvad-wheels==2.0.14
+halo==0.0.31
+scipy==1.15.2
+openwakeword>=0.4.0
+websockets==15.0.1
+websocket-client==1.8.0
+soundfile==0.13.1

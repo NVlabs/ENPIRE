@@ -1,0 +1,9 @@
+[submodule "vllm_serving"]
+	path = vllm_serving
+	url = https://github.com/Tonghe-Zhang/vllm_serving.git
+[submodule "third_party/robosuite"]
+	path = third_party/robosuite
+	url = https://github.com/ARISE-Initiative/robosuite
+[submodule "third_party/Isaac-GR00T"]
+	path = third_party/Isaac-GR00T
+	url = https://github.com/NVIDIA/Isaac-GR00T.git

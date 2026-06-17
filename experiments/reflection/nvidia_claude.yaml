@@ -1,0 +1,8 @@
+# @package _global_
+# Claude Opus (Bedrock) via the NVIDIA inference gateway.
+# Same auth model as reflection=nvidia_gemini (NVIDIA_API_KEY or
+# NVIDIA_API_KEY_1..N for rotated parallel calls).
+
+reflection:
+  vlm_backend: "nvidia"
+  vlm_model: "aws/anthropic/bedrock-claude-opus-4-6"

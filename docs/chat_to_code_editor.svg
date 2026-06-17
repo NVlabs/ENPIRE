@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="920" viewBox="0 0 1800 920">
+  <defs>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #111827; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #4b5563; }
+      .box-title { font: 700 17px Arial, sans-serif; fill: #111827; }
+      .box-text { font: 400 14px Arial, sans-serif; fill: #1f2937; }
+      .small { font: 400 12px Arial, sans-serif; fill: #4b5563; }
+      .step { font: 700 13px Arial, sans-serif; fill: #ffffff; }
+      .lane { font: 700 13px Arial, sans-serif; fill: #374151; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="920" fill="#f8fafc"/>
+  <text x="40" y="50" class="title">Natural Language Chat -&gt; Code Editor</text>
+  <text x="40" y="78" class="subtitle">Path used by chat mode: UI chat request goes to claude_bridge, returns chat_code_block, then updates editor.</text>
+
+  <!-- Lanes -->
+  <rect x="40" y="105" width="340" height="36" rx="8" fill="#e5e7eb"/>
+  <text x="62" y="129" class="lane">UI (Chat + Hooks)</text>
+  <rect x="420" y="105" width="460" height="36" rx="8" fill="#e5e7eb"/>
+  <text x="442" y="129" class="lane">claude_bridge (FastAPI)</text>
+  <rect x="920" y="105" width="420" height="36" rx="8" fill="#e5e7eb"/>
+  <text x="942" y="129" class="lane">Claude CLI / Model</text>
+  <rect x="1380" y="105" width="380" height="36" rx="8" fill="#e5e7eb"/>
+  <text x="1402" y="129" class="lane">UI Editor State</text>
+
+  <!-- Step 1 -->
+  <circle cx="70" cy="200" r="18" fill="#2563eb"/>
+  <text x="64" y="205" class="step">1</text>
+  <rect x="100" y="165" width="250" height="85" rx="10" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="114" y="188" class="box-title">ChatPanel input</text>
+  <text x="114" y="210" class="box-text">User enters natural language</text>
+  <text x="114" y="230" class="small">onSend -&gt; useChatStream.sendMessage()</text>
+
+  <!-- Step 2 -->
+  <circle cx="450" cy="200" r="18" fill="#2563eb"/>
+  <text x="444" y="205" class="step">2</text>
+  <rect x="480" y="165" width="370" height="85" rx="10" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="494" y="188" class="box-title">/api/chat</text>
+  <text x="494" y="210" class="box-text">POST /bridge-api/chat { message }</text>
+  <text x="494" y="230" class="small">useChatStream.ts -&gt; fetch(.../chat)</text>
+
+  <!-- Step 3 -->
+  <circle cx="450" cy="330" r="18" fill="#2563eb"/>
+  <text x="444" y="335" class="step">3</text>
+  <rect x="480" y="295" width="370" height="95" rx="10" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="494" y="318" class="box-title">Prompt assembly in bridge</text>
+  <text x="494" y="340" class="box-text">Prepends all cap/prompt/*.md to user request</text>
+  <text x="494" y="360" class="small">Also appends system prompt + tool docs + saved scripts</text>
+
+  <!-- Step 4 -->
+  <circle cx="950" cy="330" r="18" fill="#2563eb"/>
+  <text x="944" y="335" class="step">4</text>
+  <rect x="980" y="295" width="330" height="95" rx="10" fill="#dcfce7" stroke="#86efac"/>
+  <text x="994" y="318" class="box-title">claude CLI subprocess</text>
+  <text x="994" y="340" class="box-text">claude -p ... --output-format stream-json</text>
+  <text x="994" y="360" class="small">Streams assistant text/tool_use events</text>
+
+  <!-- Step 5 -->
+  <circle cx="450" cy="470" r="18" fill="#2563eb"/>
+  <text x="444" y="475" class="step">5</text>
+  <rect x="480" y="430" width="370" height="100" rx="10" fill="#ede9fe" stroke="#c4b5fd"/>
+  <text x="494" y="453" class="box-title">Code block extraction</text>
+  <text x="494" y="475" class="box-text">Regex finds ```python ... ``` in full response</text>
+  <text x="494" y="495" class="box-text">Bridge emits WS event: chat_code_block</text>
+  <text x="494" y="515" class="small">plus chat_text_delta for streaming text</text>
+
+  <!-- Step 6 -->
+  <circle cx="70" cy="470" r="18" fill="#2563eb"/>
+  <text x="64" y="475" class="step">6</text>
+  <rect x="100" y="430" width="250" height="100" rx="10" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="114" y="453" class="box-title">useChatStream handler</text>
+  <text x="114" y="475" class="box-text">on 'chat_code_block':</text>
+  <text x="114" y="495" class="box-text">onCodeBlock(code, language)</text>
+  <text x="114" y="515" class="small">also tags message with codeBlocks[]</text>
+
+  <!-- Step 7 -->
+  <circle cx="1410" cy="470" r="18" fill="#2563eb"/>
+  <text x="1404" y="475" class="step">7</text>
+  <rect x="1440" y="430" width="300" height="100" rx="10" fill="#fee2e2" stroke="#fca5a5"/>
+  <text x="1454" y="453" class="box-title">App.tsx callback</text>
+  <text x="1454" y="475" class="box-text">setEditorCode(code)</text>
+  <text x="1454" y="495" class="box-text">setProposedCode(code)</text>
+  <text x="1454" y="515" class="small">code becomes visible in CodeEditor</text>
+
+  <!-- Step 8 -->
+  <circle cx="1410" cy="620" r="18" fill="#2563eb"/>
+  <text x="1404" y="625" class="step">8</text>
+  <rect x="1440" y="580" width="300" height="105" rx="10" fill="#fee2e2" stroke="#fca5a5"/>
+  <text x="1454" y="603" class="box-title">Editor + Approval UI</text>
+  <text x="1454" y="625" class="box-text">CodeEditor shows generated script</text>
+  <text x="1454" y="645" class="box-text">ApprovalPanel gates execution/reject/edit</text>
+  <text x="1454" y="665" class="small">No robot command runs yet</text>
+
+  <!-- Arrows -->
+  <line x1="350" y1="207" x2="470" y2="207" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="665" y1="250" x2="665" y2="292" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="850" y1="342" x2="970" y2="342" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="980" y1="390" x2="850" y2="470" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="480" y1="480" x2="350" y2="480" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="350" y1="490" x2="1430" y2="490" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="1590" y1="530" x2="1590" y2="577" stroke="#374151" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Footnote -->
+  <text x="40" y="865" class="small">Implementation anchors: cap/ui/src/hooks/useChatStream.ts, cap/ui/src/App.tsx, cap/bridge/claude_bridge.py, cap/bridge/system_prompt.py</text>
+</svg>

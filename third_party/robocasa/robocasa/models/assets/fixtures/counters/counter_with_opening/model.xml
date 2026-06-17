@@ -1,0 +1,31 @@
+<mujoco model="counter">
+  <asset>
+    <texture file="visuals/marble.png" type="2d" name="tex_top_2d"/>
+    <texture file="visuals/marble.png" type="cube" name="tex_base"/>
+    <material name="counter_top" reflectance="0.1" shininess="0.1" texrepeat="3 3" texuniform="true" texture="tex_top_2d"/>
+    <material name="counter_base" reflectance="0.1" shininess="0.1" texture="tex_base"/>
+  </asset>
+  <default>
+    <default class="counter">
+      <geom group="0" density="10"/>
+    </default>
+    <default class="region">
+      <geom group="1" conaffinity="0" contype="0" rgba="0 1 0 0"/>
+    </default>
+  </default>
+  <worldbody>
+    <body>
+      <body name="object">
+        <!-- All sizes and positions are programatically generated -->
+        <geom pos="0.0 0 0" size="0.50 0.50 1.0" type="box" material="counter_base" name="base_right" class="counter"/>
+        <geom pos="0.0 0 0" size="0.50 0.50 1.0" type="box" material="counter_base" name="base_left" class="counter"/>
+        <geom pos="0.0 0 0" size="0.50 0.50 1.0" type="box" material="counter_base" name="base_back" class="counter"/>
+        <geom pos="0.0 0 0" size="0.50 0.50 1.0" type="box" material="counter_base" name="base_front" class="counter"/>
+        <!-- exterior bounding box points -->
+        <geom class="region" name="reg_main" type="box" pos="0.0 0.0 0.0" size="0.0001 0.0001 0.0001"/>
+        <!-- interior bounding box points -->
+        <geom class="region" name="reg_int" type="box" pos="0.0 0.0 0.0" size="0.0001 0.0001 0.0001"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

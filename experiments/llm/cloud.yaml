@@ -1,0 +1,18 @@
+# @package _global_
+# Direct Anthropic API backend — no bridge, no CLI. The pipeline calls
+# Claude through the `anthropic` SDK using ANTHROPIC_API_KEY.
+#
+# Respects stage-specific system prompts (skill_author.md,
+# assembly_generator.md, …) — CloudLLM reads them from the
+# system_prompt arg plumbed through make_llm().
+#
+# Requirements:
+#   - `anthropic` package installed (uv sync).
+#   - ANTHROPIC_API_KEY in env.
+#
+# Override the model on the CLI with llm.model=<model-id>, e.g.
+#   llm=cloud llm.model=claude-opus-4-20250514
+
+llm:
+  backend: "cloud"
+  model: "claude-sonnet-4-20250514"

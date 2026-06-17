@@ -1,0 +1,16 @@
+# @package _global_
+# Gemini via the NVIDIA inference gateway (OpenAI-compatible).
+#
+# Auth: NVIDIA_API_KEY (single key) or NVIDIA_API_KEY_1..N (rotated across
+# parallel callers — per-seed VLM reflection picks a different indexed key
+# per seed so rate limits don't cap the pool). Drop in N keys to get N-way
+# concurrency for the post-exec analysis phase.
+#
+# Available models (depend on your key's allow-list):
+#   gcp/google/gemini-3-flash-preview       (fast, default)
+#   gcp/google/gemini-3.1-pro-preview
+#   aws/anthropic/bedrock-claude-opus-4-6   (vision-capable Claude)
+
+reflection:
+  vlm_backend: "nvidia"
+  vlm_model: "gcp/google/gemini-3.1-pro-preview"

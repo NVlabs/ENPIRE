@@ -1,0 +1,11 @@
+# @package _global_
+# OpenAI Codex backend via the agent bridge. Uses GPT-5-4 by default.
+# Respects stage-specific system prompts.
+#
+# Requirements:
+#   - Codex CLI configured (see cap/bridge/providers/openai_codex.py).
+#   - cap_agent.py bridge running.
+
+llm:
+  backend: "bridge:openai_codex"
+  model: null  # use provider default

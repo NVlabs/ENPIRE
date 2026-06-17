@@ -1,0 +1,160 @@
+default:
+  size: [null, 0.53, null]
+  max_size: [0.97, null, null]
+  name: sink
+  xml: fixtures/sinks/Sink001
+
+Sink001:
+  xml: fixtures/sinks/Sink001
+
+Sink002:
+  xml: fixtures/sinks/Sink002
+
+Sink003:
+  xml: fixtures/sinks/Sink003
+
+Sink004:
+  xml: fixtures/sinks/Sink004
+
+Sink006:
+  xml: fixtures/sinks/Sink006
+
+Sink007:
+  xml: fixtures/sinks/Sink007
+
+Sink008:
+  xml: fixtures/sinks/Sink008
+
+Sink009:
+  xml: fixtures/sinks/Sink009
+  size: [null, 0.47, null]
+
+Sink010:
+  xml: fixtures/sinks/Sink010
+  size: [null, 0.47, null]
+
+Sink011:
+  xml: fixtures/sinks/Sink011
+
+Sink012:
+  xml: fixtures/sinks/Sink012
+
+Sink013:
+  xml: fixtures/sinks/Sink013
+
+Sink014:
+  xml: fixtures/sinks/Sink014
+
+Sink015:
+  xml: fixtures/sinks/Sink015
+
+Sink016:
+  xml: fixtures/sinks/Sink016
+
+Sink017:
+  xml: fixtures/sinks/Sink017
+
+Sink019:
+  xml: fixtures/sinks/Sink019
+
+Sink020:
+  xml: fixtures/sinks/Sink020
+
+Sink021:
+  xml: fixtures/sinks/Sink021
+
+Sink022:
+  xml: fixtures/sinks/Sink022
+
+Sink023:
+  xml: fixtures/sinks/Sink023
+
+# # completely round sink, will not work for us
+# Sink024:
+#   xml: fixtures/sinks/Sink024
+
+Sink025:
+  xml: fixtures/sinks/Sink025
+
+Sink027:
+  xml: fixtures/sinks/Sink027
+
+Sink028:
+  xml: fixtures/sinks/Sink028
+
+Sink029:
+  xml: fixtures/sinks/Sink029
+
+Sink030:
+  xml: fixtures/sinks/Sink030
+
+Sink032:
+  xml: fixtures/sinks/Sink032
+
+Sink033:
+  xml: fixtures/sinks/Sink033
+
+Sink037:
+  xml: fixtures/sinks/Sink037
+
+Sink038:
+  xml: fixtures/sinks/Sink038
+
+Sink039:
+  xml: fixtures/sinks/Sink039
+
+Sink042:
+  xml: fixtures/sinks/Sink042
+  size: [null, 0.46, null]
+
+Sink043:
+  xml: fixtures/sinks/Sink043
+
+Sink044:
+  xml: fixtures/sinks/Sink044
+
+Sink046:
+  xml: fixtures/sinks/Sink046
+
+Sink047:
+  xml: fixtures/sinks/Sink047
+  size: [null, 0.49, null]
+
+Sink048:
+  xml: fixtures/sinks/Sink048
+
+Sink050:
+  xml: fixtures/sinks/Sink050
+
+Sink051:
+  xml: fixtures/sinks/Sink051
+
+Sink052:
+  xml: fixtures/sinks/Sink052
+
+Sink053:
+  xml: fixtures/sinks/Sink053
+
+Sink054:
+  xml: fixtures/sinks/Sink054
+
+Sink055:
+  xml: fixtures/sinks/Sink055
+
+Sink056:
+  xml: fixtures/sinks/Sink056
+
+Sink057:
+  xml: fixtures/sinks/Sink057
+
+Sink058:
+  xml: fixtures/sinks/Sink058
+
+Sink059:
+  xml: fixtures/sinks/Sink059
+
+Sink060:
+  xml: fixtures/sinks/Sink060
+
+Sink064:
+  xml: fixtures/sinks/Sink064

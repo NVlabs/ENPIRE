@@ -1,0 +1,5 @@
+{
+  "description": "Binary reward prompt for SmolVLM (small local model). Uses fill-in-the-blank style to lead directly into the answer token. Paired with vLLM guided_choice to constrain output to YES/NO.",
+  "backend": "smolvlm",
+  "template": "Look at the robot workspace image(s). The robot is trying to: {task}\n\nHas the robot successfully completed this task? Answer YES or NO.\n\nAnswer:"
+}

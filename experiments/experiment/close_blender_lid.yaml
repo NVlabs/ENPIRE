@@ -1,0 +1,67 @@
+# @package _global_
+name: close_blender_lid
+task: "Close the blender lid."
+max_iterations: 5
+
+env:
+  name: "robocasa:CloseBlenderLid"
+  layout_id: 3
+  style_id: 5
+  seed: 42
+  camera_height: 256
+  camera_width: 256
+
+policy:
+  backend: grootpool
+  model: n15
+  endpoint: "tcp://127.0.0.1:7070"
+
+runtime:
+  agent_name: demo
+
+steps:
+  - observer
+  - skill_author
+  - assembly_generator
+  - executor
+  - reward_evaluator
+  - self_reflection
+
+skill_author:
+  prompt:
+    - system/robotics_engineer
+    - system/coding_style
+    - system/skill_library
+    - system/skill_author
+    - embodiment/robocasa_panda
+  max_retries: 2
+  allow_no_new_skills: true
+
+assembly_generator:
+  prompt:
+    - system/robotics_engineer
+    - system/coding_style
+    - system/skill_library
+    - system/assembly_generator
+    - embodiment/robocasa_panda
+  max_retries: 2
+  forbid_toplevel_def: true
+  require_skill_library_imports: false
+
+reflection:
+  prompt:
+    - system/composite_reflection
+  strategy: composite
+  cameras: [top, wrist]
+
+oracle_api: true
+
+skill_library:
+  enabled: true
+  seed_dir: cap/saved_scripts/robocasa_skill_library
+
+recording:
+  enabled: true
+  per_iteration: true
+
+reflect: true

@@ -1,0 +1,133 @@
+from __future__ import annotations
+
+import importlib.util
+import sys
+import types
+from pathlib import Path
+from unittest.mock import patch
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+RUN_SCRIPT_PATH = REPO_ROOT / "run_script.py"
+EXPECTED_SCRIPT = (
+    REPO_ROOT
+    / "cap"
+    / "saved_scripts"
+    / "table_bussing"
+    / "nclass_sorting_nvidiagemini.py"
+).resolve()
+
+
+def _load_run_script_module() -> types.ModuleType:
+    cv2 = types.ModuleType("cv2")
+    numpy = types.ModuleType("numpy")
+
+    cap = types.ModuleType("cap")
+    cap_agent = types.ModuleType("cap.agent")
+    cap_agent_config = types.ModuleType("cap.agent.agent_config")
+    cap_agent_tools = types.ModuleType("cap.agent.tools")
+    cap_config = types.ModuleType("cap.config")
+    cap_server = types.ModuleType("cap.server")
+    cap_server_cap_server = types.ModuleType("cap.server.cap_server")
+    cap.__path__ = []  # type: ignore[attr-defined]
+    cap_agent.__path__ = []  # type: ignore[attr-defined]
+
+    cap.agent = cap_agent
+    cap.config = cap_config
+    cap.server = cap_server
+    cap_agent.agent_config = cap_agent_config
+    cap_agent.tools = cap_agent_tools
+    cap_server.cap_server = cap_server_cap_server
+
+    dummy_type = type("DummyType", (), {})
+    cap_agent_config.register_configs = lambda: None
+    cap_agent_tools.create_default_registry = lambda *args, **kwargs: None
+    cap_agent_tools.Detection3D = dummy_type
+    cap_agent_tools.MoveResult = dummy_type
+    cap_agent_tools.RobotState = dummy_type
+
+    cap_config.CAMERA_NAMES = []
+    cap_config.CAP_SERVER_PORT = 0
+    cap_config.DETECTION_SERVER_PORT = 0
+    cap_config.GRIPPER_SETTLE_TIMEOUT_S = 0.0
+    cap_config.MOVE_EEF_MAX_DURATION_S = 0.0
+    cap_config.MOVE_EEF_MAX_VEL = 0.0
+
+    cap_server_cap_server.CapServer = dummy_type
+
+    stubs = {
+        "cv2": cv2,
+        "numpy": numpy,
+        "cap": cap,
+        "cap.agent": cap_agent,
+        "cap.agent.agent_config": cap_agent_config,
+        "cap.agent.tools": cap_agent_tools,
+        "cap.config": cap_config,
+        "cap.server": cap_server,
+        "cap.server.cap_server": cap_server_cap_server,
+    }
+
+    module_name = "run_script_under_test"
+    sys.modules.pop(module_name, None)
+    with patch.dict(sys.modules, stubs):
+        spec = importlib.util.spec_from_file_location(module_name, RUN_SCRIPT_PATH)
+        module = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(module)
+    return module
+
+
+def test_resolve_file_accepts_repo_prefixed_saved_script_path() -> None:
+    module = _load_run_script_module()
+    resolved = module.resolve_file(
+        "lecar-tbd/cap/saved_scripts/table_bussing/nclass_sorting_nvidiagemini.py"
+    )
+    assert resolved == EXPECTED_SCRIPT
+
+
+def test_resolve_file_accepts_repo_relative_path_outside_repo_cwd(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    module = _load_run_script_module()
+    monkeypatch.chdir(tmp_path)
+    resolved = module.resolve_file(
+        "cap/saved_scripts/table_bussing/nclass_sorting_nvidiagemini.py"
+    )
+    assert resolved == EXPECTED_SCRIPT
+
+
+def test_resolve_file_rejects_path_traversal() -> None:
+    """Path traversal via ../… must not escape saved_scripts/."""
+    import pytest
+
+    module = _load_run_script_module()
+    with pytest.raises((FileNotFoundError, ValueError)):
+        module.resolve_file("cap/saved_scripts/../../../etc/passwd")
+
+
+def test_resolve_file_rejects_tilde_expansion_to_outside() -> None:
+    """~/ paths that resolve outside the repo must not be accepted via saved-scripts."""
+    import pytest
+
+    module = _load_run_script_module()
+    with pytest.raises(FileNotFoundError):
+        module.resolve_file("~/.ssh/id_rsa")
+
+
+def test_resolve_file_rejects_empty_string() -> None:
+    """Empty string must raise FileNotFoundError."""
+    import pytest
+
+    module = _load_run_script_module()
+    with pytest.raises(FileNotFoundError):
+        module.resolve_file("")
+
+
+def test_resolve_file_rejects_whitespace_only() -> None:
+    """Whitespace-only input must raise FileNotFoundError."""
+    import pytest
+
+    module = _load_run_script_module()
+    with pytest.raises(FileNotFoundError):
+        module.resolve_file("   ")

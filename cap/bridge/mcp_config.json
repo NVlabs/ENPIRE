@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "cap-robot": {
+      "command": "uv",
+      "args": ["run", "cap/bridge/cap_mcp_server.py"],
+      "env": {
+        "CAP_AGENT_URL": "http://localhost:8200"
+      }
+    }
+  }
+}

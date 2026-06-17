@@ -1,0 +1,29 @@
+#!/bin/sh
+# Git pre-push hook: enforce branch naming and block direct pushes to main.
+
+protected_branch="main"
+# Branch name must be <developer>/<feature> (e.g. wenlix/sim_insertion_task)
+branch_pattern="^refs/heads/[a-z][a-z0-9_-]*/[a-z][a-z0-9_-]*$"
+
+while read local_ref local_sha remote_ref remote_sha; do
+    # Block direct pushes to main
+    if echo "$remote_ref" | grep -q "refs/heads/${protected_branch}$"; then
+        echo "ERROR: Direct push to '${protected_branch}' is not allowed."
+        echo "Create a PR and merge instead."
+        exit 1
+    fi
+
+    # Enforce branch naming convention: <developer>/<feature>
+    if [ "$local_sha" != "0000000000000000000000000000000000000000" ]; then
+        if ! echo "$local_ref" | grep -qE "$branch_pattern"; then
+            echo "ERROR: Branch name must follow '<developer>/<feature>' convention."
+            echo "  Example: wenlix/sim_insertion_task"
+            echo "  Got: $(echo "$local_ref" | sed 's|refs/heads/||')"
+            exit 1
+        fi
+    fi
+done
+
+# Git LFS pre-push hook
+command -v git-lfs >/dev/null 2>&1 || { echo >&2 "This repository is configured for Git LFS but 'git-lfs' was not found on your path."; exit 2; }
+git lfs pre-push "$@"

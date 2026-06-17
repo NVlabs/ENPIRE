@@ -1,0 +1,27 @@
+# @package _global_
+# Agent overrides for runs that use the episodic skill library. Works with
+# both the legacy single-stage code_generator and the two-stage
+# skill_author + assembly_generator pipeline (see
+# docs/plan/two_stage_code_generator.md).
+#
+# Usage: `agent: skill_library` in your experiment config's defaults.
+#
+# Nothing here forces the two-stage flow. To enable it, list
+# `skill_author` and `assembly_generator` in `steps:` in the experiment
+# YAML, and supply their respective `prompt:` blocks.
+
+# Legacy single-stage path — instruction template tuned for a three-layer
+# monolithic response. Left in place so experiments that still run
+# `code_generator` as their step continue to emit library-compatible code.
+code_generator:
+  initial_code_instruction: >-
+    Then write the executable Python code in a ```python block.
+    Organize it in three layers: (1) imports of existing skills from skill_library/,
+    (2) new atomic helper functions (plain def, no decorator) returning (success, log_dict),
+    (3) assembly + main loop.
+  retry:
+    code_instruction: >-
+      Then write the corrected code in a ```python block.
+      Organize it in three layers: (1) imports of existing skills from skill_library/,
+      (2) new atomic helper functions (plain def, no decorator) returning (success, log_dict),
+      (3) assembly + main loop.

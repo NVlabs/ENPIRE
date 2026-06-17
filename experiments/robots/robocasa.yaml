@@ -1,0 +1,6 @@
+# @package _global_
+robot:
+  adapter:
+    _target_: cap.agent.robot_adapters.robocasa.RobocasaAdapter
+  script_backend:
+    _target_: cap.agent.script_backends.RobocasaBackend

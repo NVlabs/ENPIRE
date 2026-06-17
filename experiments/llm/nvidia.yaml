@@ -1,0 +1,23 @@
+# @package _global_
+# NVIDIA inference-gateway backend — direct OpenAI-compatible client against
+# https://inference-api.nvidia.com/v1/. No proxy: OSMO containers can reach
+# the gateway directly.
+#
+# Respects stage-specific system prompts (skill_author.md,
+# assembly_generator.md, …) — NvidiaLLM reads them from the system_prompt
+# arg plumbed through make_llm().
+#
+# Requirements:
+#   - `openai` package installed (already in pyproject.toml).
+#   - NVIDIA_API_KEY in env.
+#
+# Model strings follow the gateway's `<cloud>/<provider>/<model>` convention.
+# Examples (override with llm.model=<id>):
+#   aws/anthropic/bedrock-claude-opus-4-6         (default)
+#   azure/openai/gpt-5.1
+#   azure/openai/gpt-5.1-codex
+#   aws/anthropic/claude-opus-4-5
+
+llm:
+  backend: "nvidia"
+  model: "azure/anthropic/claude-opus-4-6"

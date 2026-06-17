@@ -1,0 +1,32 @@
+
+https://github.com/NVIDIA/Isaac-GR00T/blob/main/examples/robocasa/README.md
+
+RoboCasa evaluation benchmark result
+Checkpoint: nvidia/GR00T-N1.6-3B
+
+Task	Success rate
+robocasa_panda_omron/CoffeeSetupMug_PandaOmron_Env	31.0%
+robocasa_panda_omron/CoffeeServeMug_PandaOmron_Env	63.5%
+robocasa_panda_omron/CoffeePressButton_PandaOmron_Env	98.5%
+robocasa_panda_omron/OpenSingleDoor_PandaOmron_Env	81.5%
+robocasa_panda_omron/OpenDoubleDoor_PandaOmron_Env	39.0%
+robocasa_panda_omron/CloseSingleDoor_PandaOmron_Env	96.0%
+robocasa_panda_omron/CloseDoubleDoor_PandaOmron_Env	88.5%
+robocasa_panda_omron/OpenDrawer_PandaOmron_Env	81.1%
+robocasa_panda_omron/CloseDrawer_PandaOmron_Env	100.0%
+robocasa_panda_omron/TurnOnMicrowave_PandaOmron_Env	91.5%
+robocasa_panda_omron/TurnOffMicrowave_PandaOmron_Env	96.0%
+robocasa_panda_omron/PnPCounterToCab_PandaOmron_Env	47.5%
+robocasa_panda_omron/PnPCabToCounter_PandaOmron_Env	41.0%
+robocasa_panda_omron/PnPCounterToSink_PandaOmron_Env	46.0%
+robocasa_panda_omron/PnPSinkToCounter_PandaOmron_Env	50.0%
+robocasa_panda_omron/PnPCounterToMicrowave_PandaOmron_Env	19.0%
+robocasa_panda_omron/PnPMicrowaveToCounter_PandaOmron_Env	24.5%
+robocasa_panda_omron/PnPCounterToStove_PandaOmron_Env	63.2%
+robocasa_panda_omron/PnPStoveToCounter_PandaOmron_Env	54.5%
+robocasa_panda_omron/TurnOnSinkFaucet_PandaOmron_Env	89.0%
+robocasa_panda_omron/TurnOffSinkFaucet_PandaOmron_Env	93.5%
+robocasa_panda_omron/TurnSinkSpout_PandaOmron_Env	87.0%
+robocasa_panda_omron/TurnOnStove_PandaOmron_Env	76.5%
+robocasa_panda_omron/TurnOffStove_PandaOmron_Env	31.0%
+Average	66.22%

@@ -1,0 +1,8 @@
+# @package _global_
+# Disable the task-success evaluator. Only the binary success flag from
+# result.json is surfaced to reflection (legacy behaviour).
+
+reward:
+  evaluator: "noop"
+  task: null
+  inject_into_per_seed_vlm: false

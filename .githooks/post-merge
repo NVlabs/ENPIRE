@@ -1,0 +1,18 @@
+#!/bin/sh
+# Git LFS post-merge hook
+command -v git-lfs >/dev/null 2>&1 || { echo >&2 "This repository is configured for Git LFS but 'git-lfs' was not found on your path."; exit 2; }
+git lfs post-merge "$@"
+
+# Auto-delete merged branch after pulling a merge commit.
+# When you `git pull` on main after a PR merge, this cleans up the local branch.
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$current_branch" != "main" ]; then
+    exit 0
+fi
+
+# Delete local branches that have been merged into main (excluding main itself)
+for branch in $(git branch --merged main | grep -v '^\*' | grep -v 'main$' | sed 's/^[[:space:]]*//'); do
+    echo "[post-merge] Deleting merged branch: $branch"
+    git branch -d "$branch" 2>/dev/null
+done

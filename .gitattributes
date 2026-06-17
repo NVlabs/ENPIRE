@@ -1,0 +1,11 @@
+third_party/bundlesdf/libs/*.so* filter=lfs diff=lfs merge=lfs -text
+third_party/bundlesdf/libs/libBundleTrack.so filter=lfs diff=lfs merge=lfs -text
+# Locally-rebuilt BundleSDF runtime closure (produced by install/compile_bundlesdf.sh).
+# Built against glibc-2.17 sysroot so it runs on any modern Linux + Python 3.11 + CUDA 12.x.
+third_party/bundlesdf_5090/*.so* filter=lfs diff=lfs merge=lfs -text
+checkpoint_detection.tar filter=lfs diff=lfs merge=lfs -text
+checkpoint_tracking.tar filter=lfs diff=lfs merge=lfs -text
+license_JalenLu.zip filter=lfs diff=lfs merge=lfs -text
+third_party/anygrasp_sdk/dependencies/MinkowskiEngine/build/lib.linux-x86_64-cpython-311/MinkowskiEngineBackend/_C.cpython-311-x86_64-linux-gnu.so filter=lfs diff=lfs merge=lfs -text
+third_party/anygrasp_sdk/pointnet2/build/lib.linux-x86_64-cpython-311/pointnet2/_ext.cpython-311-x86_64-linux-gnu.so filter=lfs diff=lfs merge=lfs -text
+experimental/pico/XRoboToolkit_PC_Service_1.0.0_ubuntu_22.04_amd64.deb filter=lfs diff=lfs merge=lfs -text

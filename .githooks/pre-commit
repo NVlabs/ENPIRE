@@ -1,0 +1,24 @@
+#!/bin/sh
+# Git pre-commit hook: lint Python files and verify cap/ui builds.
+
+# --- Python: ruff lint + format ---
+if git diff --cached --name-only | grep -qE '\.py$'; then
+    echo "Python files changed -- running ruff check and format check..."
+    uv run ruff check . && uv run ruff format --check . || {
+        echo "ERROR: ruff check/format failed. Fix lint errors and re-stage before committing."
+        exit 1
+    }
+fi
+
+# --- Frontend: vite build ---
+if git diff --cached --name-only | grep -q "^cap/ui/"; then
+    if [ ! -d "cap/ui/node_modules" ]; then
+        echo "ERROR: cap/ui/node_modules not found. Run 'cd cap/ui && npm install' first."
+        exit 1
+    fi
+    echo "Frontend files changed -- running vite build..."
+    (cd cap/ui && npx vite build) || {
+        echo "ERROR: vite build failed. Fix the build before committing."
+        exit 1
+    }
+fi

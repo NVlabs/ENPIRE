@@ -1,0 +1,97 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(uv run *)",
+      "Bash(python -m ruff --version)",
+      "Bash(pip show *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('cap/env/robocasa/env.py'\\).read\\(\\)\\); print\\('OK: syntactically valid'\\)\")",
+      "Bash(git revert *)",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('scripts/test_parallel_osmesa_render.py'\\).read\\(\\)\\); print\\('syntax OK'\\)\")",
+      "Bash(uvx ruff *)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/env/robocasa/env.py cap/policy/robocasa_runner.py)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m ' *)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/env/base/profile.py)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"add right camera to panda_omron profile \\(robot0_agentview_right\\)\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/agent/agent_config.py cap/agent/agent_step.py experiments/config.yaml)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/agent/agent_dashboard.py cap/agent/agent_step.py)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/agent/agent_step.py)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"fix: apply per-GPU semaphore and dashboard hooks to tmux path too\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"simplify GPU assignment: round-robin i%n_gpus, drop worker-GPU avoidance\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"re-enable tmux auto-exit: remove remain-on-exit on\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/saved_scripts/robocasa_hybrid_test.py)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"add robocasa_hybrid_test.py: skills pre-position → GR00T VLA\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge status --short)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add cap/env/robocasa/env.py)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"record every step: move recorder push from step_dict to _step_env_action\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"assign service ports by gpu_slot not seed index\")",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge diff --stat HEAD)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge add .claude/settings.json cap/saved_scripts/gr00t_oracle_smoke.py docs/ tmux/launch_grootpool.sh)",
+      "Bash(git -C /Users/wenlix/Dropbox/School/PhD/Research/forge commit -m \"update docs, settings, grootpool launch script, oracle smoke test\")"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-commit-docs-check.sh",
+            "if": "Bash(*git commit*)",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ruff check --fix . && uv run ruff format .",
+            "if": "Edit(**/*.py)|Write(**/*.py)",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '=== DOCS INDEX (read before starting work) ===' && for f in docs/*.md; do title=$(head -5 \"$f\" | grep -m1 '^#' | sed 's/^#* *//'); echo \"- $(basename \"$f\"): ${title:-[no title]}\"; done && echo '=== Per Rule 7: You MUST acknowledge the docs above with \"Docs loaded: ...\" before doing any work. ==='",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Session ended at $(date)\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "babysit-pr@claude-community": true,
+    "prism@claude-community": true,
+    "eight-eyes@claude-community": true
+  }
+}

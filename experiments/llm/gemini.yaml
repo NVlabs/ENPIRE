@@ -1,0 +1,17 @@
+# @package _global_
+# Direct Google Gemini API backend — uses the `google-genai` SDK.
+#
+# Respects stage-specific system prompts (skill_author.md,
+# assembly_generator.md, …) — GeminiLLM passes them as
+# system_instruction to the Gemini API.
+#
+# Requirements:
+#   - `google-genai` package installed (already in pyproject.toml).
+#   - GEMINI_API_KEY in env.
+#
+# Override the model on the CLI with llm.model=<model-id>, e.g.
+#   llm=gemini llm.model=gemini-2.5-flash
+
+llm:
+  backend: "gemini"
+  model: "gemini-2.5-pro"
