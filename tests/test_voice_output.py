@@ -7,8 +7,8 @@ import types
 
 import pytest
 
-from cap.voice import VoiceOutputManager, extract_speakable_text
-from cap.voice.backends import (
+from enpire.env.forge.cap.voice import VoiceOutputManager, extract_speakable_text
+from enpire.env.forge.cap.voice.backends import (
     ElevenLabsConfig,
     ElevenLabsVoiceOutputBackend,
     ElevenLabsVoiceSettings,

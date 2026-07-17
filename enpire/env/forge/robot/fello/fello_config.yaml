@@ -1,0 +1,133 @@
+version: 1
+description: >
+  Combined Fello configuration. Common values live at the top level; side-specific
+  values are applied from the sides block by robot.fello.fello_config.load_fello_config.
+model:
+  xml_path: robot/models/fello_right/fello.xml
+hardware:
+  can_interface: can0
+  motor_ids: [1, 2, 3, 4, 5, 6, 7]
+  feedback_ids: [1, 2, 3, 4, 5, 6, 7]
+  motor_types: ["3507", "4310", "4310", "3507", "3507", "3507", "3507"]
+  gravity_coefficients: [1.0, 0.5, 0.5, 0.5, 1.0, 1.0, 0.0] # TODO: update urdf instead of hardcoded hand-tuned values; gripper=0 to avoid motor fault
+  footswitch:
+    type: serial
+    button_map: [2, 0, 1]  # logical CSV inputs -> [save, takeover, start]
+    serial_port: /dev/serial-left-buttons
+    # serial_baudrate: 115200
+    # button_map: [0, 1, 2]               # serial CSV index -> [save, takeover, start]
+    # Legacy evdev/keyboard config (used when type is omitted or "evdev"/"keyboard"):
+    # device_0: /dev/input/footswitch_0   # [ key -> save
+    # device_1: /dev/input/footswitch_1   # ] key -> takeover
+    # device_2: /dev/input/footswitch_2   # , key -> start
+    # keyboard_keys: ["[", "]", ","]
+mapping:
+  arm_index_map: [0, 1, 2, 3, 4, 5]
+  arm_sign: [1, 1, 1, -1, 1, 1]
+  joint_position_ratio: [1, 1.0, 1.0, 1.3, 2.0, 2.0, 1] # Per-joint linear scale applied in Fello<->YAM position mapping
+  # For YAM arms: 0->Gripper Close, 1->Gripper Open
+  gripper_index_map: 6
+  gripper_sign: 1 # 1->Fello gripper has same direction as YAM, -1->Fello gripper has opposite direction as YAM
+  gripper_range_rad: 0.33 # effective angle range of fello gripper
+  gripper_close_pos_rad: 0.0 # Encoder position of fello gripper when it is closed
+  gripper_force_feedback_deadband: 0.01 # Apply gripper force feedback only when |leader_gripper_pos - follower_gripper_pos| exceeds this normalized deadband
+  gripper_feedback_velocity_deadband: 0.05 # Apply gripper force feedback only when follower gripper |velocity| is below this rad/s threshold
+  force_feedback_sign: [-1, -1, -1, -1, -1, -1, 1] # Per-joint direction for mirrored YAM (joint_eff - gravity_comp); gripper sign is configured separately here
+  force_feedback_ratio: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Per-joint Fello feedforward torque ratio magnitude for opposing YAM (joint_eff - gravity_comp)
+  torque_calibration_csvs:
+    - robot/systemid/3507.csv  # joint_1 (3507)
+    - robot/systemid/4310.csv  # joint_2 (4310)
+    - robot/systemid/4310.csv  # joint_3 (4310)
+    - robot/systemid/3507.csv  # joint_4 (3507)
+    - robot/systemid/3507.csv  # joint_5 (3507)
+    - robot/systemid/3507.csv  # joint_6 (3507)
+    - robot/systemid/3507.csv  # joint_7 (3507)
+  torque_cal_method: lut
+torque_compensation:
+  stiction_compensation_nm:
+    joint_1: 0.0
+    joint_2: 0.1
+    joint_3: 0.1
+    joint_4: 0.00
+    joint_5: 0.0
+    joint_6: 0.0
+    joint_7: 0.0
+  stiction_deadband_nm:
+    joint_1: 0.0
+    joint_2: 0.01
+    joint_3: 0.05
+    joint_4: 0.05
+    joint_5: 0.0
+    joint_6: 0.0
+    joint_7: 0.0
+control:
+  kp: [3.0, 10.0, 10.0, 3.0, 3.0, 3.0, 1.5]
+  kd: [0.5, 1.5, 1.5, 0.5, 0.5, 0.5, 0.15]
+  # Per-joint damping used while in server gravity mode.
+  gravity_mode_kd: [0.3, 0.1, 0.1, 0.00, 0.0, 0.0, 0.00]
+  # Per-joint viscous friction compensation torque gain in gravity mode (Nm per rad/s).
+  k_fric: [0.00, 0.000, 0.000, 0.000, 0.000, 0.000, 0.0]
+  gripper_mode: disabled # linear_spring, gas_spring, disabled
+  gripper_spring_constant: 0.05
+  gripper_spring_rest_position: 0.7853981633974483
+  gripper_gas_spring_torque: 0.1
+scaled_control:
+  # Logical button index from the 3-button Fello input that gates anchor capture
+  # and scaled delta output. `pressed` takeover logic is handled separately.
+  active_button: 1
+  # 7D mapped Fello joint position used to park the leader while the pressed
+  # scaled-control path is active. Order: joint_1..joint_6, normalized gripper.
+  nominal_position: [0.0, 0.8, 0.4, 0.0, 0.0, 0.0, 1.0]
+  # NOTE: xyz_scale is no longer read from YAML — callers pass
+  # `scaled_control_xyz_scale` to FelloTeleopPolicy / DualFelloPolicy directly.
+  # Per-axis XYZ Euler scaling applied to the leader->follower EE orientation
+  # delta while scaled control is active. Order: [roll, pitch, yaw].
+  rpy_scale: [1.0, 1.0, 1.0]
+  # First-order low-pass cutoff (Hz) applied to the leader EE x/y/z before
+  # the follower delta is computed. 0 disables filtering. Lower = smoother
+  # but more lag; e.g. at 30 Hz control, 5 Hz is a mild smooth.
+  xyz_lowpass_cutoff_hz: 2.0
+  # Leader joints (1-indexed) locked to their toggle-on values while
+  # scaled control is active. These are the joints the follower's IK
+  # solves for pointing-down, so the user shouldn't command them.
+  leader_lock_joints: [4]
+server:
+  port: 11336
+  debug: false
+  debug_print_interval_s: 0.1
+  viewer: false
+  viewer_freq: 30
+  control_loop_hz: 100
+  initial_mode: gravity
+teleop:
+  host: localhost
+  sim: false
+  no_viewer: false
+  attach: true
+  fello_debug: false
+  fello_visualization: false
+  use_footswitch: true
+  footswitch_device: null
+  print_interval_s: 0.1
+  print_alignment: false
+  align_interval_s: 0.005
+  align_lpf_alpha: 1
+sides:
+  left:
+    model:
+      xml_path: robot/models/fello_left/fello.xml
+    teleop:
+      side: left
+  right:
+    model:
+      xml_path: robot/models/fello_right/fello.xml
+    hardware:
+      footswitch:
+        serial_port: /dev/serial-right-buttons
+        button_map: [0, 2, 1]  # logical CSV inputs -> [save, takeover, start]
+        button_mode: ui_control  # buttons = start / pause / home (instead of save / takeover / start-recording)
+        ui_button_map: [0, 2, 1]  # [start, pause, home] using the logical button slots after button_map
+    scaled_control:
+      active_button: 0
+    teleop:
+      side: right

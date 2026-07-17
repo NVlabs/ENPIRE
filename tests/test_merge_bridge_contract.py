@@ -4,7 +4,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from cap.bridge import agent_bridge, claude_bridge
+from enpire.env.forge.cap.bridge import agent_bridge, claude_bridge
 
 
 def _repo_root() -> Path:

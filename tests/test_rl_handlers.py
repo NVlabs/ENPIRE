@@ -3,8 +3,8 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from rl.config import DataCollectionConfig
-from rl.handlers import do_home, do_hover
+from enpire.policy.rl.config import DataCollectionConfig
+from enpire.policy.rl.handlers import do_home, do_hover
 
 
 class _Env:
@@ -160,11 +160,11 @@ def test_gpu_hover_reset_relocalizes_then_starts_episode_at_current_pose(monkeyp
     }
     calls = []
     monkeypatch.setattr(
-        "rl.handlers.check_gpu_slot_hover_dependencies",
+        "enpire.policy.rl.handlers.check_gpu_slot_hover_dependencies",
         lambda cfg: None,
     )
     monkeypatch.setattr(
-        "rl.handlers.move_to_gpu_slot_hover",
+        "enpire.policy.rl.handlers.move_to_gpu_slot_hover",
         lambda ctx: calls.append(ctx.cfg.task_name),
     )
     ctx.terminal_event = "success"
@@ -216,11 +216,11 @@ def test_gpu_hover_reset_can_randomize_start_after_relocalization(monkeypatch):
     }
     calls = []
     monkeypatch.setattr(
-        "rl.handlers.check_gpu_slot_hover_dependencies",
+        "enpire.policy.rl.handlers.check_gpu_slot_hover_dependencies",
         lambda cfg: None,
     )
     monkeypatch.setattr(
-        "rl.handlers.move_to_gpu_slot_hover",
+        "enpire.policy.rl.handlers.move_to_gpu_slot_hover",
         lambda ctx: calls.append(ctx.cfg.task_name),
     )
     ctx.terminal_event = None

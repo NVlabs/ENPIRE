@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-from cap.voice import VoiceOutputManager
+from enpire.env.forge.cap.voice import VoiceOutputManager
 
 DEFAULT_TEXT = "Hey, how are you?"
 DEFAULT_VOICE_ID = "yM93hbw8Qtvdma2wCnJG"

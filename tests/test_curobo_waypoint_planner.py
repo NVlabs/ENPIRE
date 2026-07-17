@@ -18,7 +18,7 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
-from experimental.curobo_waypoint_planner import CuroboWaypointPlanner
+from enpire.env.forge.experimental.curobo_waypoint_planner import CuroboWaypointPlanner
 
 
 def make_circle(center, radius, z, n_points=64):
@@ -169,7 +169,7 @@ def main():
 
     # --- Sanity check: FK of a single top-down point ---
     print("\n--- Sanity check: single top-down FK ---")
-    from experimental.curobo_waypoint_planner import display_rpy_to_quat_xyzw, quat_xyzw_to_display_rpy
+    from enpire.env.forge.experimental.curobo_waypoint_planner import display_rpy_to_quat_xyzw, quat_xyzw_to_display_rpy
     q_xyzw = display_rpy_to_quat_xyzw(top_down_rpy)
     rpy_back = quat_xyzw_to_display_rpy(q_xyzw)
     print(f"  Top-down RPY: {top_down_rpy}")

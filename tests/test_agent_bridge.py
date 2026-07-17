@@ -5,8 +5,8 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-import cap.bridge.agent_bridge as agent_bridge
-from cap.bridge.providers.base import (
+import enpire.env.forge.cap.bridge.agent_bridge as agent_bridge
+from enpire.env.forge.cap.bridge.providers.base import (
     AgentBackend,
     AgentBackendSpec,
     AgentBridgeConfig,
@@ -14,8 +14,8 @@ from cap.bridge.providers.base import (
     ProviderContext,
     TurnResult,
 )
-from cap.bridge.providers.claude_code import ClaudeCodeBackend
-from cap.bridge.providers.openai_codex import OpenAICodexBackend
+from enpire.env.forge.cap.bridge.providers.claude_code import ClaudeCodeBackend
+from enpire.env.forge.cap.bridge.providers.openai_codex import OpenAICodexBackend
 
 
 class _RecordingWSManager:

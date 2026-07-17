@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
-from rl.config import DataCollectionConfig
-from rl.gpu_success_full_cycle import maybe_request_gpu_success_full_cycle
+from enpire.policy.rl.config import DataCollectionConfig
+from enpire.policy.rl.gpu_success_full_cycle import maybe_request_gpu_success_full_cycle
 
 
 class _Env:

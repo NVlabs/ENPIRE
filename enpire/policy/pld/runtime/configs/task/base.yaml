@@ -1,0 +1,6 @@
+# @package task
+# Base task configuration
+
+# Override defaults for this experiment  
+defaults:
+  - override /env: base_env

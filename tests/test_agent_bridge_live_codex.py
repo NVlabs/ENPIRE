@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-import cap.bridge.agent_bridge as agent_bridge
+import enpire.env.forge.cap.bridge.agent_bridge as agent_bridge
 
 
 pytestmark = pytest.mark.skipif(

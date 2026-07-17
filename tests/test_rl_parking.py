@@ -1,4 +1,4 @@
-from rl.parking import ParkingNavigator
+from enpire.policy.rl.parking import ParkingNavigator
 
 
 class _PoseManager:

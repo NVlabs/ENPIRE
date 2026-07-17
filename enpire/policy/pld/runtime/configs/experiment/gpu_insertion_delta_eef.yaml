@@ -1,0 +1,57 @@
+# @package _global_
+# Experiment: shallow GPU-to-PCIe insertion with left-arm 3-D delta-EEF policy.
+# Forge prepares the GPU at the socket hover pose; each episode resets by lifting
+# back to that hover pose.
+
+task:
+  disk_buffer_path: ${oc.env:RL_DATA_PATH}/gpu_insertion
+  reuse_buffer_dirs:
+    - ${oc.env:RL_DATA_PATH}/gpu_insertion/human_success_demo
+
+  buffer_update_freq: 5.0
+
+train:
+  # Keep the GPU-insertion PoC responsive while the replay set is still small.
+  # This avoids a long first XLA compile before any learner metrics appear.
+  batch_size: 256
+  cta_ratio: 1
+  encoder_type: resnet10
+  freeze_visual_encoder: true
+  backup_entropy: false
+  training_starts: 256
+  replay_buffer_capacity: 150000
+  demo_buffer_capacity: 80000
+  max_steps: 1000000
+  checkpoint_period: 100
+  save_checkpoint_path: ${oc.env:RL_DATA_PATH}/gpu_insertion/pld_checkpoints/gpu_insertion_run_${now:%Y%m%d_%H%M%S}
+  warmup_episodes: 0
+  d0812_warmup_actor: false
+  d0813_init_delta_scale: 0.1
+  num_checkpoints_to_keep: 500
+  # Self-contained checkpoints: encoder weights are saved in agent.state, so eval
+  # restore overwrites them. null => random init at build (no external resnet10 pkl
+  # dependency / no crash on machines lacking it). Training scripts override this
+  # with ++train.resnet10_ckpt_path=<imagenet pkl> so training uses real weights.
+  resnet10_ckpt_path: null
+
+wandb:
+  project: pld-lan-4090-learner
+
+action_scaling:
+  scales:
+    eef_pos:
+      # Raw meters per normalized action unit for [x, y, z].
+      # Keep the GPU PoC slightly more conservative than pin insertion.
+      pos: [0.00025, 0.00025, 0.0004]
+
+env:
+  image_filter:
+    mode: drop
+    include:
+      - left_wrist_camera_image
+
+  proprio_filter:
+    state_eef_rot6d:
+      mode: drop
+      include: [L_z]
+

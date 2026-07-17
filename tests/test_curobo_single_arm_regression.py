@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from experimental.motion_planner_curobo import YamMotionPlannerCurobo
+from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
 
 
 class _CollisionFreeValidator:
@@ -124,8 +124,8 @@ def test_setup_motion_gen_can_disable_collision_checking() -> None:
 def test_portal_motion_planner_server_passes_collision_checking_to_yam_planner(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import experimental.motion_planner_curobo as motion_planner_curobo
-    from experimental.portal_motion_planner import (
+    import enpire.env.forge.experimental.motion_planner_curobo as motion_planner_curobo
+    from enpire.env.forge.experimental.portal_motion_planner import (
         PortalMotionPlannerConfig,
         PortalMotionPlannerServer,
     )

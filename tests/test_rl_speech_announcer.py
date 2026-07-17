@@ -1,12 +1,12 @@
-from rl.speech_announcer import SpeechAnnouncer
+from enpire.policy.rl.speech_announcer import SpeechAnnouncer
 
 
 def test_speech_announcer_disabled_outside_learn_mode(monkeypatch, capsys):
     calls = []
 
-    monkeypatch.setattr("rl.speech_announcer.shutil.which", lambda _: "/usr/bin/spd-say")
+    monkeypatch.setattr("enpire.policy.rl.speech_announcer.shutil.which", lambda _: "/usr/bin/spd-say")
     monkeypatch.setattr(
-        "rl.speech_announcer.subprocess.Popen",
+        "enpire.policy.rl.speech_announcer.subprocess.Popen",
         lambda *args, **kwargs: calls.append((args, kwargs)),
     )
 
@@ -20,9 +20,9 @@ def test_speech_announcer_disabled_outside_learn_mode(monkeypatch, capsys):
 def test_speech_announcer_noops_without_tts_command(monkeypatch, capsys):
     calls = []
 
-    monkeypatch.setattr("rl.speech_announcer.shutil.which", lambda _: None)
+    monkeypatch.setattr("enpire.policy.rl.speech_announcer.shutil.which", lambda _: None)
     monkeypatch.setattr(
-        "rl.speech_announcer.subprocess.Popen",
+        "enpire.policy.rl.speech_announcer.subprocess.Popen",
         lambda *args, **kwargs: calls.append((args, kwargs)),
     )
 
@@ -44,8 +44,8 @@ def test_speech_announcer_uses_first_available_command(monkeypatch, capsys):
     def popen(*args, **kwargs):
         calls.append((args, kwargs))
 
-    monkeypatch.setattr("rl.speech_announcer.shutil.which", which)
-    monkeypatch.setattr("rl.speech_announcer.subprocess.Popen", popen)
+    monkeypatch.setattr("enpire.policy.rl.speech_announcer.shutil.which", which)
+    monkeypatch.setattr("enpire.policy.rl.speech_announcer.subprocess.Popen", popen)
 
     announcer = SpeechAnnouncer.for_mode("learn")
     announcer.speak("out of range")
@@ -59,12 +59,12 @@ def test_speech_announcer_uses_first_available_command(monkeypatch, capsys):
 
 
 def test_speech_announcer_logs_spawn_failure(monkeypatch, capsys):
-    monkeypatch.setattr("rl.speech_announcer.shutil.which", lambda _: "/usr/bin/spd-say")
+    monkeypatch.setattr("enpire.policy.rl.speech_announcer.shutil.which", lambda _: "/usr/bin/spd-say")
 
     def popen(*args, **kwargs):
         raise OSError("audio unavailable")
 
-    monkeypatch.setattr("rl.speech_announcer.subprocess.Popen", popen)
+    monkeypatch.setattr("enpire.policy.rl.speech_announcer.subprocess.Popen", popen)
 
     announcer = SpeechAnnouncer.for_mode("learn")
     capsys.readouterr()

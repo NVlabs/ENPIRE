@@ -33,7 +33,7 @@ def _load_provider(**env: str):
         os.environ.pop(name, None)
     os.environ.update(env)
 
-    import cap.agent.providers.nvidia as provider
+    import enpire.env.forge.cap.agent.providers.nvidia as provider
 
     return importlib.reload(provider)
 
@@ -245,7 +245,7 @@ class NvidiaProviderTests(unittest.TestCase):
             NVIDIA_API_KEY_2="bad-two",
             NVIDIA_API_KEY_3="good-three",
         )
-        import cap.agent.providers.nvidia_server as server
+        import enpire.env.forge.cap.agent.providers.nvidia_server as server
 
         calls: list[int] = []
 
@@ -276,7 +276,7 @@ class NvidiaProviderTests(unittest.TestCase):
             NVIDIA_API_KEY_2="key-two",
             CAP_NVIDIA_PROVIDER_MAX_ATTEMPTS="3",
         )
-        import cap.agent.providers.nvidia_server as server
+        import enpire.env.forge.cap.agent.providers.nvidia_server as server
 
         calls: list[int] = []
 
@@ -301,7 +301,7 @@ class NvidiaProviderTests(unittest.TestCase):
 
     def test_provider_server_does_not_retry_bad_request_errors(self) -> None:
         _load_provider(NVIDIA_API_KEY_1="key-one")
-        import cap.agent.providers.nvidia_server as server
+        import enpire.env.forge.cap.agent.providers.nvidia_server as server
 
         calls: list[int] = []
 
@@ -324,7 +324,7 @@ class NvidiaProviderTests(unittest.TestCase):
 
     def test_provider_server_health_check_uses_best_predefined_model_status(self) -> None:
         provider = _load_provider(NVIDIA_API_KEY_1="key-one", NVIDIA_API_KEY_2="key-two")
-        import cap.agent.providers.nvidia_server as server
+        import enpire.env.forge.cap.agent.providers.nvidia_server as server
 
         key_one = provider.nvidia_key_label("key-one")
         key_two = provider.nvidia_key_label("key-two")
@@ -607,7 +607,7 @@ class NvidiaProviderTests(unittest.TestCase):
 
     def test_provider_dashboard_ignores_benign_health_probe_output_limit(self) -> None:
         provider = _load_provider(NVIDIA_API_KEY_1="key-one")
-        import cap.agent.providers.nvidia_server as server
+        import enpire.env.forge.cap.agent.providers.nvidia_server as server
 
         label = provider.nvidia_key_label("key-one")
         with tempfile.TemporaryDirectory() as tmp:
@@ -640,7 +640,7 @@ class NvidiaProviderTests(unittest.TestCase):
 
     def test_provider_dashboard_reports_peak_rates_since_start(self) -> None:
         provider = _load_provider(NVIDIA_API_KEY_1="key-one")
-        import cap.agent.providers.nvidia_server as server
+        import enpire.env.forge.cap.agent.providers.nvidia_server as server
 
         label = provider.nvidia_key_label("key-one")
         events = [

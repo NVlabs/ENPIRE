@@ -1,0 +1,52 @@
+# @package _global_
+# Experiment: pin insertion with right-arm 3-D delta-EEF policy on the gear station.
+# Role (train.learner / train.actor) and resume flags are passed per-script on the CLI.
+
+task:
+  disk_buffer_path: ${oc.env:RL_DATA_PATH}/pin_insertion
+  reuse_buffer_dirs:
+    - ${oc.env:RL_DATA_PATH}/pin_insertion/human_success_demo
+
+  buffer_update_freq: 5.0
+
+train:
+  batch_size: 1024
+  encoder_type: resnet10
+  freeze_visual_encoder: true
+  backup_entropy: false
+  training_starts: 1000
+  replay_buffer_capacity: 150000
+  demo_buffer_capacity: 80000
+  max_steps: 1000000
+  checkpoint_period: 100
+  warmup_episodes: 0
+  d0812_warmup_actor: false
+  d0813_init_delta_scale: 0.1
+  num_checkpoints_to_keep: 500
+
+wandb:
+  project: pld-lan-4090-learner
+
+action_scaling:
+  scales:
+    eef_pos:
+      # Raw meters per normalized action unit for [x, y, z].
+      # Caps the per-step delta-EEF action: |delta_i| <= pos[i] (after the
+      # [-1, 1] clip in train_pld._policy_action).
+      pos: [0.0003, 0.0003, 0.0006]
+
+env:
+  # Available image_filter include values:
+  #   top_camera_image, left_camera_image, right_camera_image
+  image_filter:
+    mode: drop
+    include: [right_camera_image]
+
+  proprio_filter:
+    # Available state_eef_rot6d include values:
+    #   L_x, L_y, L_z, L_rot6d, L_grip,
+    #   R_x, R_y, R_z, R_rot6d, R_grip
+    state_eef_rot6d:
+      mode: drop
+      include: [R_z, R_rot6d, R_grip]
+

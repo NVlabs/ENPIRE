@@ -1,0 +1,30 @@
+# @package _global_
+# Left-arm GPU insertion PLD setup:
+#   algorithm action: 3-D normalized delta position [dx, dy, dz]
+#   remote-env action: 10-D delta_eef_rot6d [dpos(3), id_rot6d(6), closed_grip(1)]
+#   rotation/gripper: fixed by actor expansion, not learned by SACMini
+
+defaults:
+  - remote_yam
+  - override /train: sac_mini
+  - override /action_scaling: yam_delta_eef_pos3
+  - _self_
+
+exp_name: "remote_yam_left_gpu_pos3"
+
+env:
+  control_mode: "left"
+  remote_action_dim: 10
+  action_repr: "delta_eef_rot6d"   # wire repr sent to Forge (10-D)
+  image_keys:
+    - left_wrist_camera_image
+  proprio_keys: ["state_eef_rot6d"]
+  instruction: "Insert the GPU edge connector into the PCIe socket"
+
+task:
+  task_suite_name: "remote_yam_left_gpu_pos3"
+  action_repr: "delta_eef_pos"     # policy repr (3-D xyz, learned by SACMini)
+  mask_delta_rotation: false
+  mask_gripper: false
+  max_episode_steps: 200
+

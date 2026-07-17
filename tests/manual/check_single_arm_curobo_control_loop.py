@@ -10,9 +10,9 @@ if str(REPO_ROOT) not in sys.path:
 
 import numpy as np
 
-from experimental.motion_planner_curobo import YamMotionPlannerCurobo
-from experimental.scripted_policy import SafetyLimits, ScriptedPolicy
-from robot.yam.yam_sim_env import YamSimEnv
+from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
+from enpire.env.forge.experimental.scripted_policy import SafetyLimits, ScriptedPolicy
+from enpire.env.forge.robot.yam.yam_sim_env import YamSimEnv
 
 
 def main() -> int:

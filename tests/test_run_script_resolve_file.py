@@ -8,9 +8,10 @@ from unittest.mock import patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-RUN_SCRIPT_PATH = REPO_ROOT / "run_script.py"
+FORGE_ROOT = REPO_ROOT / "enpire" / "env" / "forge"
+RUN_SCRIPT_PATH = FORGE_ROOT / "run_script.py"
 EXPECTED_SCRIPT = (
-    REPO_ROOT
+    FORGE_ROOT
     / "cap"
     / "saved_scripts"
     / "table_bussing"
@@ -22,13 +23,13 @@ def _load_run_script_module() -> types.ModuleType:
     cv2 = types.ModuleType("cv2")
     numpy = types.ModuleType("numpy")
 
-    cap = types.ModuleType("cap")
-    cap_agent = types.ModuleType("cap.agent")
-    cap_agent_config = types.ModuleType("cap.agent.agent_config")
-    cap_agent_tools = types.ModuleType("cap.agent.tools")
-    cap_config = types.ModuleType("cap.config")
-    cap_server = types.ModuleType("cap.server")
-    cap_server_cap_server = types.ModuleType("cap.server.cap_server")
+    cap = types.ModuleType("enpire.env.forge.cap")
+    cap_agent = types.ModuleType("enpire.env.forge.cap.agent")
+    cap_agent_config = types.ModuleType("enpire.env.forge.cap.agent.agent_config")
+    cap_agent_tools = types.ModuleType("enpire.env.forge.cap.agent.tools")
+    cap_config = types.ModuleType("enpire.env.forge.cap.config")
+    cap_server = types.ModuleType("enpire.env.forge.cap.server")
+    cap_server_cap_server = types.ModuleType("enpire.env.forge.cap.server.cap_server")
     cap.__path__ = []  # type: ignore[attr-defined]
     cap_agent.__path__ = []  # type: ignore[attr-defined]
 
@@ -58,13 +59,13 @@ def _load_run_script_module() -> types.ModuleType:
     stubs = {
         "cv2": cv2,
         "numpy": numpy,
-        "cap": cap,
-        "cap.agent": cap_agent,
-        "cap.agent.agent_config": cap_agent_config,
-        "cap.agent.tools": cap_agent_tools,
-        "cap.config": cap_config,
-        "cap.server": cap_server,
-        "cap.server.cap_server": cap_server_cap_server,
+        "enpire.env.forge.cap": cap,
+        "enpire.env.forge.cap.agent": cap_agent,
+        "enpire.env.forge.cap.agent.agent_config": cap_agent_config,
+        "enpire.env.forge.cap.agent.tools": cap_agent_tools,
+        "enpire.env.forge.cap.config": cap_config,
+        "enpire.env.forge.cap.server": cap_server,
+        "enpire.env.forge.cap.server.cap_server": cap_server_cap_server,
     }
 
     module_name = "run_script_under_test"

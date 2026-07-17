@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from cap.voice.voice_server import create_app
+from enpire.env.forge.cap.voice.voice_server import create_app
 
 
 class FakeRecorder:
@@ -77,7 +77,7 @@ def test_voice_server_streams_partial_and_final_events() -> None:
 
 
 def test_voice_service_callbacks_tolerate_extra_args() -> None:
-    from cap.voice.service import VoiceInputService
+    from enpire.env.forge.cap.voice.service import VoiceInputService
 
     service = VoiceInputService(project_root=Path("."), emit=lambda *_args, **_kwargs: None)
 

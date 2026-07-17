@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from robot.camera_factory import center_square_crop, crop_image_region
-from robot.yam._base_yam_env import _BaseYamEnv
+from enpire.env.forge.robot.camera_factory import center_square_crop, crop_image_region
+from enpire.env.forge.robot.yam._base_yam_env import _BaseYamEnv
 
 
 def test_center_square_crop_640x480_uses_center_480_square() -> None:

@@ -16,7 +16,7 @@ def _image_b64() -> str:
 
 
 def test_sam3_segment_returns_404_when_no_detection(monkeypatch) -> None:
-    from tools.vision import serve_sam3
+    from enpire.env.forge.tools.vision import serve_sam3
 
     monkeypatch.setattr(serve_sam3, "text_to_masks", lambda *args, **kwargs: [])
 

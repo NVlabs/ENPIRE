@@ -50,7 +50,7 @@ class TestMultiCameraCalibrationUI(unittest.TestCase):
         ui.capture_metrics = []
 
         camera_types = {"left_d405": "realsense", "top_zed": "zed"}
-        serials = {"left_d405": "335122272894", "top_zed": 38531109}
+        serials = {"left_d405": "000000000021", "top_zed": 10000001}
         ui.camera_config.get_camera_type.side_effect = camera_types.__getitem__
         ui.camera_config.get_serial_by_name.side_effect = serials.__getitem__
         return ui

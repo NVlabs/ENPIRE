@@ -1,0 +1,131 @@
+# @package train
+# RLPD training configuration
+
+# Training hyperparameters
+batch_size: 64
+cta_ratio: 2
+max_steps: 1000000
+training_starts: 100
+log_period: 10
+action_viz_period: 10
+actor_tui: true
+actor_tui_refresh_hz: 5.0
+actor_tui_timeout_s: 15.0
+actor_async_learner_stats: false
+actor_learner_stats_queue_size: 4
+actor_learner_request_timeout_ms: 30000
+eval_period: 1000
+obs_horizon: 1
+discount: 0.99
+
+# Model configuration
+# Supported PLD visual encoders: resnet10, resnet18, dinov3.
+encoder_type: "dinov3"
+dinov3_ckpt_path: ${oc.env:DINO_CKPT_PATH,''}
+resnet10_ckpt_path: ${oc.env:RESNET10_CKPT_PATH,''}
+resnet18_ckpt_path: ${oc.env:RESNET18_CKPT_PATH,''}
+freeze_visual_encoder: true
+actor_require_initial_network: true
+actor_initial_network_timeout_s: 120.0
+setup_mode: "single-arm-continuous"  # 7 dof continuous actions
+teacher_setup_mode: "single-arm-learned-gripper"
+
+# Buffer settings
+buffer_period: 1000
+checkpoint_period: 0
+# Actor warmup is opt-in. A nonzero value forces warmup actions before policy rollout.
+warmup_episodes: 0
+steps_per_update: 50
+
+
+# Algorithm specific
+algo_name: "delta_rlpd"
+
+# Environment interaction
+image_keys: ["3rd_view_camera"]
+proprio_keys: ["qpos", "qvel", "target_pose", "base_pose"]
+
+# Flags
+ignore_gripper: false
+ignore_base_gripper: false
+add_base_action_to_obs: false
+deactivate_rl_actor: false
+connect_to_learner: true
+actor_send_online_data: true
+# Checkpoint settings
+checkpoint_path: null        # used by train_delta_rlpd.py (combined save+resume dir)
+save_checkpoint_path: null   # used by train_pld.py (save dir, auto-set by system config)
+resume_checkpoint_path: null # used by train_pld.py (load from when train.resume=true)
+checkpoint_name: null
+eval_mode: false
+eval_deterministic: true
+eval_checkpoint_step: 0
+eval_base_agent: false
+eval_n_trajs: 0
+
+save_video: false
+eval_demo_path: null
+eval_save_data: false
+eval_record_video: false
+dump_relabel_data: false
+
+dump_buffer_to_local: false
+
+# Learner disk-debug controls.
+# disk_debug_once loads disk data through the normal ingestor path, reports the
+# resulting buffer/gate state, then exits before the learner server/training loop.
+include_mc_returns: false
+disk_debug_once: false
+disk_debug_scan_passes: 1
+disk_debug_clear_ingested: false
+debug_disable_mc_returns: false
+learner_start_server: true
+profile_sync_jax: true
+
+self_bootstrapping: false
+self_bootstrapping_sr_ths: 0.55
+self_bootstrapping_length_ths: 100
+actor_buffer_capacity: 50000
+replay_buffer_capacity: 250000
+demo_buffer_capacity: 25000
+num_checkpoints_to_keep: 0
+
+actor: false
+actor_eval_only: false
+learner: false
+evaluator: false
+evaluator_base_agent: false
+
+# base agent
+base_agent_type: "vla"
+base_action_gamma: 1.0
+
+d0811_critic_path: null
+d0811_critic_step: 0
+
+d0812_warmup_actor: false
+d0813_load_temperature: false
+d0813_temperature_init: 1e-2
+d0813_init_delta_scale: 0.01
+
+d0814_copy_critic: false
+
+reward_bias: 0.0
+
+
+# record demo
+record_n_trajs: 10
+resume: false
+
+d0909_random_init_state: false
+d0909_random_init_state_scale: 0.
+
+d0918_ablate_init_alpha: false
+
+critic_warmup_steps: 0
+use_expectile: true
+expectile: 0.5
+
+max_target_backup: false # whether to use max target backup
+on_the_fly: 0 # number of actions to sample for on-the-fly target backup
+backup_entropy: false # whether critic TD targets include -alpha * log pi(a'|s')

@@ -1,0 +1,47 @@
+========================================================================
+Log started: 2026-07-16T17:35:27.877642
+Script: profiling
+PID: 1851164
+========================================================================
+[run_script] Logging to /home/gear/Projects/wenlix/gear-enpire/runs/cube_pick_eval_20260716T173522/run_profiling_20260716T173527.txt[run_script] Skill library parent on sys.path: /home/gear/Projects/wenlix/gear-enpire/enpire/env/forge/cap/saved_scripts[run_script] Injected skill_library.namespace with 33 tools[recorder] Saving to /home/gear/Projects/wenlix/gear-enpire/runs/cube_pick_eval_20260716T173522────────────────────────────────────────────────────────────Running: pick_cube.py────────────────────────────────────────────────────────────
+[run_script] YAM dashboard disabled (robot.dashboard=false)
+  --- Grasp attempt 1/5 for cube ---[17:35:27.885] #1 CALL sample_grasp_pose_2d(object_name='cube', camera='top', max_grasps=16, grasp_z_m=None, return_debug=False, reuse_cached_frame=False, image_bbox=None)
+[17:35:28.065] #1 OK sample_grasp_pose_2d -> 179.6ms
+  result=[GraspCandidate(position=[0.45352, -0.11413, 0.78], rpy=[0.0, 180.0, 155.0688], score=0.32, width=0.08), GraspCandidate(position=[0.45352, -0.11413, 0.78], rpy=[0.0, 180.0, -24.9312], score=0.3, width=0.08), GraspCandidate(position=[0.45027, -0.1477, 0.78], rpy=[0.0, 180.0, -114.366], score=0.72, width=0.08), GraspCandidate(position=[0.45027, -0.1477, 0.78], rpy=[0.0, 180.0, 65.634], score=0.7, width=0.08), GraspCandidate(position=[0.46619, -0.1359, 0.78], rpy=[0.0, 180.0, -175.0656], score=1.02, width=0.08) ... +5]
+[17:35:28.065] #2 CALL get_robot_state()
+  idle_gap=0.0ms
+[17:35:28.068] #2 OK get_robot_state -> 2.9ms
+  result={'arms': {'left': ArmState(joint_pos=[np.float64(-0.009346150911726525), np.float64(0.0036240177004653873), np.float64(0.006675822079804661), np.float64(-0.09174486915388691), np.float64(-0.004386968795300206), np.float64(-0.009727626459143934)], gripper_pos=7.219174126479905e-05, ee_pos=[np.float64(0.4963530958357495), np.float64(0.30846666068032524), np.float64(0.8940915491734633)], ee_quat=[np....
+  Distance to left gripper: 0.440 m  Distance to right gripper: 0.225 m  Closer arm: right[17:35:28.068] #3 CALL freespace_move(planning_speed=1.5, ik_error_threshold=0.01, ik_xyz_weight=1.0, ik_rpy_weight=0.3, planner_backend='curobo', preview_only=False, grasp_candidates=[GraspCandidate(position=[0.45352, -0.11413, 0.78], rpy=[0.0, 180.0, 155.0688], score=0.32, width=0.08), GraspCandidate(position=[0.45352, -0.11413, 0.78], rpy=[0.0, 180.0, -24.9312], score=0.3, width..., batch_side='right', batch_top_k=16, solver_speed='fast', batch_validate_trajectory=False)
+  idle_gap=0.0ms
+[33m[Client][0mConnecting to 127.0.0.1:8611[33m[Client][0mConnection established[17:35:28.305] #3 OK freespace_move -> 236.8ms
+  result={'status': 'Success', 'ik_error_m': 6e-06, 'final_pos_error_m': 6e-06, 'final_rot_error_deg': 0.0003, 'final_pose_error': 8e-06, 'trajectory_steps': 0, 'trajectory_cache_key': None, 'executed': False, 'reason': 'Batch evaluated 10 grasp candidate(s) on right: 7 executable, 7 within threshold, 0 IK failed, 3 planning failed.', 'planning_mode': 'batch', 'side': 'right', 'batch_candidates': [Freespac...
+  Batched cuRobo topdown_2d ranking [right]: input=10, evaluated=10, truncated=0, solve=109.7ms, graph=8.9ms, ik=16.9ms, mode=batch  Selected topdown_2d: rank=1, side=right, xyz=[0.4662, -0.1359, 0.78], rpy=[0.0, 180.0, 4.9], score=1.000[17:35:28.305] #4 CALL open_gripper('right')
+  idle_gap=0.1ms
+[17:35:28.836] #4 OK open_gripper -> 531.1ms
+  result={'success': True, 'side': 'right', 'gripper': 1.0, 'final_gripper_pos': 0.9163800515907137, 'settled': True, 'stall_held': False, 'vel_limit': None, 'torque_limit': None}
+  [state_after]
+    L_ee_pos=[0.4964, 0.3084, 0.8941]  L_grip=0.000
+    R_ee_pos=[0.4955, -0.3044, 0.8920]  R_grip=0.916
+    L_jp=[-0.0093, 0.0036, 0.0067, -0.0917, -0.0040, -0.0101]
+    R_jp=[0.0025, 0.0067, 0.0151, -0.1146, -0.0296, -0.0097]
+  Moving directly to topdown_2d target: xyz=[0.4662, -0.1359, 0.78], rpy=[0.0, 180.0, 4.9], score=1.000[17:35:28.839] #5 CALL freespace_move(preview_only=False, trajectory_cache_key='801c457dfaa54fcc906823d49173f933')
+  idle_gap=0.0ms
+[17:35:30.166] #5 OK freespace_move -> 1326.8ms
+  result={'status': 'Success', 'ik_error_m': 0.0, 'final_pos_error_m': 6e-06, 'final_rot_error_deg': 0.0003, 'final_pose_error': 8e-06, 'trajectory_steps': 93, 'trajectory_cache_key': '801c457dfaa54fcc906823d49173f933', 'executed': True, 'reason': '', 'planning_mode': 'cached', 'side': 'right', 'batch_candidates': [], 'best_candidate': None, 'input_candidate_count': 0, 'evaluated_candidate_count': 0, 'trun...
+[17:35:30.166] #6 CALL close_gripper('right')
+  idle_gap=0.0ms
+[17:35:30.701] #6 OK close_gripper -> 534.9ms
+  result={'success': True, 'side': 'right', 'gripper': 0.0, 'final_gripper_pos': 0.07401834336486073, 'settled': True, 'stall_held': False, 'vel_limit': None, 'torque_limit': None}
+  [state_after]
+    L_ee_pos=[0.4963, 0.3082, 0.8941]  L_grip=0.000
+    R_ee_pos=[0.4151, -0.1488, 0.7880]  R_grip=0.074
+    L_jp=[-0.0105, 0.0040, 0.0071, -0.0921, -0.0044, -0.0109]
+    R_jp=[0.6815, 1.6375, 1.0275, -1.1473, -0.1345, 0.7059]
+[17:35:30.705] #7 CALL get_robot_state()
+  idle_gap=0.0ms
+[17:35:30.707] #7 OK get_robot_state -> 2.1ms
+  result={'arms': {'left': ArmState(joint_pos=[np.float64(-0.010490577553978753), np.float64(0.0040054932478827965), np.float64(0.00705729762722207), np.float64(-0.09212634470130432), np.float64(-0.004386968795300206), np.float64(-0.010872053101396162)], gripper_pos=7.219174126479905e-05, ee_pos=[np.float64(0.49634330360539086), np.float64(0.3081876724108439), np.float64(0.8940995460126663)], ee_quat=[np.f...
+  Gripper pos after close: 0.0740  Grasp check passed[recorder] Videos saved to /home/gear/Projects/wenlix/gear-enpire/runs/cube_pick_eval_20260716T173522========================================================================
+Log ended: 2026-07-16T17:35:30.852497
+========================================================================

@@ -4,7 +4,7 @@ import threading
 
 import numpy as np
 
-from cap.server.cap_server import CapServer
+from enpire.env.forge.cap.server.cap_server import CapServer
 
 
 class _Safety:

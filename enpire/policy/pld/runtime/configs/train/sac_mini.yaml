@@ -1,0 +1,14 @@
+# @package train
+defaults:
+  - delta_rlpd
+  - _self_
+
+algo_name: "sac_mini"
+use_base_actions: false
+base_agent_type: "zero"
+
+critic_warmup_steps: 0
+include_mc_returns: false
+max_target_backup: false
+use_expectile: false
+

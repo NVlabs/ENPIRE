@@ -5,7 +5,7 @@ from typing import Any
 import gymnasium as gym
 import numpy as np
 
-from record_episode_wrapper import RecordEpisodeWrapper
+from enpire.policy.rl.record_episode_wrapper import RecordEpisodeWrapper
 
 
 def _obs(step: int) -> dict[str, np.ndarray]:

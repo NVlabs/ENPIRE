@@ -1,0 +1,1 @@
+"""YAM integration tests."""

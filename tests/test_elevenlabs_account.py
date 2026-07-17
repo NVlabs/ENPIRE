@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from cap.voice.elevenlabs_account import (
+from enpire.env.forge.cap.voice.elevenlabs_account import (
     ElevenLabsVoiceSummary,
     format_voice_summary,
     pick_recommended_female_english_voice,

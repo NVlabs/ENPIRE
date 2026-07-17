@@ -1,0 +1,12 @@
+# Copy outside the repository and replace every value with a safely taught pose.
+# Never use these zero placeholders on hardware.
+position_1:
+  left:
+    position: [0.0, 0.0, 0.0]
+    rpy_deg: [0.0, 0.0, 0.0]
+    gripper_pos: [0.0]
+  right:
+    position: [0.0, 0.0, 0.0]
+    rpy_deg: [0.0, 0.0, 0.0]
+    gripper_pos: [0.0]
+

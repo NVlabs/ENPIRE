@@ -4,12 +4,12 @@ from pathlib import Path
 
 import numpy as np
 
-from cap.debug_ui.app import LogMonitor
-from cap.agent.tools.base import FreespaceResult, ToolResult
-from cap.agent.tools.camera import GetCameraExtrinsicsTool, GetCameraIntrinsicsTool
-from cap.agent.tools.freespace_move import FreespaceMoveTool
-from cap.agent.tools.native import GetCameraImageTool, GetRobotStateTool, SetGripperTool
-from cap.agent.tools.nudge import NudgeTool
+from enpire.env.forge.cap.debug_ui.app import LogMonitor
+from enpire.env.forge.cap.agent.tools.base import FreespaceResult, ToolResult
+from enpire.env.forge.cap.agent.tools.camera import GetCameraExtrinsicsTool, GetCameraIntrinsicsTool
+from enpire.env.forge.cap.agent.tools.freespace_move import FreespaceMoveTool
+from enpire.env.forge.cap.agent.tools.native import GetCameraImageTool, GetRobotStateTool, SetGripperTool
+from enpire.env.forge.cap.agent.tools.nudge import NudgeTool
 
 
 class _ArmProfile:
@@ -174,7 +174,7 @@ def test_nudge_direct_env_delegates_to_freespace(monkeypatch) -> None:
 
 
 def test_nudge_world_pose_preserving_is_freespace_compat_wrapper(monkeypatch) -> None:
-    from cap.env.real_bimanual_yam import skills
+    from enpire.env.forge.cap.env.real_bimanual_yam import skills
 
     env = _DirectEnv()
     calls: list[dict] = []

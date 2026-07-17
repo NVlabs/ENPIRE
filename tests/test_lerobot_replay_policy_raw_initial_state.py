@@ -6,7 +6,7 @@ from tempfile import TemporaryDirectory
 
 import numpy as np
 
-from experimental.lerobot_replay_policy import LerobotReplayPolicy
+from enpire.env.forge.experimental.lerobot_replay_policy import LerobotReplayPolicy
 
 
 class TestRawFolderInitialState(unittest.TestCase):

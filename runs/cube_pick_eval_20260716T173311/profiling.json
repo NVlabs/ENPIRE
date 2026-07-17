@@ -1,0 +1,146 @@
+{
+  "summary": {
+    "total_calls": 8,
+    "total_duration_ms": 7442.8,
+    "total_idle_ms": 142.4,
+    "errors": 0
+  },
+  "per_tool": {
+    "go_home": {
+      "count": 1,
+      "total_ms": 3520.5,
+      "errors": 0
+    },
+    "freespace_move": {
+      "count": 2,
+      "total_ms": 2200.6,
+      "errors": 0
+    },
+    "sample_grasp_pose_2d": {
+      "count": 1,
+      "total_ms": 650.4,
+      "errors": 0
+    },
+    "open_gripper": {
+      "count": 1,
+      "total_ms": 531.9,
+      "errors": 0
+    },
+    "close_gripper": {
+      "count": 1,
+      "total_ms": 527.5,
+      "errors": 0
+    },
+    "get_robot_state": {
+      "count": 2,
+      "total_ms": 11.9,
+      "errors": 0
+    }
+  },
+  "calls": [
+    {
+      "call_id": 1,
+      "tool": "sample_grasp_pose_2d",
+      "timestamp": "2026-07-16T17:33:16.835469",
+      "duration_ms": 650.4,
+      "idle_gap_ms": 0.0,
+      "args": "object_name='cube', camera='top', max_grasps=16, grasp_z_m=None, return_debug=False, reuse_cached_frame=False, image_bbox=None",
+      "result": "[GraspCandidate(position=[0.44947, -0.11943, 0.78], rpy=[0.0, 180.0, 153.9094], score=0.32, width=0.08), GraspCandidate(position=[0.44947, -0.11943, 0.78], rpy=[0.0, 180.0, -26.0906], score=0.3, width=0.08), GraspCandidate(position=[0.46291, -0.12052, 0.78], rpy=[0.0, 180.0, 158.3657], score=0.72, width=0.08), GraspCandidate(position=[0.46291, -0.12052, 0.78], rpy=[0.0, 180.0, -21.6343], score=0.7, width=0.08), GraspCandidate(position=[0.47677, -0.11407, 0.78], rpy=[0.0, 180.0, -156.8407], score=1.02, width=0.08) ... +5]",
+      "error": null
+    },
+    {
+      "call_id": 2,
+      "tool": "get_robot_state",
+      "timestamp": "2026-07-16T17:33:16.841851",
+      "duration_ms": 6.3,
+      "idle_gap_ms": 0.0,
+      "args": "",
+      "result": "{'arms': {'left': ArmState(joint_pos=[np.float64(-0.024605172808422893), np.float64(-0.0001907377737087046), np.float64(0.000953688868543523), np.float64(-0.08831158922713023), np.float64(-0.004386968795300206), np.float64(-0.1161593041886011)], gripper_pos=0.0, ee_pos=[np.float64(0.4964476564219098), np.float64(0.30474242226964826), np.float64(0.8929882686945516)], ee_quat=[np.float64(0.545617233...",
+      "error": null
+    },
+    {
+      "call_id": 3,
+      "tool": "freespace_move",
+      "timestamp": "2026-07-16T17:33:17.213112",
+      "duration_ms": 370.9,
+      "idle_gap_ms": 0.0,
+      "args": "planning_speed=1.5, ik_error_threshold=0.01, ik_xyz_weight=1.0, ik_rpy_weight=0.3, planner_backend='curobo', preview_only=False, grasp_candidates=[GraspCandidate(position=[0.44947, -0.11943, 0.78], rpy=[0.0, 180.0, 153.9094], score=0.32, width=0.08), GraspCandidate(position=[0.44947, -0.11943, 0.78], rpy=[0.0, 180.0, -26.0906], score=0.3, width..., batch_side='right', batch_top_k=16, solver_speed='fast', batch_validate_trajectory=False",
+      "result": "{'status': 'Success', 'ik_error_m': 8.9e-05, 'final_pos_error_m': 8.9e-05, 'final_rot_error_deg': 0.0037, 'final_pose_error': 0.000108, 'trajectory_steps': 0, 'trajectory_cache_key': None, 'executed': False, 'reason': 'Batch evaluated 10 grasp candidate(s) on right: 6 executable, 6 within threshold, 0 IK failed, 4 planning failed.', 'planning_mode': 'batch', 'side': 'right', 'batch_candidates': [F...",
+      "error": null
+    },
+    {
+      "call_id": 4,
+      "tool": "open_gripper",
+      "timestamp": "2026-07-16T17:33:17.745275",
+      "duration_ms": 531.9,
+      "idle_gap_ms": 0.2,
+      "args": "'right'",
+      "result": "{'success': True, 'side': 'right', 'gripper': 1.0, 'final_gripper_pos': 0.9034823731728289, 'settled': True, 'stall_held': False, 'vel_limit': None, 'torque_limit': None}",
+      "error": null,
+      "result_data": {
+        "success": true,
+        "side": "right",
+        "gripper": 1.0,
+        "final_gripper_pos": 0.9034823731728289,
+        "settled": true,
+        "stall_held": false,
+        "vel_limit": null,
+        "torque_limit": null
+      }
+    },
+    {
+      "call_id": 5,
+      "tool": "freespace_move",
+      "timestamp": "2026-07-16T17:33:19.579654",
+      "duration_ms": 1829.7,
+      "idle_gap_ms": 0.0,
+      "args": "preview_only=False, trajectory_cache_key='f263ae2271aa4fc09c7e99f2ab432273'",
+      "result": "{'status': 'Success', 'ik_error_m': 0.0001, 'final_pos_error_m': 8.9e-05, 'final_rot_error_deg': 0.0037, 'final_pose_error': 0.000108, 'trajectory_steps': 112, 'trajectory_cache_key': 'f263ae2271aa4fc09c7e99f2ab432273', 'executed': True, 'reason': '', 'planning_mode': 'cached', 'side': 'right', 'batch_candidates': [], 'best_candidate': None, 'input_candidate_count': 0, 'evaluated_candidate_count':...",
+      "error": null
+    },
+    {
+      "call_id": 6,
+      "tool": "close_gripper",
+      "timestamp": "2026-07-16T17:33:20.107264",
+      "duration_ms": 527.5,
+      "idle_gap_ms": 0.0,
+      "args": "'right'",
+      "result": "{'success': True, 'side': 'right', 'gripper': 0.0, 'final_gripper_pos': 0.07394668959587247, 'settled': True, 'stall_held': False, 'vel_limit': None, 'torque_limit': None}",
+      "error": null,
+      "result_data": {
+        "success": true,
+        "side": "right",
+        "gripper": 0.0,
+        "final_gripper_pos": 0.07394668959587247,
+        "settled": true,
+        "stall_held": false,
+        "vel_limit": null,
+        "torque_limit": null
+      }
+    },
+    {
+      "call_id": 7,
+      "tool": "get_robot_state",
+      "timestamp": "2026-07-16T17:33:20.116017",
+      "duration_ms": 5.6,
+      "idle_gap_ms": 0.0,
+      "args": "",
+      "result": "{'arms': {'left': ArmState(joint_pos=[np.float64(-0.024605172808422893), np.float64(0.0036240177004653873), np.float64(0.006675822079804661), np.float64(-0.0913633936064695), np.float64(-0.0040054932478827965), np.float64(-0.1161593041886011)], gripper_pos=0.00021657522379439715, ee_pos=[np.float64(0.4963082109322936), np.float64(0.3046809841352822), np.float64(0.8941842402896726)], ee_quat=[np.fl...",
+      "error": null
+    },
+    {
+      "call_id": 8,
+      "tool": "go_home",
+      "timestamp": "2026-07-16T17:33:23.778717",
+      "duration_ms": 3520.5,
+      "idle_gap_ms": 142.2,
+      "args": "",
+      "result": "{'success': True, 'status': 'done'}",
+      "error": null,
+      "result_data": {
+        "success": true,
+        "status": "done"
+      }
+    }
+  ]
+}

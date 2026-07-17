@@ -31,7 +31,7 @@ def test_egl_device_render_guard_serializes_processes_on_same_gpu(
 import sys
 import time
 
-from cap.utils.egl_render_guard import egl_device_render_guard
+from enpire.env.forge.cap.utils.egl_render_guard import egl_device_render_guard
 
 with egl_device_render_guard():
     print("READY", flush=True)
@@ -40,7 +40,7 @@ with egl_device_render_guard():
     waiter_code = """
 import time
 
-from cap.utils.egl_render_guard import egl_device_render_guard
+from enpire.env.forge.cap.utils.egl_render_guard import egl_device_render_guard
 
 t0 = time.monotonic()
 with egl_device_render_guard():

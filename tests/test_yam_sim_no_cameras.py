@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from robot.yam.yam_sim_env import YamSimEnv
+from enpire.env.forge.robot.yam.yam_sim_env import YamSimEnv
 
 
 def test_yam_sim_env_disable_cameras_returns_blank_frames() -> None:

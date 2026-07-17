@@ -1,0 +1,6 @@
+# @package _global_
+robot:
+  adapter:
+    _target_: enpire.env.forge.cap.agent.robot_adapters.study.StudyAdapter
+  script_backend:
+    _target_: enpire.env.forge.cap.agent.script_backends.StudyBackend

@@ -3,7 +3,7 @@ from __future__ import annotations
 import zipfile
 from pathlib import Path
 
-import cap.utils.anygrasp_runtime as runtime
+import enpire.env.forge.cap.utils.anygrasp_runtime as runtime
 
 
 _POINTER_TEXT = """version https://git-lfs.github.com/spec/v1

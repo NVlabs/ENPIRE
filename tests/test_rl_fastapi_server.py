@@ -3,7 +3,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from rl.fastapi_server import build_app
+from enpire.policy.rl.fastapi_server import build_app
 
 
 def _client(tmp_path):
@@ -16,10 +16,19 @@ def test_control_routes_enqueue_expected_events(tmp_path):
     client, events = _client(tmp_path)
 
     assert client.post("/home").status_code == 200
-    assert events.get_nowait() == ("home", {})
+    event, payload = events.get_nowait()
+    assert event == "home"
+    assert payload["source"] == "fastapi"
 
     assert client.post("/resume").status_code == 200
-    assert events.get_nowait() == ("start", {})
+    event, payload = events.get_nowait()
+    assert event == "start"
+    assert payload["source"] == "fastapi"
+
+    assert client.post("/pause").status_code == 200
+    event, payload = events.get_nowait()
+    assert event == "parking"
+    assert payload["source"] == "fastapi"
 
 
 def test_restart_creates_new_output_dir_and_enqueues_path(tmp_path):
@@ -30,7 +39,7 @@ def test_restart_creates_new_output_dir_and_enqueues_path(tmp_path):
     assert response.status_code == 200
     path = response.json()["path"]
     assert Path(path).is_dir()
-    assert events.get_nowait() == ("restart", {"path": path})
+    assert events.get_nowait() == ("restart", {"path": path, "source": "fastapi"})
 
 
 def test_help_only_lists_exposed_routes(tmp_path):
@@ -41,6 +50,7 @@ def test_help_only_lists_exposed_routes(tmp_path):
     assert response.status_code == 200
     endpoints = response.json()["endpoints"]
     assert "POST /home" in endpoints
+    assert "POST /pause" in endpoints
     assert "POST /resume" in endpoints
     assert "POST /restart" in endpoints
     assert "POST /set_initial_position_index" not in endpoints

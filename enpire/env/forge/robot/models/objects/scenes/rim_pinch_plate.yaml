@@ -1,0 +1,23 @@
+objects:
+  - name: blue_plate
+    type: compound
+    # Same square frame plate as stick_plate.yaml, but initialized upright
+    # so the right arm can test a rim pinch against a vertical plate.
+    sub_geoms:
+      - type: box
+        size: [0.050, 0.011, 0.025]
+        pos: [0, 0.039, 0]
+      - type: box
+        size: [0.050, 0.011, 0.025]
+        pos: [0, -0.039, 0]
+      - type: box
+        size: [0.011, 0.028, 0.025]
+        pos: [-0.039, 0, 0]
+      - type: box
+        size: [0.011, 0.028, 0.025]
+        pos: [0.039, 0, 0]
+    pos: [0.55, -0.10, 0.795]
+    quat: [0.70710678, 0.70710678, 0.0, 0.0]  # 90 deg about X, standing on edge
+    rgba: [0.1, 0.2, 0.9, 1.0]
+    mass: 0.01
+    friction: [2.0, 0.1, 0.01]

@@ -4,8 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from cap.agent.agent_session import AgentRunSession
-from cap.agent.skill_library import SkillLibrary
+from enpire.env.forge.cap.agent.agent_session import AgentRunSession
+from enpire.env.forge.cap.agent.skill_library import SkillLibrary
 
 
 def _skill_source(name: str) -> str:
