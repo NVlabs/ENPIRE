@@ -351,6 +351,10 @@ class YamRobot:
             motor = self.controller.add_motor(motor_id, feedback_id, motor_type=self.motor_types[i])
             is_gripper = self.gripper_index is not None and i == self.gripper_index
             mode = "FORCE_POS" if is_gripper else "MIT"
+            # Clear any fault from the previous run before setting control mode or enabling.
+            # enable() is fire-and-forget; a motor stuck in fault silently ignores it.
+            motor.clear_error()
+            time.sleep(0.05)
             self._ensure_control_mode(motor, mode)
             motor.enable()
             self.motors[i] = motor
@@ -517,13 +521,6 @@ class YamRobot:
             )
             self._cmd_gripper_torque_limit_nm = (
                 None if gripper_torque_limit_nm is None else float(gripper_torque_limit_nm)
-            )
-            print(f"[{self.can_interface}] target pos: {joint_pos[0:6]}")
-            print(
-                f"[{self.can_interface}] current observation: {self.get_observations()['joint_pos'][0:6]}"
-            )
-            print(
-                f"[{self.can_interface}] err: {joint_pos[0:6] - self.get_observations()['joint_pos'][0:6]}"
             )
 
     def command_joint_state(self, joint_state: dict) -> None:

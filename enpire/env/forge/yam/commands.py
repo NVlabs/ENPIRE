@@ -119,6 +119,25 @@ def station_validate_calibration(args: argparse.Namespace) -> int:
     return 0
 
 
+def station_calibrate_all(args: argparse.Namespace) -> int:
+    os.environ["ENPIRE_STATION"] = args.station
+    if args.model_root is not None:
+        os.environ["ENPIRE_YAM_MODEL_ROOT"] = args.model_root
+    else:
+        # Always pin to gear-enpire's bundled models so stale env vars
+        # from old forge/yam-calibration installs don't redirect the path.
+        from enpire.env.forge.paths import forge_path
+        os.environ["ENPIRE_YAM_MODEL_ROOT"] = str(forge_path("robot", "models", "station"))
+    if args.output_xml is not None:
+        os.environ["ENPIRE_YAM_CALIBRATED_XML_OUTPUT"] = args.output_xml
+    from enpire.env.forge.yam.calibration.launch import launch
+    return launch(
+        confirm_motion=args.confirm_motion,
+        station=args.station,
+        resolution=args.resolution,
+    )
+
+
 def add_station_parser(commands: argparse._SubParsersAction) -> None:
     station = commands.add_parser("station", help="Configure and inspect a YAM station")
     station_commands = station.add_subparsers(dest="station_command", required=True)
@@ -180,6 +199,17 @@ def add_station_parser(commands: argparse._SubParsersAction) -> None:
     calibrate.add_argument("--no-launch-server", action="store_true")
     calibrate.add_argument("--confirm-motion", action="store_true")
     calibrate.set_defaults(handler=station_calibrate)
+
+    calibrate_all = station_commands.add_parser(
+        "calibrate-all",
+        help="Start arm servers in tmux and run all three camera calibrations in sequence",
+    )
+    calibrate_all.add_argument("--station", required=True)
+    calibrate_all.add_argument("--resolution", default=None, metavar="WIDTHxHEIGHT")
+    calibrate_all.add_argument("--model-root", default=None)
+    calibrate_all.add_argument("--output-xml", default=None)
+    calibrate_all.add_argument("--confirm-motion", action="store_true")
+    calibrate_all.set_defaults(handler=station_calibrate_all)
 
     validate = station_commands.add_parser(
         "validate-calibration", help="Validate an emitted calibration.json without hardware"
