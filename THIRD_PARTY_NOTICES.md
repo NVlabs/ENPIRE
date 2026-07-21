@@ -1,8 +1,16 @@
 # Third-Party Notices
 
-ENPIRE is a practitioner-oriented harness for repeatable robot policy improvement built on top of the Forge runtime and YAM calibration pipeline.  All third-party software used by this project retains its original license; see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for the full license texts and links.
+ENPIRE is Copyright (c) 2025, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
-> **License status notice:** The root release license and IP review for source code migrated from the internal Forge branches and yam-calibration repository are still pending. Third-party components listed below retain their own licenses independently of that review. Do not redistribute this software publicly until the root license is resolved.
+This file provides third-party notices required by components used in ENPIRE.
+Each third-party component retains its original license; see
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for full license texts and links.
+
+> **Note on source-derived components:** Code migrated from internal Forge branches
+> and the yam-calibration repository is listed in the source-derived table below.
+> License review for those components is tracked in
+> `enpire/env/docs/source_provenance.yaml`.
 
 ---
 
