@@ -1,4 +1,4 @@
-from rl.state_machine import RLStateMachine
+from enpire.policy.rl.state_machine import RLStateMachine
 
 
 def test_start_hover_learn_terminal_cycle():

@@ -1,9 +1,9 @@
 from types import SimpleNamespace
 
-from hardware.identify_forge_rl_devices import REALSENSE_ROLES
-from rl.config import load_yaml_defaults
-from robot.models.station.paths import needs_optical_flip
-from robot.yam._base_yam_env import _BaseYamEnv
+from enpire.env.forge.hardware.identify_forge_rl_devices import REALSENSE_ROLES
+from enpire.policy.rl.config import load_yaml_defaults
+from enpire.env.forge.robot.models.station.paths import needs_optical_flip
+from enpire.env.forge.robot.yam._base_yam_env import _BaseYamEnv
 
 
 def test_realsense_registration_uses_explicit_third_view_and_wrist_names():

@@ -1,239 +1,260 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-# Keep editable builds focused on the repo's own Python packages.
-include = ["bringup*", "cap*", "experimental*", "hardware*", "robot*", "tools*"]
-exclude = [
-    "log*",
-    "logs*",
-    "data*",
-    "models*",
-    "videos*",
-    "scripts*",
-    "third_party*",
-    "cap.ui*",
-    "tmux*",
-    "build*",
-    ".venv*",
-    "__pycache__*",
-]
-
 [project]
-name = "yam"
+name = "enpire"
 version = "0.1.0"
-description = "Simple and easy-to-use Gym environments for the YAM bimanual robot station."
+description = "A repeatable reset-execute-verify-refine harness for robot policies and tools."
 readme = "README.md"
-requires-python = "==3.11.*"  # i2rt requires >= 3.11
+requires-python = ">=3.11,<3.12"
 dependencies = [
-    "gear",
-    "gymnasium==1.2.0",
-    "i2rt",
-    "ipdb>=0.13.13",
-    "mink==0.0.12",
-    "pin-pink",
-    "opencv-python==4.12.0.88",
-    # Pin to the official Stereolabs SDK wheel for Linux x86_64 / CPython 3.11.
-    # Do NOT replace this with the unrelated PyPI `pyzed` package.
-    "pyzed @ https://download.stereolabs.com/zedsdk/5.2/whl/linux_x86_64/pyzed-5.2-cp311-cp311-linux_x86_64.whl ; sys_platform == 'linux'",
-    "pyrealsense2==2.56.5.9235; sys_platform == 'linux'",
-    "viser==1.0.6",
-    "pyzmq==27.1.0",
-    "pytest>=9.0.1",
-    "damiao-motor>=1.0.7b1",
-    "pyarrow",
-    "fastparquet",
-    "pyyaml>=6.0.3",
-    "termcolor",
-    "fastapi>=0.115",
-    "uvicorn>=0.34",
-    "mcp[cli]>=1.0",
-    "msgpack>=1.0",
-    "portal>=3.7.3",
-    "torch>=2.8.0",
-    "transformers>=5.2.0",
-    "open3d>=0.19.0",
-    "torchvision>=0.23.0",
-    "pynput>=1.7",
-    "rich>=13.0",
-    "pyserial>=3.5",
-    "google-genai>=1.0",
-    "openai>=1.0",
-    "hydra-core>=1.3.2",
-    "omegaconf>=2.3.0",
-    "lz4>=4.4.5",
+    "numpy>=1.26",
+    "pyyaml>=6.0",
 ]
 
 [project.scripts]
-serve-sam3 = "tools.vision.serve_sam3:main"
-download-robocasa-assets = "robocasa.scripts.download_kitchen_assets:main"
+enpire = "enpire.cli:main"
+enpire-run-agent = "enpire.env.forge.run_agent:main"
+enpire-run-script = "enpire.env.forge.run_script:main"
 
 [project.optional-dependencies]
-experimental = [
-    "pyroki",
-    "yourdfpy==0.0.59",
-    "pandas",
-    "tianshou==0.4.10",
-    "diffusers==0.35.1",
-    "decord==0.6.0",
-    "torchcodec==0.5",
-    "ninja",
-    "torch==2.8.0",
-    "torchvision==0.23.0",
-    "torchaudio==2.8.0",
-    "qwen-vl-utils>=0.0.14",
-    "xrobotoolkit-sdk @ git+https://github.com/XR-Robotics/XRoboToolkit-PC-Service-Pybind.git@refs/pull/14/head",
-]
-cap = [
-    # vllm is NOT included here — run it in a separate venv (~/vllm-env)
-    # to avoid torch ABI conflicts. See docs/CAP_DESIGN.md § 4e.
-    "pyroki",
-    "yourdfpy==0.0.59",
-]
-cap_tools = [
-    # CAP + BundleSDF pose estimation — install with: uv sync --extra cap_tools
-    "pyroki",
-    "yourdfpy==0.0.59",
-    "bundlesdf",
-    "transformers>=5.1.0",
-    "torch>=2.8.0",
-    "torchvision>=0.23.0",
-    "warp-lang",
-    "ninja",                # build-dep for nvidia-curobo (no-build-isolation)
-    "nvidia-curobo",        # editable path source; see [tool.uv.sources]
-    "graspnetAPI",          # AnyGrasp Python API; transforms3d pin overridden
-]
-robocasa = [
-    # RoboCasa sim benchmark — install with: uv sync --extra robocasa
-    # robosuite is a git submodule: run `git submodule update --init
-    # third_party/robosuite` first. Kitchen assets (~10 GB, or a subset) come
-    # from `uv run python third_party/robocasa/robocasa/scripts/download_kitchen_assets.py`.
-    "robosuite",            # editable path source; see [tool.uv.sources]
-    "robocasa",             # editable path source; see [tool.uv.sources]
-    "numba>=0.61.2",        # robosuite jit utils (pulls llvmlite)
-    "qpsolvers[quadprog]>=4.3.1",  # robosuite IK solver
-    "pynput",               # robosuite device input
-    "hidapi",               # robocasa device input
-]
-sim_warp = [
-    "mujoco-warp>=3.5.0",
-]
-stt = [
-    # RealtimeSTT dependencies
-    "PyAudio==0.2.14",
-    "faster-whisper==1.1.1",
-    "pvporcupine==1.9.5",
-    "webrtcvad-wheels==2.0.14",
-    "halo==0.0.31",
-    "scipy==1.15.2",
-    "openwakeword>=0.4.0",
-    "websockets==15.0.1",
-    "websocket-client==1.8.0",
-    "soundfile==0.13.1",
-    "RealtimeSTT @ git+https://github.com/KoljaB/RealtimeSTT.git",
-]
-voice = [
-    "av>=16.1.0",
-    "h5py>=3.15.1",
-    "jax>=0.9.0",
-    "jaxlib>=0.9.0",
-    "jax-dataclasses>=1.6.3",
-    "jaxlie>=1.5.0",
-    "jaxls @ git+https://github.com/brentyi/jaxls.git@6fe7cf9d56223736b2c0272d080ec7346203c648",
-    "jaxtyping>=0.3.7",
-    "grpcio>=1.78.0",
-    "gym>=0.26.2",
-    "tensorboard>=2.20.0",
-    "robot-descriptions>=1.22.0",
-    "pyliblzfse>=0.4.1",
-    "wadler-lindig>=0.1.7",
-    "torchaudio>=2.8.0",
+# Lightweight clients for remote perception services. These do not install
+# local model weights or a CUDA runtime.
+vision = [
+    "opencv-python>=4.10,<5",
+    "pillow>=10",
+    "requests>=2.32",
 ]
 
+# Local SAM / detector / encoder execution.
+vision-local = [
+    "fastapi>=0.115",
+    "opencv-python>=4.10,<5",
+    "pillow>=10",
+    "requests>=2.32",
+    "torch>=2.8",
+    "torchvision>=0.23",
+    "transformers>=5.1",
+    "uvicorn>=0.34",
+]
+
+# Local AnyGrasp HTTP service. The licensed AnyGrasp SDK, checkpoint, and
+# license archive remain external and are supplied with environment variables.
+grasping-local = [
+    "fastapi>=0.115",
+    "graspnetAPI",
+    "open3d>=0.19",
+    "opencv-python>=4.10,<5",
+    "torch>=2.8",
+    "uvicorn>=0.34",
+]
+
+# Kinematics and generic planning clients. The CUDA-bound cuRobo server uses
+# its own tool bundle so a core lock never has to build it.
+planning = [
+    "mink==0.0.12",
+    "mujoco>=3.5",
+    "pin-pink",
+    "portal>=3.7.3",
+    "pyroki",
+    "scipy>=1.15",
+    "yourdfpy==0.0.59",
+]
+
+# Local CUDA cuRobo server. The vendored cuRobo license is research-only;
+# this extra requires a matching NVIDIA driver, CUDA toolkit, and compiler.
+planning-local = [
+    "ninja",
+    "nvidia-curobo",
+    "portal>=3.7.3",
+    "torch>=2.8",
+    # cuRobo's collision checker imports ``warp.torch``, which was removed
+    # from Warp 1.15. Keep the version proven by the original Forge lock.
+    "warp-lang==1.12.0",
+    "yourdfpy==0.0.59",
+]
+
+# YAM control is independent from camera SDKs so headless control machines do
+# not need to install camera wheels.
+control-yam = [
+    "damiao-motor>=1.0.7b1",
+    "gymnasium>=1.2",
+    "mink==0.0.12",
+    "msgpack>=1.0",
+    "mujoco>=3.5",
+    "portal>=3.7.3",
+    "pyserial>=3.5",
+    "scipy>=1.15",
+    "tyro>=0.9",
+    "pyzmq>=27",
+]
+
+# Optional I2RT leader/teaching-handle support. The MIT-licensed source and
+# YAM gravity-compensation model are vendored so this does not depend on a
+# sibling Forge checkout.
+control-i2rt = [
+    "i2rt",
+]
+camera-realsense = [
+    "opencv-python>=4.10,<5",
+    "pyrealsense2==2.56.5.9235; sys_platform == 'linux'",
+]
+camera-zed = [
+    "opencv-python>=4.10,<5",
+    "pyzed @ https://download.stereolabs.com/zedsdk/5.2/whl/linux_x86_64/pyzed-5.2-cp311-cp311-linux_x86_64.whl ; sys_platform == 'linux' and python_version < '3.12'",
+]
+
+calibration = [
+    "damiao-motor>=1.0.7b1",
+    "mujoco>=3.5",
+    "opencv-contrib-python>=4.10,<5",
+    "portal>=3.7.3",
+    "pyrealsense2==2.56.5.9235; sys_platform == 'linux'",
+    "scipy>=1.15",
+]
+
+vlm = [
+    "google-genai>=1.0",
+    "openai>=1.0",
+    "pillow>=10",
+    "requests>=2.32",
+]
+
+# Original Hydra run_script entry and its dependency-light tool clients.
+cap = [
+    "hydra-core>=1.3",
+    "omegaconf>=2.3",
+    "opencv-python>=4.10,<5",
+    "pillow>=10",
+    "requests>=2.32",
+    "scipy>=1.15",
+]
+
+# Forge real-world actor bridge, recording, teleoperation, and dashboards.
+# Robot/camera dependencies remain separate so a learner-only host stays small.
+real-rl = [
+    "evdev>=1.9; sys_platform == 'linux'",
+    "fastapi>=0.115",
+    "gymnasium>=1.2",
+    "lz4>=4.4",
+    "opencv-python>=4.10,<5",
+    "pillow>=10",
+    "portal>=3.7.3",
+    "pynput>=1.7",
+    "requests>=2.32",
+    "scipy>=1.15",
+    "torch>=2.8",
+    "tyro>=0.9",
+    "uvicorn>=0.34",
+    "pyzmq>=27",
+]
+
+# PLD command/config inspection. The CUDA/JAX learner has an isolated uv
+# project under enpire/policy/pld/runtime so it cannot constrain robot extras.
+pld = [
+    "hydra-core>=1.3",
+    "omegaconf>=2.3",
+]
+
+robocasa = [
+    "gymnasium>=1.2",
+    "hidapi",
+    "numba>=0.61.2",
+    "pynput",
+    "qpsolvers[quadprog]>=4.3.1",
+    "robocasa",
+    "robosuite",
+]
+
+dev = [
+    "coverage[toml]>=7.6",
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "msgpack>=1.0",
+    "pillow>=10",
+    "pytest>=8.3",
+    "pytest-cov>=6",
+    "requests>=2.32",
+    "ruff>=0.9",
+    "scipy>=1.15",
+    "uvicorn>=0.34",
+]
+
+[tool.setuptools.packages.find]
+include = ["enpire*"]
+exclude = [
+    "data*",
+    "logs*",
+    "outputs*",
+    "scripts*",
+    "third_party*",
+]
+
+[tool.setuptools.package-data]
+enpire = ["**/*.md", "**/*.yaml", "**/*.yml", "**/*.json", "**/*.xml", "**/*.stl"]
+
 [tool.uv.sources]
-i2rt = { path = "third_party/i2rt", editable = true }
 pyroki = { path = "third_party/pyroki", editable = true }
-bundlesdf = { path = "third_party/bundlesdf", editable = true }
 nvidia-curobo = { path = "third_party/curobo", editable = true }
-robosuite = { path = "third_party/robosuite", editable = true }
 robocasa = { path = "third_party/robocasa", editable = true }
-jaxls = { git = "https://github.com/brentyi/jaxls.git", rev = "6fe7cf9d56223736b2c0272d080ec7346203c648" }
+i2rt = { path = "third_party/i2rt", editable = true }
+robosuite = { git = "https://github.com/ARISE-Initiative/robosuite.git", rev = "v1.5.1" }
 torch = [
     { index = "pytorch-cu128", marker = "sys_platform == 'linux'" },
 ]
 torchvision = [
     { index = "pytorch-cu128", marker = "sys_platform == 'linux'" },
 ]
-torchaudio = [
-    { index = "pytorch-cu128", marker = "sys_platform == 'linux'" },
-]
-[tool.uv]
-preview = true
-environments = ["sys_platform == 'linux'"]
-# nvidia-curobo has CUDA-host build deps (ninja, gcc, CUDA_HOME) and must
-# build against the venv's torch — no PEP 517 isolation.
-no-build-isolation-package = ["nvidia-curobo"]
-override-dependencies = [
-    # From gr00t pyproject.toml
-    "numpy>2.0.0",
-    "ray[default]==2.48.0",
-    "transformers>=5.1.0",  # 5.1+ for DINOv3 (dinov3_vit) support
-    "matplotlib",
-
-    # 0.18.0 tries to import transformers.modeling_layers, which does not exist
-    "peft==0.17.1",
-
-    # For tianshou
-    "protobuf==6.32.1",
-
-    # mujoco-warp requires >=3.5.0; i2rt pins ==3.3.5 — override globally
-    "mujoco>=3.5.0",
-
-    # PyOpenGL 3.1.0 is missing EGLDeviceEXT (breaks MuJoCo EGL)
-    "PyOpenGL>=3.1.7",
-
-    # graspnetAPI hard-pins transforms3d==0.3.1 (uses removed-in-NumPy-2 APIs).
-    # We've smoke-tested the relaxed pin and it works fine at runtime.
-    "transforms3d>=0.4",
-]
 
 [tool.uv.extra-build-dependencies]
 nvidia-curobo = ["setuptools"]
 
+[tool.uv]
+environments = ["sys_platform == 'linux'"]
+no-build-isolation-package = ["nvidia-curobo"]
+override-dependencies = [
+    "mujoco>=3.5",
+    "numpy>=1.26",
+    "PyOpenGL>=3.1.7",
+    "transforms3d>=0.4",
+]
+
 [[tool.uv.index]]
 name = "pypi"
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 
 [[tool.uv.index]]
 name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
-[dependency-groups]
-# Minimal deps for running CAP in sim mode on macOS (Apple Silicon Mac Mini).
-# Install with:  uv sync --only-group macmini
-# No torch, transformers, pyrealsense2, gear, or CUDA packages.
-macmini = [
-    "i2rt",
-    "gymnasium==1.2.0",
-    "mink==0.0.12",
-    "pin-pink",
-    "opencv-python==4.12.0.88",
-    "viser==1.0.6",
-    "pyzmq==27.1.0",
-    "pyyaml>=6.0.3",
-    "termcolor",
-    "fastapi>=0.115",
-    "uvicorn>=0.34",
-    "msgpack>=1.0",
-    "pynput>=1.7",
-    "numpy>2.0.0",
-    "requests",
-    "Pillow",
-    "pyroki",
-    "yourdfpy==0.0.59",
-    # Fello leader arm (--use-fello)
-    "damiao-motor>=1.0.7b1",
-    "tyro",
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+markers = [
+    "hardware: requires connected robot or camera hardware",
+    "integration: requires optional services or multiple processes",
+    "network: requires external network access or credentials",
+    "slow: takes longer than a normal unit test",
 ]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [
+    "third_party",
+    "enpire/policy/pld/runtime/.venv",
+    "enpire/policy/pld/runtime/vendor",
+    "enpire/policy/pld/runtime/src",
+    "enpire/env/forge/outputs",
+    "enpire/env/forge/logs",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"enpire/env/forge/yam/registration/_legacy_identify.py" = ["E501", "I001"]
+"tests/enpire/yam/test_calibration_cv.py" = ["E402"]

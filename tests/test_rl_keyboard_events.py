@@ -1,8 +1,8 @@
 import queue
 from types import SimpleNamespace
 
-from rl.config import DataCollectionConfig, load_yaml_defaults
-from rl.keyboard_events import dispatch_keyboard_events
+from enpire.policy.rl.config import DataCollectionConfig, load_yaml_defaults
+from enpire.policy.rl.keyboard_events import dispatch_keyboard_events
 
 
 def _ctx(cfg):

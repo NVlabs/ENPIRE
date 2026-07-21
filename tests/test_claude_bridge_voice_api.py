@@ -4,10 +4,10 @@ import time
 
 from fastapi.testclient import TestClient
 
-from cap.bridge import claude_bridge
-from cap.chat import extract_code_blocks
-from cap.chat import runtime as chat_runtime
-from cap.voice.backends import ElevenLabsConfig
+from enpire.env.forge.cap.bridge import claude_bridge
+from enpire.env.forge.cap.chat import extract_code_blocks
+from enpire.env.forge.cap.chat import runtime as chat_runtime
+from enpire.env.forge.cap.voice.backends import ElevenLabsConfig
 
 
 def test_voice_test_endpoint(monkeypatch) -> None:
@@ -47,7 +47,7 @@ def test_voice_stop_endpoint(monkeypatch) -> None:
 
 
 def test_agent_bridge_voice_test_offline_uses_elevenlabs_backend(monkeypatch) -> None:
-    from cap.bridge import agent_bridge
+    from enpire.env.forge.cap.bridge import agent_bridge
 
     synth_calls: list[tuple[str, ElevenLabsConfig]] = []
     played_audio: list[bytes] = []
@@ -74,11 +74,11 @@ def test_agent_bridge_voice_test_offline_uses_elevenlabs_backend(monkeypatch) ->
     monkeypatch.setenv("ELEVENLABS_MODEL_ID", "eleven_flash_v2_5")
     monkeypatch.setenv("ELEVENLABS_LANGUAGE_CODE", "en")
     monkeypatch.setattr(
-        "cap.voice.backends.UrllibElevenLabsSynthesizer",
+        "enpire.env.forge.cap.voice.backends.UrllibElevenLabsSynthesizer",
         lambda: FakeSynthesizer(),
     )
     monkeypatch.setattr(
-        "cap.voice.backends.PygameMP3AudioPlayer",
+        "enpire.env.forge.cap.voice.backends.PygameMP3AudioPlayer",
         lambda: FakePlayer(),
     )
 

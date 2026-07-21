@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from cap.agent.tools.grasp_2d import (
+from enpire.env.forge.cap.agent.tools.grasp_2d import (
     SampleGraspPose2DTool,
     compute_segmented_cloud_height_m,
     estimate_local_tangent_from_mask,
@@ -14,7 +14,7 @@ from cap.agent.tools.grasp_2d import (
     top_down_yaw_from_world_axis,
     world_axis_from_top_down_yaw,
 )
-from cap.config import TABLE_SURFACE_Z_M
+from enpire.env.forge.cap.config import TABLE_SURFACE_Z_M
 
 
 def _top_down_camera_transform() -> np.ndarray:

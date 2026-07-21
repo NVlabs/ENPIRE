@@ -1,7 +1,7 @@
 import numpy as np
 
-from rl.config import DataCollectionConfig
-from rl.initial_pose_manager import InitialPoseManager
+from enpire.policy.rl.config import DataCollectionConfig
+from enpire.policy.rl.initial_pose_manager import InitialPoseManager
 
 
 def _cfg(tmp_path, *, enabled_sides="right", enable_oor_check=True):

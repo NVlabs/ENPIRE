@@ -16,8 +16,8 @@ from gymnasium import spaces
 
 import pytest
 
-from cap.policy.backend import PolicyBackend
-from cap.policy.inference import InferencePolicyConfig, inference_policy
+from enpire.env.forge.cap.policy.backend import PolicyBackend
+from enpire.env.forge.cap.policy.inference import InferencePolicyConfig, inference_policy
 
 # Batched path requires gr00t (for MultiStepWrapper). Skip if unavailable.
 _has_gr00t = False

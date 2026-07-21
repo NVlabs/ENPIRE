@@ -17,7 +17,7 @@ import pytest
 
 @pytest.fixture()
 def sim_backend():
-    from cap.server.sim_backend import SimBackend
+    from enpire.env.forge.cap.server.sim_backend import SimBackend
 
     backend = SimBackend(viewer=False)
     yield backend
@@ -123,7 +123,7 @@ class TestSimClientWrappers:
     """Verify SimArmClient and SimCameraClient match _ArmClient / _CameraClient interface."""
 
     def test_sim_arm_client_interface(self, sim_backend):
-        from cap.server.sim_backend import SimArmClient
+        from enpire.env.forge.cap.server.sim_backend import SimArmClient
 
         client = SimArmClient(sim_backend, "left")
 
@@ -144,7 +144,7 @@ class TestSimClientWrappers:
     def test_sim_camera_client_interface(self, sim_backend):
         import time
 
-        from cap.server.sim_backend import SimCameraClient
+        from enpire.env.forge.cap.server.sim_backend import SimCameraClient
 
         client = SimCameraClient(sim_backend, "top")
         time.sleep(0.2)  # let background render thread produce a frame
@@ -173,7 +173,7 @@ class TestConfigConstants:
     """Verify cap/config.py constants have expected shapes and values."""
 
     def test_joint_limits_shape(self):
-        from cap.config import JOINT_LIMITS_HIGH, JOINT_LIMITS_LOW
+        from enpire.env.forge.cap.config import JOINT_LIMITS_HIGH, JOINT_LIMITS_LOW
 
         assert JOINT_LIMITS_LOW.shape == (12,)  # 6 left + 6 right
         assert JOINT_LIMITS_HIGH.shape == (12,)
@@ -182,13 +182,13 @@ class TestConfigConstants:
         np.testing.assert_array_equal(JOINT_LIMITS_HIGH[:6], JOINT_LIMITS_HIGH[6:])
 
     def test_motor_gains_shape(self):
-        from cap.config import INTERP_KD, INTERP_KP
+        from enpire.env.forge.cap.config import INTERP_KD, INTERP_KP
 
         assert INTERP_KP.shape == (7,)  # 6 arm + 1 gripper
         assert INTERP_KD.shape == (7,)
 
     def test_home_state_structure(self):
-        from cap.config import HOME_JOINT_STATE
+        from enpire.env.forge.cap.config import HOME_JOINT_STATE
 
         assert set(HOME_JOINT_STATE.keys()) == {
             "left_joint_pos",
@@ -205,14 +205,14 @@ class TestConfigConstants:
             np.testing.assert_array_equal(v, np.zeros_like(v))
 
     def test_camera_names(self):
-        from cap.config import CAMERA_NAMES
+        from enpire.env.forge.cap.config import CAMERA_NAMES
 
         assert isinstance(CAMERA_NAMES, tuple)
         # Should contain top, left, right (may vary by station profile)
         assert len(CAMERA_NAMES) >= 1
 
     def test_control_frequencies(self):
-        from cap.config import (
+        from enpire.env.forge.cap.config import (
             CONTROL_FREQ_HZ,
             CONTROL_PERIOD_S,
             POLICY_FREQ_HZ,
@@ -225,7 +225,7 @@ class TestConfigConstants:
         assert abs(POLICY_PERIOD_S - 1.0 / 30.0) < 1e-10
 
     def test_gripper_range(self):
-        from cap.config import GRIPPER_MAX, GRIPPER_MIN
+        from enpire.env.forge.cap.config import GRIPPER_MAX, GRIPPER_MIN
 
         assert GRIPPER_MIN == 0.0
         assert GRIPPER_MAX == 1.0
@@ -240,7 +240,7 @@ class TestProfileEquivalence:
     """Verify robot profiles produce correct values."""
 
     def test_yam_profile_matches_config_constants(self):
-        from cap.config import (
+        from enpire.env.forge.cap.config import (
             CAMERA_NAMES,
             CONTROL_FREQ_HZ,
             GRIPPER_MAX,
@@ -252,7 +252,7 @@ class TestProfileEquivalence:
             JOINT_LIMITS_LOW,
             POLICY_FREQ_HZ,
         )
-        from cap.env.profile import yam_profile
+        from enpire.env.forge.cap.env.profile import yam_profile
 
         profile = yam_profile()
 
@@ -281,7 +281,7 @@ class TestProfileEquivalence:
         assert profile.arms["right"].ee_frame_name == "right_grasp"
 
     def test_robocasa_panda_omron_profile(self):
-        from cap.env.profile import robocasa_panda_omron_profile
+        from enpire.env.forge.cap.env.profile import robocasa_panda_omron_profile
 
         profile = robocasa_panda_omron_profile()
         assert profile.name == "panda_omron"
@@ -294,8 +294,8 @@ class TestProfileEquivalence:
         assert "top" in profile.camera_obs_key_map
 
     def test_protocol_conformance_sim_backend(self):
-        from cap.env.base import SceneProtocol, EnvProtocol
-        from cap.server.sim_backend import SimBackend
+        from enpire.env.forge.cap.env.base import SceneProtocol, EnvProtocol
+        from enpire.env.forge.cap.server.sim_backend import SimBackend
 
         backend = SimBackend(viewer=False)
         try:
@@ -327,7 +327,7 @@ class TestGetStateKeyFormat:
 
     def test_get_state_keys_and_shapes(self):
         """get_state() must return these exact keys with these exact shapes."""
-        from cap.server.cap_server import CapServer
+        from enpire.env.forge.cap.server.cap_server import CapServer
 
         # Directly check what get_state returns by setting up minimal state
         # Use the _StubServer pattern from existing tests

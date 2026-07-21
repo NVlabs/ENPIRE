@@ -1,0 +1,5 @@
+name: hello-environment
+what: Run a deterministic reset-execute-verify loop without robot hardware.
+needs: uv sync --extra dev
+time: under 5 seconds
+safety: no hardware motion

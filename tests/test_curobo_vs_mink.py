@@ -100,12 +100,12 @@ def plot_comparison(desired, ee_curobo, ee_mink, res_curobo, res_mink, title, sa
 
 def run_curobo(waypoints, rpy, side, subsample):
     """CuRobo plan_to_pose segment-by-segment (old approach)."""
-    from experimental.motion_planner_curobo import YamMotionPlannerCurobo
-    from experimental.curobo_waypoint_planner import (
+    from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
+    from enpire.env.forge.experimental.curobo_waypoint_planner import (
         densify_waypoints, interpolate_orientations, display_rpy_to_quat_xyzw,
     )
     from scipy.interpolate import CubicSpline
-    from robot.yam.kinematics import YamKinematics
+    from enpire.env.forge.robot.yam.kinematics import YamKinematics
     import time
 
     planner = YamMotionPlannerCurobo(
@@ -208,7 +208,7 @@ def run_mink(planner, waypoints, rpy, side, subsample):
 
 
 def main():
-    from experimental.curobo_waypoint_planner import CuroboWaypointPlanner
+    from enpire.env.forge.experimental.curobo_waypoint_planner import CuroboWaypointPlanner
 
     center = [0.55, -0.15]
     z = 0.82

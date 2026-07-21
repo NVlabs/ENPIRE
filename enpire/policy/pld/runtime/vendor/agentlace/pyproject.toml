@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentlace"
+version = "0.1.4"
+license = "MIT"
+dependencies = ["gym>=0.26", "lz4", "opencv-python", "pyzmq", "typing-extensions"]
+
+[tool.setuptools.packages.find]
+include = ["agentlace*"]
+namespaces = false

@@ -1,0 +1,79 @@
+# @package train
+# RLPD training configuration
+
+# Training hyperparameters
+batch_size: 256
+cta_ratio: 2
+max_steps: 1000000
+training_starts: 100
+log_period: 10
+eval_period: 1000
+obs_horizon: 1
+discount: 0.99
+
+# Model configuration
+encoder_type: "resnet-pretrained"
+setup_mode: "single-arm-continuous" # "single-arm-learned-gripper"
+teacher_setup_mode: "single-arm-learned-gripper"
+
+# Buffer settings
+buffer_period: 1000
+checkpoint_period: 2000
+warmup_episodes: 100
+steps_per_update: 50
+
+
+# Algorithm specific
+algo_name: "rlpd"
+
+# Environment interaction
+image_keys: ["3rd_view_camera"]
+proprio_keys: ["qpos", "qvel", "target_pose", "base_pose"]
+
+# Flags
+ignore_gripper: false
+ignore_base_gripper: false
+add_base_action_to_obs: false
+deactivate_rl_actor: false
+# Checkpoint settings
+save_checkpoint_path: null   # where to write new checkpoints (auto-set by system config)
+resume_checkpoint_path: null # checkpoint to load from when train.resume=true or eval_mode
+checkpoint_name: null
+eval_checkpoint_step: 0
+eval_n_trajs: 0
+
+eval_save_data: false
+eval_record_video: false
+
+dump_buffer_to_local: false
+
+# Learner disk-debug controls.
+# disk_debug_once loads disk data through the normal ingestor path, reports the
+# resulting buffer/gate state, then exits before the learner server/training loop.
+include_mc_returns: false
+disk_debug_once: false
+disk_debug_scan_passes: 1
+disk_debug_clear_ingested: false
+debug_disable_mc_returns: false
+learner_start_server: true
+
+self_bootstrapping: false
+self_bootstrapping_sr_ths: 0.55
+self_bootstrapping_length_ths: 100
+actor_buffer_capacity: 50000
+replay_buffer_capacity: 250000
+demo_buffer_capacity: 25000
+num_checkpoints_to_keep: 0
+actor: false
+actor_eval_only: false
+learner: false
+
+reward_bias: 0.0
+
+# record demo
+record_n_trajs: 10
+resume: false
+
+d0909_random_init_state: false
+d0909_random_init_state_scale: 0.0
+

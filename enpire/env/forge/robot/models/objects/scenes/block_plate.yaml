@@ -1,0 +1,17 @@
+objects:
+  - name: red_block
+    type: box
+    size: [0.025, 0.025, 0.025]
+    pos: [0.55, 0.05, 0.77]
+    quat: [0.707, 0, 0, -0.707]  # -90° yaw to match gripper home orientation
+    rgba: [0.9, 0.1, 0.1, 1.0]
+    mass: 0.01
+    friction: [1.5, 0.05, 0.01]
+
+  - name: blue_plate
+    type: box
+    size: [0.05, 0.05, 0.01]
+    pos: [0.55, -0.05, 0.77]
+    quat: [0.707, 0, 0, -0.707]  # -90° yaw to match gripper home orientation
+    rgba: [0.1, 0.2, 0.9, 1.0]
+    mass: 0.10

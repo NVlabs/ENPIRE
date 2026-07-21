@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentlace Viz</title>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  body { background: #1d232a; }
+  .card { background: #2a323c; }
+  canvas { max-height: 220px; }
+  .stat-value { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body class="min-h-screen p-4">
+
+<div class="navbar bg-base-200 rounded-box mb-4 px-4">
+  <div class="flex-1">
+    <span class="text-xl font-bold">Agentlace Viz</span>
+  </div>
+  <div class="flex-none gap-4 text-sm opacity-70">
+    <span id="status-badge" class="badge badge-error">Disconnected</span>
+    <span id="update-counter">Updates: 0</span>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+  <!-- Buffer Sizes -->
+  <div class="card shadow-lg p-4">
+    <h2 class="card-title text-sm mb-2">Buffer Sizes</h2>
+    <canvas id="chart-buffers"></canvas>
+  </div>
+
+  <!-- Episode Return -->
+  <div class="card shadow-lg p-4">
+    <h2 class="card-title text-sm mb-2">Episode Return</h2>
+    <canvas id="chart-returns"></canvas>
+  </div>
+
+  <!-- Success Rate -->
+  <div class="card shadow-lg p-4">
+    <h2 class="card-title text-sm mb-2">Success Rate</h2>
+    <canvas id="chart-success"></canvas>
+  </div>
+
+  <!-- Actions Bar Chart -->
+  <div class="card shadow-lg p-4">
+    <h2 class="card-title text-sm mb-2">Latest Actions</h2>
+    <canvas id="chart-actions"></canvas>
+  </div>
+
+  <!-- Stats Panel -->
+  <div class="card shadow-lg p-4">
+    <h2 class="card-title text-sm mb-2">Stats</h2>
+    <div class="grid grid-cols-2 gap-2 mb-3">
+      <div class="stat bg-base-300 rounded-lg p-3">
+        <div class="stat-title text-xs">Network Publishes</div>
+        <div class="stat-value text-lg" id="net-pub-count">0</div>
+      </div>
+      <div class="stat bg-base-300 rounded-lg p-3">
+        <div class="stat-title text-xs">Data Inserts</div>
+        <div class="stat-value text-lg" id="data-insert-count">0</div>
+      </div>
+    </div>
+
+    <h3 class="text-xs font-semibold mb-1 opacity-70">Timer Stats</h3>
+    <div class="overflow-x-auto max-h-[140px]">
+      <table class="table table-xs table-zebra w-full">
+        <thead><tr><th>Name</th><th>Value</th></tr></thead>
+        <tbody id="timer-tbody"></tbody>
+      </table>
+    </div>
+
+    <h3 class="text-xs font-semibold mt-3 mb-1 opacity-70">Recent Publishes</h3>
+    <div class="overflow-y-auto max-h-[100px] text-xs font-mono opacity-60" id="pub-log"></div>
+  </div>
+
+</div>
+
+<script>
+// --------------- Chart setup ---------------
+const chartOpts = (title) => ({
+  responsive: true,
+  animation: { duration: 0 },
+  plugins: { legend: { display: true, labels: { boxWidth: 12, font: { size: 11 } } } },
+  scales: {
+    x: { display: false },
+    y: { beginAtZero: true, ticks: { font: { size: 10 } } }
+  }
+});
+
+const bufferChart = new Chart(document.getElementById('chart-buffers'), {
+  type: 'line',
+  data: { labels: [], datasets: [] },
+  options: chartOpts('Buffer Sizes'),
+});
+
+const returnChart = new Chart(document.getElementById('chart-returns'), {
+  type: 'line',
+  data: { labels: [], datasets: [{ label: 'Return', data: [], borderColor: '#36d399', borderWidth: 2, pointRadius: 0, fill: false }] },
+  options: chartOpts('Episode Return'),
+});
+
+const successChart = new Chart(document.getElementById('chart-success'), {
+  type: 'line',
+  data: { labels: [], datasets: [{ label: 'Success', data: [], borderColor: '#f59e0b', borderWidth: 2, pointRadius: 0, fill: false }] },
+  options: chartOpts('Success Rate'),
+});
+
+const actionsChart = new Chart(document.getElementById('chart-actions'), {
+  type: 'bar',
+  data: { labels: [], datasets: [{ label: 'Action', data: [], backgroundColor: '#6366f1' }] },
+  options: {
+    responsive: true,
+    animation: { duration: 0 },
+    plugins: { legend: { display: false } },
+    scales: { y: { ticks: { font: { size: 10 } } } }
+  },
+});
+
+// --------------- Palette for buffer lines ---------------
+const palette = ['#3b82f6', '#f472b6', '#a78bfa', '#34d399', '#fbbf24', '#fb923c'];
+
+// --------------- SSE connection ---------------
+let updateCount = 0;
+
+function connect() {
+  const es = new EventSource('/events');
+  es.onopen = () => {
+    document.getElementById('status-badge').className = 'badge badge-success';
+    document.getElementById('status-badge').textContent = 'Connected';
+  };
+  es.onmessage = (e) => {
+    updateCount++;
+    document.getElementById('update-counter').textContent = `Updates: ${updateCount}`;
+    try { onSnapshot(JSON.parse(e.data)); } catch (err) { console.error(err); }
+  };
+  es.onerror = () => {
+    document.getElementById('status-badge').className = 'badge badge-error';
+    document.getElementById('status-badge').textContent = 'Disconnected';
+    es.close();
+    setTimeout(connect, 2000);
+  };
+}
+
+function onSnapshot(d) {
+  // --- Buffer sizes ---
+  const bufNames = Object.keys(d.buffer_sizes || {});
+  // Ensure one dataset per buffer
+  if (bufferChart.data.datasets.length !== bufNames.length) {
+    bufferChart.data.datasets = bufNames.map((name, i) => ({
+      label: name,
+      data: [],
+      borderColor: palette[i % palette.length],
+      borderWidth: 2,
+      pointRadius: 0,
+      fill: false,
+    }));
+  }
+  bufNames.forEach((name, i) => {
+    const hist = d.buffer_sizes[name].history || [];
+    bufferChart.data.datasets[i].data = hist;
+    bufferChart.data.labels = hist.map((_, j) => j);
+  });
+  bufferChart.update();
+
+  // --- Episode returns ---
+  const rets = d.episode_returns || [];
+  returnChart.data.datasets[0].data = rets;
+  returnChart.data.labels = rets.map((_, i) => i);
+  returnChart.update();
+
+  // --- Success rate ---
+  const succs = d.success_rates || [];
+  successChart.data.datasets[0].data = succs;
+  successChart.data.labels = succs.map((_, i) => i);
+  successChart.update();
+
+  // --- Actions ---
+  const acts = d.latest_actions || [];
+  actionsChart.data.datasets[0].data = acts;
+  actionsChart.data.labels = acts.map((_, i) => `a${i}`);
+  actionsChart.update();
+
+  // --- Stats ---
+  document.getElementById('net-pub-count').textContent = d.network_publish_count || 0;
+  document.getElementById('data-insert-count').textContent = d.data_insert_count || 0;
+
+  // --- Timer stats table ---
+  const tbody = document.getElementById('timer-tbody');
+  const timers = d.timer_stats || {};
+  tbody.innerHTML = Object.entries(timers)
+    .map(([k, v]) => `<tr><td>${k}</td><td>${typeof v === 'number' ? v.toFixed(4) : v}</td></tr>`)
+    .join('');
+
+  // --- Publish log ---
+  const log = d.network_publish_log || [];
+  document.getElementById('pub-log').innerHTML = log.slice(-10).reverse()
+    .map(e => {
+      const t = new Date(e.t * 1000).toLocaleTimeString();
+      return `${t} — keys: [${e.keys.join(', ')}]`;
+    }).join('<br>');
+}
+
+connect();
+</script>
+</body>
+</html>
+

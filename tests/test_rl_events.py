@@ -3,8 +3,8 @@ import time
 
 import numpy as np
 
-from rl.config import DataCollectionConfig
-from rl.events import RLEventRouter
+from enpire.policy.rl.config import DataCollectionConfig
+from enpire.policy.rl.events import RLEventRouter
 
 
 class _PoseManager:

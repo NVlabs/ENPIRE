@@ -1,0 +1,36 @@
+# @package _global_
+# Remote deployment: YAM right-arm-only PLD via Portal socket.
+#
+# The actor keeps the same PLD delta-EEF rot6d representation, but only for the
+# right arm: [dpos(3), drot6d(6), gripper(1)] = 10-D. The remote deployment env
+# converts that to right-arm EE command fields [dpos(3), dquat(4), gripper(1)]
+# before sending to Forge. Forge holds the left arm at its current joint pose.
+#
+# Quickstart:
+#   uv run scripts/pld_lite/train_delta_rlpd.py task=remote_yam_right \
+#     train.actor=True train.base_agent_type=zero
+#
+#   uv run python -m experimental.yam_control_loop \
+#     --action-horizon=20 --server-address="localhost:8964" \
+#     --control-mode=delta_ee_pose
+
+defaults:
+  - remote_yam
+  - _self_
+
+exp_name: "remote_yam_right"
+
+env:
+  control_mode: "right"
+  remote_action_dim: 10
+  image_keys: ["right_camera_image", "left_camera_image"]
+  proprio_keys: ["state_eef_rot6d"]
+  instruction: "Insert pin into the hole of the toolbox"
+
+task:
+  task_suite_name: "remote_yam_right"
+  mask_delta_rotation: true # rotation will be masked into identity rotation
+  mask_gripper: true # gripper will be masked into close gripper by default
+  gripper_mask_value: -1.0
+  max_episode_steps: 200
+

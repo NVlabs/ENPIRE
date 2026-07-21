@@ -6,9 +6,9 @@ from types import SimpleNamespace
 
 import yaml
 
-from rl.auto_eval import AutoEvalController
-from rl.config import DataCollectionConfig
-from rl.state_machine import RLStateMachine
+from enpire.policy.rl.auto_eval import AutoEvalController
+from enpire.policy.rl.config import DataCollectionConfig
+from enpire.policy.rl.state_machine import RLStateMachine
 
 
 class _Env:

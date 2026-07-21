@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from cap.agent.agent_session import AgentRunSession
+from enpire.env.forge.cap.agent.agent_session import AgentRunSession
 
 
 def _write_subprocess_artifacts(

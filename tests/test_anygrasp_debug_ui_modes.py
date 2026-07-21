@@ -5,9 +5,9 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-import tools.vision.serve_anygrasp_debug as anygrasp_debug
-from cap.agent.tools.freespace_move import FreespaceMoveTool
-from cap.agent.tools.grasp_2d import Grasp2DPlanResult, GraspCandidate
+import enpire.env.forge.tools.vision.serve_anygrasp_debug as anygrasp_debug
+from enpire.env.forge.cap.agent.tools.freespace_move import FreespaceMoveTool
+from enpire.env.forge.cap.agent.tools.grasp_2d import Grasp2DPlanResult, GraspCandidate
 
 
 class _FakeCloudViser:

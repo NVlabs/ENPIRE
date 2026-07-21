@@ -1,0 +1,12 @@
+# @package action_transform
+# Shared policy-action gain for PLD actor paths.
+#
+# The env/raw unit conversion lives in action_scaling. Actor paths first apply
+# this policy gain, then apply action_scaling before sending actions to Forge.
+
+type: "residual"
+
+# Execution-normalized action = clip(base_action + policy_action * gamma, -1, 1).
+# Default gamma=1.0 means no policy-side gain/attenuation.
+gamma: 1.0
+

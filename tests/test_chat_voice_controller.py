@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from cap.voice import ChatVoiceController
+from enpire.env.forge.cap.voice import ChatVoiceController
 
 
 class StubVoiceOutput:
@@ -18,7 +18,7 @@ class StubVoiceOutput:
         return True
 
     def get_status(self):  # noqa: ANN201
-        from cap.voice.output import VoiceStatus
+        from enpire.env.forge.cap.voice.output import VoiceStatus
 
         return VoiceStatus(enabled=self.enabled, speaking=False, last_spoken_text=self.spoken[-1] if self.spoken else "")
 

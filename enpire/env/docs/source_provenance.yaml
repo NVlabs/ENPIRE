@@ -1,0 +1,145 @@
+schema_version: 1
+policy:
+  strategy: facade-first
+  requirement: characterize existing behavior before refactoring
+  credentials_allowed: false
+
+repositories:
+  target:
+    path_hint: gear-enpire
+    branch: release
+    commit: 2b34f9d
+    license_status: pending-root-license
+
+  forge_pusht:
+    path_hint: forge
+    branch: wenlix/pusht_env
+    commit: 3cc5e899
+    license_status: pending-source-owner-review
+    include:
+      - cap/saved_scripts/place_grasped_t_reset.py
+      - cap/saved_scripts/pusht/
+      - rl/pusht/
+      - rl/pusht_runner.py
+      - tmux/realworld_rl/pusht_supervisor.py
+      - tmux/realworld_rl/rl_pusht.sh
+      - tmux/realworld_rl/tasks_config/pusht/
+
+  forge_autorl:
+    path_hint: forge
+    branch: origin/wenlix/autorl
+    commit: 4c37817d
+    license_status: pending-source-owner-review
+    include:
+      - hardware/identify_forge_rl_devices.py
+      - tmux/realworld_rl/tasks_config/pin_insertion/
+
+  forge_gpu:
+    path_hint: forge
+    branch: origin/haotian/gpu-insertion
+    commit: 682f7937
+    license_status: pending-source-owner-review
+    include:
+      - cap/saved_scripts/gpu/
+      - cap/saved_scripts/skill_library/
+      - experimental/motion_planner_curobo.py
+      - launch.py
+      - rl/
+      - robot/
+      - run_script.py
+      - rl/gpu_slot_hover.py
+      - rl/gpu_success_full_cycle.py
+      - tmux/realworld_rl/gpu_insertion_dual_full_cycle.sh
+      - tmux/realworld_rl/gpu_insertion_full_cycle.sh
+      - tmux/realworld_rl/rl_gear.sh
+      - tmux/realworld_rl/tasks_config/gpu_insertion/
+      - tools/debug/yam_gravcomp_viewer.py
+      - tools/vision/serve_anygrasp.py
+    exclude:
+      - hardware/fello_config/
+      - hardware/fleet6/
+      - hardware/yam-research-2/
+      - hardware/forge_rl_camera_aliases.json
+      - hardware/forge_rl_station.rules
+      - cap/saved_scripts/gpu/test_img.png
+      - cap/saved_scripts/gpu/test_img_bbox.json
+      - cap/saved_scripts/gpu/test_img_masked.png
+      - cap/saved_scripts/gpu/test_img_native.png
+    exclusion_reason: station identifiers and generated debug artifacts are not public source
+
+  forge_ziptie:
+    path_hint: forge
+    branch: origin/tonghe/ziptie-autorl
+    commit: 1abbfeae
+    license_status: pending-source-owner-review
+    include:
+      - cap/saved_scripts/ziptie/
+      - rl/auto_reward.py
+    reward_sources:
+      - cap/saved_scripts/ziptie/reward/
+      - cap/saved_scripts/ziptie/get_rew_rgb.py
+      - cap/saved_scripts/ziptie/get_rew_rgb_trt.py
+
+  yam_calibration:
+    path_hint: yam-calibration
+    branch: main
+    commit: 37babca
+    license_status: missing
+    include:
+      - arm_server.py
+      - calibrator.py
+      - camera.py
+      - charuco.py
+      - config.py
+      - hand_eye.py
+      - launch.py
+      - mujoco_utils.py
+      - robot.py
+      - xml_writer.py
+      - yam_controller.py
+      - base_robot_description/
+    preserve_local_changes:
+      - base_robot_description/station_fello_gripper_with_top_camera.xml
+    exclude:
+      - output/
+      - gravity_comp_two_arms.py
+    exclusion_reason: generated calibration is station-local; gravity script is superseded by Forge viewer
+
+  minimal_policy_pld:
+    path_hint: minimal_policy
+    branches:
+      - name: origin/main
+        commit: abae3de
+      - name: origin/wenlix/autorl
+        commit: 1f7378d
+      - name: origin/haotian/gpu-insertion
+        commit: cba0c0a
+      - name: autoresearch/offline/gear-yam-desktop-37/20260606-213620
+        commit: 81988f0
+    license_status: source-mit-license-copied-root-review-still-required
+    include:
+      - scripts/pld_lite/
+      - scripts/actor_gear.sh
+      - scripts/learner_gear.sh
+      - scripts/sr_rolling_window.py
+      - configs/action_scaling/
+      - configs/action_transform/
+      - configs/env/remote_deployment.yaml
+      - configs/experiment/pin_insertion_delta_eef.yaml
+      - configs/experiment/gpu_insertion_delta_eef.yaml
+      - configs/experiment/ziptie_delta_eef.yaml
+      - configs/task/remote_yam*.yaml
+      - configs/train/sac_mini.yaml
+      - serl_launcher/serl_launcher/agents/continuous/sac_mini.py
+      - serl_launcher/serl_launcher/common/
+      - serl_launcher/serl_launcher/data_andy_fix/
+      - serl_launcher/serl_launcher/env/remote_deployment_env.py
+      - serl_launcher/serl_launcher/networks/
+      - serl_launcher/serl_launcher/vision/
+      - third_party/agentlace/
+    exclude:
+      - token_usage/
+      - research_notes/
+      - third_party/Isaac-GR00T
+      - flywheel/yam_env/
+    exclusion_reason: retain only the PLD real-world actor/learner dependency closure

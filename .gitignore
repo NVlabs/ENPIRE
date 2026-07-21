@@ -18,6 +18,7 @@ videos/
 # logs
 log/
 logs/
+**/logs/
 *.log
 *.csv
 conversation/
@@ -66,6 +67,7 @@ third_party/nodejs/
 bundlesdf-5090-*.tar.gz
 .forge_env
 .forge_env.secrets
+.enpire_env
 
 # deleted third-party packages (safety net if accidentally recreated)
 third_party/contact_graspnet_pytorch/
@@ -75,7 +77,6 @@ third_party/bundlesdf.egg-info/
 
 # claude code local overrides
 .claude/settings.local.json
-uv.lock
 
 # Hydra runtime outputs
 outputs/

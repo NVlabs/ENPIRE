@@ -1,0 +1,42 @@
+# @package action_scaling
+# Legacy 16-D bimanual delta-EE quaternion action scaling for YAM.
+# Current PLD remote_yam uses yam_delta_eef_rot6d.yaml instead.
+#
+# Layout per timestep (matches forge yam_real_env.py:control_mode="delta_ee_pose"):
+#   [L_dpos(3), L_dquat_xyzw(4), L_grip(1),
+#    R_dpos(3), R_dquat_xyzw(4), R_grip(1)]
+#
+# Scales are raw command units per normalized action unit:
+#   p99(|dpos|) ≈ 0.03 m   -> scale ≈ 1/30
+#   p99(|dq_xyz|) ≈ 0.10   -> scale = 0.1
+#   p99(|dq_w|) ≈ 1.0      -> scale = 1
+#   gripper ∈ [0, 1]       -> centre via 2g-1
+# See serl_launcher.utils.tools.action_scaling_yam_delta_eef for the
+# corresponding forward/inverse implementation.
+
+enabled: true
+action_scaling_fn: serl_launcher.utils.tools.action_scaling_yam_delta_eef
+action_scaling_inv_fn: serl_launcher.utils.tools.action_scaling_yam_delta_eef_inv
+
+scales:
+  bimanual_eef:
+    pos: 0.03333333333333333
+    quat_xyz: 0.1
+    quat_w: 1.0
+    gripper: 1.0   # used only for the legacy 7-D path; the bimanual gripper
+                   # remap (2g-1) is applied unconditionally in the fn body.
+
+  # Kept so that any code path that still reads the 7-D structure (e.g. legacy
+  # tools that look at scales.eef_pose / scales.gripper) doesn't KeyError.
+  # The 16-D pipeline ignores these.
+  eef_pose:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    roll: 1.0
+    pitch: 1.0
+    yaw: 1.0
+  gripper:
+    ths: 0.5
+    sign: 1.0
+

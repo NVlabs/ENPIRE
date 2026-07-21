@@ -5,10 +5,10 @@ import threading
 import mujoco
 import numpy as np
 
-from experimental.embodiment_tags import EmbodimentTag
-from experimental.key_remapping_utils import map_observation
-from robot.yam.yam_controller import _EEF_SITE_NAME, _YAM_XML_PATH, YamRobot
-from robot.yam.mujoco_utils import MuJoCoKDL
+from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
+from enpire.env.forge.experimental.key_remapping_utils import map_observation
+from enpire.env.forge.robot.yam.yam_controller import _EEF_SITE_NAME, _YAM_XML_PATH, YamRobot
+from enpire.env.forge.robot.yam.mujoco_utils import MuJoCoKDL
 
 
 def _estimator_only_robot() -> YamRobot:

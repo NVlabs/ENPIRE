@@ -9,13 +9,13 @@ from typing import Any
 import msgpack
 import numpy as np
 
-from experimental.embodiment_tags import EmbodimentTag
-from experimental.key_remapping_utils import map_action, map_observation
-from experimental.rl_interface import PolicyAdapters, RLInterface
-from experimental.robot_interface import RobotInterface
+from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
+from enpire.env.forge.experimental.key_remapping_utils import map_action, map_observation
+from enpire.env.forge.experimental.rl_interface import PolicyAdapters, RLInterface
+from enpire.env.forge.experimental.robot_interface import RobotInterface
 
 
-SERVER_ADDRESS = "10.88.0.2:8965"
+SERVER_ADDRESS = "192.0.2.88:8965"
 TASK_NAME = "Plug the pin into the socket"
 RESOLUTION = 256
 EMBODIMENT = EmbodimentTag.XDOF_WRISTONLY

@@ -1,1 +1,0 @@
-uv run run_data_collection_knn.py --station=1 --display-image --database-path=/home/lecar/datasets/raw/2026-02-09-08-53-27-YAM-01

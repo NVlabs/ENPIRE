@@ -1,0 +1,38 @@
+# @package _global_
+
+# Main configuration for RLPD training
+defaults:
+  - train: rlpd
+  - env: remote_deployment
+  - action_scaling: null
+  - action_transform: base
+  - task: base
+  - wandb: base
+  - _self_
+  - system: local
+
+# General training settings
+seed: 42
+
+render_mode: "rgb_array"
+action_type: "joint_angle"
+ip: "localhost"
+agentlace_port_number: 8001
+agentlace_broadcast_port: 8002
+debug: false
+dev_note: ""
+no_jit: false
+
+record_demo:
+  successes_needed: 20
+
+record_success_fail:
+  successes_needed: 200
+
+run_log:
+  enabled: true
+  filename: run.log
+  errors_filename: errors.log
+  capture_stdout: true
+  capture_stderr: true
+

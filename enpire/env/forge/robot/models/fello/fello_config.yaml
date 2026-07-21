@@ -1,0 +1,88 @@
+version: 1
+description: >
+  Sign/index mapping between Fello joint order (joint_1..joint_7) and
+  YAM order [arm_joint_pos[0..5], gripper_pos]. Applies both directions.
+hardware:
+  can_interface: can0
+  motor_ids: [1, 2, 3, 4, 5, 6, 7]
+  feedback_ids: [1, 2, 3, 4, 5, 6, 7]
+  motor_types: ["3507", "4310", "4310", "3507", "3507", "3507", "3507"]
+  gravity_coefficients: [1.0, 1.00, 1.12, 1.0, 1.0, 1.0, 0.0] # TODO: update urdf instead of hardcoded hand-tuned values; gripper=0 to avoid motor fault
+  footswitch:
+    # Per-station overrides in robot/device/{station}.yaml
+    device_0: /dev/input/footswitch_0  # evdev fallback
+    device_1: /dev/input/footswitch_1
+    device_2: /dev/input/footswitch_2
+    keyboard_keys: ["[", "]", ","]
+mapping:
+  arm_index_map: [0, 1, 2, 3, 4, 5]
+  arm_sign: [1, 1, 1, -1, 1, 1]
+  # For YAM arms: 0->Gripper Close, 1->Gripper Open
+  gripper_index_map: 6
+  gripper_sign: 1 # 1->Fello gripper has same direction as YAM, -1->Fello gripper has opposite direction as YAM
+  gripper_range_rad: 0.55 # effective angle range of fello gripper
+  gripper_close_pos_rad: 0.0 # Encoder position of fello gripper when it is closed
+  gripper_force_feedback_deadband: 0.01 # Apply gripper force feedback only when |leader_gripper_pos - follower_gripper_pos| exceeds this normalized deadband
+  gripper_feedback_velocity_deadband: 0.05 # Apply gripper force feedback only when follower gripper |velocity| is below this rad/s threshold
+  force_feedback_sign: [-1, -1, -1, -1, -1, -1, 1] # Per-joint direction for mirrored YAM (joint_eff - gravity_comp); gripper sign is configured separately here
+  force_feedback_ratio: [0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.0] # Per-joint Fello feedforward torque ratio magnitude for opposing YAM (joint_eff - gravity_comp)
+  torque_calibration_csvs:
+    - robot/systemid/3507.csv  # joint_1 (3507)
+    - robot/systemid/4310.csv  # joint_2 (4310)
+    - robot/systemid/4310.csv  # joint_3 (4310)
+    - robot/systemid/3507.csv  # joint_4 (3507)
+    - robot/systemid/3507.csv  # joint_5 (3507)
+    - robot/systemid/3507.csv  # joint_6 (3507)
+    - robot/systemid/3507.csv  # joint_7 (3507)
+  torque_cal_method: lut
+torque_compensation:
+  stiction_compensation_nm:
+    joint_1: 0.0
+    joint_2: 0.0
+    joint_3: 0.0
+    joint_4: 0.00
+    joint_5: 0.0
+    joint_6: 0.0
+    joint_7: 0.0
+  stiction_deadband_nm:
+    joint_1: 0.0
+    joint_2: 0.01
+    joint_3: 0.05
+    joint_4: 0.05
+    joint_5: 0.0
+    joint_6: 0.0
+    joint_7: 0.0
+control:
+  kp: [3.0, 10.0, 10.0, 3.0, 3.0, 3.0, 1.5]
+  kd: [0.5, 1.5, 1.5, 0.5, 0.5, 0.5, 0.15]
+  # Per-joint damping used while in server gravity mode.
+  gravity_mode_kd: [0.0, 0.01, 0.01, 0.025, 0.0, 0.0, 0.05]
+  command_scale: 1
+  gripper_mode: disabled
+  gripper_spring_constant: -0.1
+  gripper_spring_rest_position: 0.7853981633974483
+  gripper_gas_spring_torque: -0.1
+server:
+  port: 11336
+  debug: false
+  debug_print_interval_s: 0.1
+  viewer: false
+  viewer_freq: 30
+  control_loop_hz: 100
+  initial_mode: gravity
+teleop:
+  host: localhost
+  side: left
+  control_mode: joint_position
+  action_type: joint
+  sim: false
+  no_viewer: false
+  attach: true
+  fello_debug: false
+  fello_visualization: false
+  use_footswitch: true
+  footswitch_device: null
+  print_interval_s: 0.1
+  print_alignment: false
+  align_interval_s: 0.005
+  align_lpf_alpha: 1

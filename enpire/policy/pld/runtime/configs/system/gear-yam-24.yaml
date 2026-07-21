@@ -1,0 +1,36 @@
+# @package _global_
+# LAN split mode:
+#   - mini-PC runs Forge/YAM control and records raw gearraw episodes.
+#   - 4090 runs learner + DiskBufferIngestor against the mounted raw-data path.
+#   - 3090 runs actor inference + Portal server.
+
+defaults:
+  - base
+  - override /task: remote_yam_right
+  - _self_
+
+ip: ${oc.env:PLD_LEARNER_HOST,localhost}
+agentlace_port_number: 1987
+agentlace_broadcast_port: 1988
+forge_handshake_url: tcp://${oc.env:PLD_FORGE_HOST,localhost}:${oc.env:PLD_FORGE_HANDSHAKE_PORT,1986}
+forge_handshake_retry_s: 5.0
+forge_handshake_max_wait_s: -1.0
+
+env:
+  remote_host: ${oc.env:PLD_ACTOR_HOST,localhost}
+  remote_port: 8965
+  remote_server_address: ${.remote_host}:${.remote_port}
+  instruction: ${oc.env:PLD_INSTRUCTION,insert pin}
+
+train:
+  save_checkpoint_path: ${oc.env:RL_DATA_PATH}/pin_insertion/pld_checkpoints/insert_pin_run_${now:%Y%m%d_%H%M%S}
+  base_agent_type: "zero"
+  encoder_type: "resnet10"
+  dinov3_ckpt_path: ${oc.env:RL_DATA_PATH}/pretrained/dinov3_vits16_pretrain_lvd1689m-08c60483.pth
+  resnet10_ckpt_path: ${oc.env:RL_DATA_PATH}/pretrained/resnet10_params.pkl
+  resnet18_ckpt_path: ${oc.env:RL_DATA_PATH}/pretrained/resnet18_imagenet1k_jax_resnet_flax.pkl
+  connect_to_learner: true
+  actor_send_online_data: false
+  actor_async_learner_stats: true
+  actor_learner_request_timeout_ms: 30000
+

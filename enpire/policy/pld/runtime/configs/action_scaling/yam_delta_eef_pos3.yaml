@@ -1,0 +1,23 @@
+# @package action_scaling
+# 3-D/6-D delta-EEF position scaling for YAM PLD.
+#
+# action_scaling is the policy-side per-dim raw-unit transform. For the
+# single-right-arm MiniSAC task, the policy action is 3-D [dx, dy, dz] in
+# normalized coordinates. The forward transform maps it to the raw delta
+# position command sent to Forge; the inverse maps recorded raw gearraw actions
+# back to normalized policy targets for the replay/demo buffers.
+
+enabled: true
+action_scaling_fn: serl_launcher.utils.tools.action_scaling_yam_delta_eef_pos3
+action_scaling_inv_fn: serl_launcher.utils.tools.action_scaling_yam_delta_eef_pos3_inv
+
+scales:
+  eef_pos:
+    # Raw meters per normalized action unit for [x, y, z].
+    # A scalar is still accepted for backward-compatible isotropic scaling.
+    pos: [0.0003, 0.0003, 0.0006]
+
+  # Kept for callers that share the bimanual YAM scaling shape.
+  bimanual_eef:
+    pos: [0.0003, 0.0003, 0.0006]
+

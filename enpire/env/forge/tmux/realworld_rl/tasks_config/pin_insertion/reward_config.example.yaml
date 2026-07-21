@@ -1,0 +1,3 @@
+# Copy outside the repository and measure this station-specific threshold.
+auto_reward_z_threshold: 0.0
+

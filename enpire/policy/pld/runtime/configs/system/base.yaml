@@ -1,0 +1,17 @@
+# @package system
+
+log_dir: "./experiments"
+demo_dir: null
+checkpoint_dir: null
+jax_cache_dir: "./.jax_cache"
+
+actor_gpu_mem_fraction: 0.3
+learner_gpu_mem_fraction: 0.8
+cuda_device_id: 0
+
+model_path:
+  octo-base: "hf://rail-berkeley/octo-base"
+  octo-small: "hf://rail-berkeley/octo-small"
+  pi0_libero: "gs://openpi-assets/checkpoints/pi0_libero"
+  pi0_aloha_sim: "gs://openpi-assets/checkpoints/pi0_aloha_sim"
+  pi0_fast_libero: "gs://openpi-assets/checkpoints/pi0_fast_libero"

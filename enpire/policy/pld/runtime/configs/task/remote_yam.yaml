@@ -1,0 +1,82 @@
+# @package _global_
+# Remote deployment: Yam bimanual robot via Portal socket (20-D delta-EE rot6d control)
+#
+# The RL actor runs as a Portal server on this machine. The Yam sim/real robot
+# (lecar-tbd yam_control_loop) connects as a client.
+#
+# Quickstart:
+#   # Terminal 1 - Learner (no env needed):
+#   uv run scripts/pld_lite/train_delta_rlpd.py task=remote_yam \
+#     train.learner=True
+#
+#   # Terminal 2 - Actor (runs Portal server):
+#   uv run scripts/pld_lite/train_delta_rlpd.py task=remote_yam \
+#     train.actor=True train.base_agent_type=zero
+#
+#   # Terminal 3 - YAM sim (lecar-tbd):
+#   uv run python -m experimental.yam_control_loop \
+#     --action-horizon=20 --server-address="localhost:8964" \
+#     --control-mode=delta_ee_pose
+
+defaults:
+  - override /train: delta_rlpd
+  - override /env: remote_deployment
+  - override /action_scaling: yam_delta_eef_rot6d
+
+# Experiment identification
+exp_name: "remote_yam"
+
+train:
+  base_agent_type: "zero"
+
+# Environment overrides.
+env:
+  env_name: "remote_deployment"
+  instruction: ""
+  remote_port: 8964
+  image_keys: ["top_camera_image", "left_camera_image", "right_camera_image"]
+  proprio_keys: ["state_eef_rot6d"]
+  remote_state_repr: "eef_rot6d"
+  remote_action_exec_horizon: 20
+  remote_action_dim: 20
+  action_repr: "delta_eef_rot6d"
+
+checkpoint_path: null
+
+task:
+  demo_file_name: null
+  demo_path: null
+  log_path: null
+  eval_demo_path: null
+  task_idx: 0
+  task_suite_name: "remote_yam"
+  classifier_data_path: null
+  classifier_ckpt_name: null
+  classifier_ckpt_path: null
+  use_classifier: false
+  eval_checkpoint_step: null
+  eval_n_trajs: 10
+  eval_record_video: false
+  eval_save_data: false
+  max_episode_steps: 200
+  octo_dataset_id: "bridge_dataset"
+
+  disk_buffer_path: ${oc.env:RL_DATA_PATH}
+  # Optional SACMini learner split:
+  #   - reuse_buffer_dirs are preloaded once before the learner opens its
+  #     training gate.
+  #   - online_data_buffer_path is watched continuously for new robot episodes.
+  reuse_buffer_dirs: []
+  online_data_buffer_path: ${oc.env:PLD_ONLINE_DATA_BUFFER_PATH,null}
+  buffer_update_freq: 30.0
+  # Avoid racing Forge/video compression: files must be stable before decode.
+  disk_buffer_min_episode_age_s: 2.0
+  unknown_to_replay: false
+  strict_source_labels: true
+  prefer_delta_eef: true
+  state_repr: "eef_rot6d"
+  action_repr: ${env.action_repr}
+  mask_delta_rotation: false
+  mask_gripper: false
+  gripper_mask_value: -1.0
+

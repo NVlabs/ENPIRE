@@ -81,8 +81,8 @@ def _install_fake_gym_wrapper() -> None:
 
 def _load_env_module():
     _install_fake_core_modules()
-    sys.modules.pop("cap.env.robocasa.env", None)
-    module = importlib.import_module("cap.env.robocasa.env")
+    sys.modules.pop("enpire.env.forge.cap.env.robocasa.env", None)
+    module = importlib.import_module("enpire.env.forge.cap.env.robocasa.env")
     return importlib.reload(module)
 
 

@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from experimental.motion_planner_curobo import YamMotionPlannerCurobo
+from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
 
 
 def test_plan_to_pose_routes_through_batch_interface() -> None:

@@ -54,7 +54,7 @@ class TestStateType(unittest.TestCase):
         # Import without triggering portal/hardware side-effects
         with patch.dict("sys.modules", {
             "portal": MagicMock(),
-            "robot.yam.kinematics": MagicMock(),
+            "enpire.env.forge.robot.yam.kinematics": MagicMock(),
         }):
             spec = importlib.util.spec_from_file_location(
                 "start_stop_play_policy",

@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 import requests
 
-from cap.agent.tools.grasp_2d import Grasp2DPlanResult, GraspCandidate
-from cap.agent.tools.grasp_anygrasp import SampleGraspPoseAnyGraspTool
+from enpire.env.forge.cap.agent.tools.grasp_2d import Grasp2DPlanResult, GraspCandidate
+from enpire.env.forge.cap.agent.tools.grasp_anygrasp import SampleGraspPoseAnyGraspTool
 
 
 def _make_tool(monkeypatch: pytest.MonkeyPatch) -> SampleGraspPoseAnyGraspTool:

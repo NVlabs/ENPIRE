@@ -1,0 +1,21 @@
+
+# @package action_scaling
+# Identity action scaling configuration (no scaling)
+
+enabled: false
+action_scaling_fn: serl_launcher.utils.tools.action_scaling
+action_scaling_inv_fn: serl_launcher.utils.tools.action_scaling_inv
+
+scales:
+  eef_pose:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    roll: 1.0
+    pitch: 1.0
+    yaw: 1.0
+
+  gripper:
+    ths: 0.5
+    sign: 1.0
+

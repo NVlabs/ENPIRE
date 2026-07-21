@@ -1,0 +1,31 @@
+# @package action_scaling
+# 20-D bimanual delta-EE 6D-rotation action scaling for YAM PLD.
+#
+# Layout per timestep:
+#   [L_dpos(3), L_drot6d(6), L_grip(1),
+#    R_dpos(3), R_drot6d(6), R_grip(1)]
+
+enabled: true
+action_scaling_fn: serl_launcher.utils.tools.action_scaling_yam_delta_eef_rot6d
+action_scaling_inv_fn: serl_launcher.utils.tools.action_scaling_yam_delta_eef_rot6d_inv
+
+scales:
+  bimanual_eef:
+    # Raw command units per normalized action unit.
+    pos: 0.006
+    # Stored rot6d is offset around identity; scaling applies to raw-offset.
+    rot6d: 0.1
+    gripper: 1.0
+
+  # Legacy keys retained for callers that read the generic 7-D structure.
+  eef_pose:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    roll: 1.0
+    pitch: 1.0
+    yaw: 1.0
+  gripper:
+    ths: 0.5
+    sign: 1.0
+

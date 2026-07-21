@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="html-devise-layout gl-light" lang="en">
+<head prefix="og: http://ogp.me/ns#">
+<meta charset="utf-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<title>Sign in · GitLab</title>
+<script>
+//<![CDATA[
+window.gon={};
+//]]>
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/assets/application-6a54b783019af16f39492a7c048d885d232d3940d8e5528940d70b6a6d2d0eb0.css" />
+<link rel="stylesheet" href="/assets/page_bundles/login-d3d6bc53e95a451be9ab770d7a515d686002ad44c6493bfac5caab63ebe9db94.css" /><link rel="stylesheet" href="/assets/page_bundles/commit_description-065c52911d70ac846b47cc0f64e7a6e0d3daadd0cd34f5788259712569dc0dc3.css" /><link rel="stylesheet" href="/assets/page_bundles/work_items-1df2eea09269b0096c89bcdeba7f775c344c607599d35c3e540bd969463a3bd4.css" /><link rel="stylesheet" href="/assets/page_bundles/notes_shared-bb04929b630340c7b337fb6bfa30ea2d10fcfe6334e1c2e804a3159fc888c146.css" />
+<link rel="stylesheet" href="/assets/application_utilities-0f64530bdd1cd7f39aa00294ccb76cb9a4a8a8d4fbe2f0f3479997820877adc1.css" />
+<link rel="stylesheet" href="/assets/tailwind-fb88381860d175aa2d6ab3bf5c4b8aaa0a7c9d8fa45d8eacb0e5051d7599ea4e.css" />
+
+
+<link rel="stylesheet" href="/assets/fonts-fae5d3f79948bd85f18b6513a025f863b19636e85b09a1492907eb4b1bb0557b.css" />
+<link rel="stylesheet" href="/assets/highlight/themes/white-4e077f818d11286ef63d2c38533b4af8666edc48a0ac7f20d4892136e219f873.css" />
+
+
+<link rel="preload" href="/assets/application_utilities-0f64530bdd1cd7f39aa00294ccb76cb9a4a8a8d4fbe2f0f3479997820877adc1.css" as="style" type="text/css">
+<link rel="preload" href="/assets/application-6a54b783019af16f39492a7c048d885d232d3940d8e5528940d70b6a6d2d0eb0.css" as="style" type="text/css">
+<link rel="preload" href="/assets/highlight/themes/white-4e077f818d11286ef63d2c38533b4af8666edc48a0ac7f20d4892136e219f873.css" as="style" type="text/css">
+
+
+
+
+<script src="/assets/webpack/runtime.39b570b0.bundle.js" defer="defer"></script>
+<script src="/assets/webpack/main.07b8f36a.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/9.c332f0f4.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/12.2b54019c.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/13.8d893045.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/commons-pages.groups.analytics.dashboards-pages.groups.analytics.dashboards.value_streams_dashboard--2bbf92b2.bcfa12d9.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/commons-pages.groups.new-pages.import.gitlab_projects.new-pages.import.manifest.new-pages.projects.n-44c6c18e.e55f118b.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/commons-pages.search.show-super_sidebar.f2dc61f1.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/super_sidebar.aa01cb06.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/commons-pages.admin.sessions-pages.sessions-pages.sessions.new-pages.subscriptions.trials-pages.subs-ae4413d3.f92ffb88.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/commons-pages.groups.sso-pages.registrations.new-pages.sessions.new-pages.trial_registrations.new.15db796f.chunk.js" defer="defer"></script>
+<script src="/assets/webpack/pages.sessions.new.ae88665b.chunk.js" defer="defer"></script>
+
+
+
+<meta content="object" property="og:type">
+<meta content="GitLab" property="og:site_name">
+<meta content="Sign in · GitLab" property="og:title">
+<meta content="NVIDIA - GitLab-Master" property="og:description">
+<meta content="https://gitlab-master.nvidia.com/assets/twitter_card-570ddb06edf56a2312253c5872489847a0f385112ddbcd71ccfa1570febab5d2.jpg" property="og:image">
+<meta content="64" property="og:image:width">
+<meta content="64" property="og:image:height">
+<meta content="https://gitlab-master.nvidia.com/users/sign_in" property="og:url">
+<meta content="summary" property="twitter:card">
+<meta content="Sign in · GitLab" property="twitter:title">
+<meta content="NVIDIA - GitLab-Master" property="twitter:description">
+<meta content="https://gitlab-master.nvidia.com/assets/twitter_card-570ddb06edf56a2312253c5872489847a0f385112ddbcd71ccfa1570febab5d2.jpg" property="twitter:image">
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="CT2goGZpQwaQ0a1AYwbEN4lNZPlIqtR0A97T36YW-xEaqg6PwVWcCWHGktKMW9ZPfC-IHbVaxfhiN6y_cjxzng" />
+<meta name="csp-nonce" />
+<meta name="action-cable-url" content="/-/cable" />
+<link href="/-/manifest.json" rel="manifest">
+<link rel="icon" type="image/png" href="/assets/favicon-72a2cad5025aa931d6ea56c3201d1f18e68a8cd39788c7c80d5b2b82aa5143ef.png" id="favicon" data-original-href="/assets/favicon-72a2cad5025aa931d6ea56c3201d1f18e68a8cd39788c7c80d5b2b82aa5143ef.png" />
+<link rel="apple-touch-icon" type="image/x-icon" href="/assets/apple-touch-icon-b049d4bc0dd9626f31db825d61880737befc7835982586d015bded10b4435460.png" />
+<link href="/search/opensearch.xml" rel="search" title="Search GitLab" type="application/opensearchdescription+xml">
+
+
+
+
+<meta content="NVIDIA - GitLab-Master" name="description">
+<meta content="#ececef" name="theme-color">
+</head>
+
+<body class="gl-h-full login-page gl-browser-generic gl-platform-other" data-page="sessions:new" data-testid="login-page">
+
+<script>
+//<![CDATA[
+gl = window.gl || {};
+gl.client = {"isGeneric":true,"isOther":true};
+
+
+//]]>
+</script>
+
+
+
+
+<div class="gl-h-full gl-flex gl-flex-wrap">
+<div class="container gl-self-center">
+<div class="content">
+<div class="flash-container flash-container-page sticky" data-testid="flash-container">
+<div id="js-global-alerts"></div>
+</div>
+
+<div class="row gl-mt-5 gl-gap-y-5">
+<div class="col-md order-12 sm-bg-gray">
+<div class="col-sm-12">
+<h1 class="gl-mb-5 gl-text-size-h2">
+NVIDIA - GitLab-Master
+</h1>
+<div id="js-custom-sign-in-description"><p data-sourcepos="1:1-1:120" dir="auto">This is the SCM Team supported Gitlab instance open to all in the company.   Use your NVIDIA SSO credentials to login.</p>&#x000A;<p data-sourcepos="3:1-3:177" dir="auto">There is no need to register for an account any longer; just login with SSO and your account will be created.  Service accounts are no longer allowed to register for an account.</p>&#x000A;<p data-sourcepos="5:1-5:45" dir="auto">Only the following credentials are supported:</p>&#x000A;<ul data-sourcepos="6:1-9:0" dir="auto">&#x000A;<li data-sourcepos="6:1-6:33">User Interface: NVIDIA SSO only</li>&#x000A;<li data-sourcepos="7:1-7:23">Git: Token or SSH Key</li>&#x000A;<li data-sourcepos="8:1-9:0">Docker (container registry): Token only</li>&#x000A;</ul>&#x000A;<p data-sourcepos="10:1-10:117" dir="auto">If you do not use the UI at least once every 3 months it will be automatically disabled.  To re-enable, simply login.</p>&#x000A;<hr data-sourcepos="12:1-12:3">&#x000A;<h1 data-sourcepos="13:1-13:24" dir="auto">&#x000A;<a id="user-content-export-control-warning" class="anchor" href="#export-control-warning" aria-hidden="true"></a>Export Control Warning</h1>&#x000A;<p data-sourcepos="15:1-15:194" dir="auto"><strong>There is no export control security built into GitLab as there is in Perforce; you <em>must not</em> store any export-controlled code, data or references in any controlled project on gitlab-master.</strong></p>&#x000A;<hr data-sourcepos="17:1-18:0">&#x000A;<p data-sourcepos="19:1-19:76" dir="auto">Find Help Here: <a href="https://confluence.nvidia.com/display/SCMU/GitLab-Master+FAQ" rel="nofollow noreferrer noopener" target="_blank">https://confluence.nvidia.com/display/SCMU/GitLab-Master+FAQ</a></p></div>
+</div>
+</div>
+<div class="col-md order-md-12">
+<div class="col-sm-12 bar">
+<div class="gl-text-center gl-mb-5">
+<img alt="NVIDIA - GitLab-Master" class="gl-invisible gl-h-10 js-portrait-logo-detection lazy" data-src="/assets/logo-911de323fa0def29aaf817fca33916653fc92f3ff31647ac41d2c39bbe243edb.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+</div>
+
+<div class="js-non-oauth-login">
+</div>
+<div class="gl-mt-3">
+By signing in you accept the <a href='/-/users/terms' target='_blank' rel='noreferrer noopener'>Terms of Use and acknowledge the Privacy Statement and Cookie Policy</a>.
+</div>
+<div class="gl-mt-5 gl-text-center gl-flex gl-flex-col gl-gap-3 js-oauth-login">
+<form class="button_to" method="post" action="/users/auth/openid_connect"><button class="gl-button btn btn-block btn-md btn-default " data-testid="oidc-login-button" type="submit"><span class="gl-button-text">
+<img alt="NVIDIA SSO" title="Sign in with NVIDIA SSO" class="gl-button-icon lazy" data-src="/assets/auth_buttons/azure_64-d8814fc511fae80fb5fb5bd930746a8711f98799c2406c99b292b17280a10c19.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+<span class="gl-button-text">
+NVIDIA SSO
+</span>
+
+</span>
+
+</button><input type="hidden" name="authenticity_token" value="MPuMVvZThcRbdhbXtfsxT-x-_mwQNWfI_-z06xj3l1wjbCJ5UW9ay6phKUVapiM3GRwSiO3FdkSeBYuLzN0f0w" autocomplete="off" /></form>
+<div class="gl-form-checkbox custom-control custom-checkbox">
+<input type="checkbox" name="js-remember-me-omniauth" id="js-remember-me-omniauth" class="custom-control-input" />
+<label class="custom-control-label" for="js-remember-me-omniauth"><span>Remember me
+</span></label>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footer-container gl-w-full gl-self-end">
+<hr class="gl-m-0">
+<div class="container gl-py-5 gl-flex gl-justify-between gl-items-start">
+<div class="gl-hidden md:gl-flex gl-gap-5 gl-flex-wrap">
+<a href="/explore">Explore</a>
+<a href="/help">Help</a>
+<a href="https://about.gitlab.com">About GitLab</a>
+<a target="_blank" class="text-nowrap" rel="noopener noreferrer" href="https://forum.gitlab.com">Community forum</a>
+</div>
+<div class="js-language-switcher" data-locales="[{&quot;value&quot;:&quot;en&quot;,&quot;percentage&quot;:100,&quot;text&quot;:&quot;English&quot;},{&quot;value&quot;:&quot;zh_TW&quot;,&quot;percentage&quot;:93,&quot;text&quot;:&quot;繁體中文 (台灣)&quot;},{&quot;value&quot;:&quot;zh_CN&quot;,&quot;percentage&quot;:93,&quot;text&quot;:&quot;简体中文&quot;},{&quot;value&quot;:&quot;ja&quot;,&quot;percentage&quot;:93,&quot;text&quot;:&quot;日本語&quot;},{&quot;value&quot;:&quot;fr&quot;,&quot;percentage&quot;:93,&quot;text&quot;:&quot;français&quot;},{&quot;value&quot;:&quot;de&quot;,&quot;percentage&quot;:93,&quot;text&quot;:&quot;Deutsch&quot;}]"></div>
+
+</div>
+</div>
+
+
+</div>
+</body>
+</html>

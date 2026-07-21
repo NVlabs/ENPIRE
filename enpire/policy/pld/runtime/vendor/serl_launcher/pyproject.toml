@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "serl-launcher"
+version = "0.1.2"
+description = "ENPIRE's source-faithful real-world SERL/PLD subset"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "absl-py",
+  "chex==0.1.90",
+  "cloudpickle",
+  "distrax==0.1.5",
+  "einops==0.8.2",
+  "flax==0.11.2",
+  "gym>=0.26",
+  "gymnasium==0.29.1",
+  "imageio",
+  "matplotlib",
+  "ml-collections",
+  "msgpack",
+  "natsort",
+  "numpy>=1.26.4,<2",
+  "optax==0.2.8",
+  "pynput",
+  "requests",
+  "scipy==1.11.4",
+  "tensorflow==2.18.1",
+  "tensorflow-probability==0.25.0",
+  "tf-keras==2.18.0",
+  "tqdm",
+  "tyro",
+  "wandb",
+]
+

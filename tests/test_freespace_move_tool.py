@@ -10,7 +10,7 @@ import pytest
 
 os.environ.setdefault("CAP_AGENT_NAME", "Mochi")
 
-from cap.agent.tools.freespace_move import FreespaceMoveTool
+from enpire.env.forge.cap.agent.tools.freespace_move import FreespaceMoveTool
 
 
 def test_infer_effective_side_freezes_other_arm_when_target_matches_current_pose() -> (
@@ -432,7 +432,7 @@ def test_single_preview_returns_cache_key_and_later_execute_reuses_it_without_re
 def test_curobo_planner_cache_ignores_diagnostic_weights(monkeypatch) -> None:
     tool = FreespaceMoveTool()
 
-    import experimental.portal_motion_planner as portal_motion_planner
+    import enpire.env.forge.experimental.portal_motion_planner as portal_motion_planner
 
     created: list[dict[str, object]] = []
 
@@ -476,7 +476,7 @@ def test_curobo_planner_cache_ignores_diagnostic_weights(monkeypatch) -> None:
 def test_curobo_planner_cache_respects_thresholds(monkeypatch) -> None:
     tool = FreespaceMoveTool()
 
-    import experimental.portal_motion_planner as portal_motion_planner
+    import enpire.env.forge.experimental.portal_motion_planner as portal_motion_planner
 
     created: list[dict[str, object]] = []
 
@@ -521,7 +521,7 @@ def test_curobo_planner_cache_respects_thresholds(monkeypatch) -> None:
 def test_curobo_planner_uses_remote_portal_env(monkeypatch) -> None:
     tool = FreespaceMoveTool()
 
-    import experimental.portal_motion_planner as portal_motion_planner
+    import enpire.env.forge.experimental.portal_motion_planner as portal_motion_planner
 
     created: list[dict[str, object]] = []
 

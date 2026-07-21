@@ -2,8 +2,8 @@ import json
 
 from fastapi.testclient import TestClient
 
-from cap.agent.tools import ToolRegistry
-from cap.agent.tools.base import Tool, ToolParameter, ToolResult
+from enpire.env.forge.cap.agent.tools import ToolRegistry
+from enpire.env.forge.cap.agent.tools.base import Tool, ToolParameter, ToolResult
 
 
 class _DummyVisualizer:
@@ -88,7 +88,7 @@ class _FakeGetRobotStateTool(Tool):
 
 
 def test_freespace_move_failure_broadcasts_runtime_error(monkeypatch):
-    import cap.agent.cap_agent as cap_agent_module
+    import enpire.env.forge.cap.agent.cap_agent as cap_agent_module
 
     registry = ToolRegistry()
     registry.register(_FakeFreespaceMoveTool())
@@ -133,7 +133,7 @@ def test_freespace_move_failure_broadcasts_runtime_error(monkeypatch):
 
 
 def test_execute_auto_releases_estop(monkeypatch):
-    import cap.agent.cap_agent as cap_agent_module
+    import enpire.env.forge.cap.agent.cap_agent as cap_agent_module
 
     client_stub = _FakePortalClient()
     registry = ToolRegistry()

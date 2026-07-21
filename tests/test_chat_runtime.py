@@ -4,8 +4,8 @@ import json
 
 from fastapi.testclient import TestClient
 
-from cap.chat.runtime import ChatSession, ChatTurnSink, create_chat_app
-from cap.voice.output import VoiceStatus
+from enpire.env.forge.cap.chat.runtime import ChatSession, ChatTurnSink, create_chat_app
+from enpire.env.forge.cap.voice.output import VoiceStatus
 
 
 class StubChatVoice:
