@@ -1197,7 +1197,7 @@ def main(cfg: EvalConfig) -> None:
     # Debug: record converted joint actions during delta_ee_pose replay
     # so we can compare them against the original joint-space parquet.
     _DEBUG_PARQUET_PATH = Path(
-        "/home/lecar/Project/data/yam/CutterBuxJointConvertedFromEEDeltaPose_000000.parquet"
+        "data/yam/CutterBuxJointConvertedFromEEDeltaPose_000000.parquet"
     )
     _debug_actions: list[np.ndarray] = []  # 14D post-IK joint actions
     _debug_states: list[np.ndarray] = []  # 14D pre-step observation state

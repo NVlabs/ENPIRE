@@ -3,7 +3,7 @@
 
 Examples:
   # Neural network depth estimation + realtime rgb streaming
-  uv run python3 /home/lecar/Project/lecar-tbd/tools/vision/zed2i_depth.py --show --frames 0
+  uv run python3 tools/vision/zed2i_depth.py --show --frames 0
   # Official pointcloud:
   uv run python3 "/usr/local/zed/samples/depth sensing/depth sensing/python/depth_sensing.py"
 

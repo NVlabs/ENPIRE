@@ -18,6 +18,7 @@ videos/
 # logs
 log/
 logs/
+**/logs/
 *.log
 *.csv
 conversation/

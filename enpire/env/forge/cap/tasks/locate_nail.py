@@ -19,16 +19,7 @@ import numpy as np
 from PIL import Image
 
 
-INPUT_IMAGE_PATHS = [
-    Path(
-        "/home/lecar/Project/lecar-tbd/logs/nail_bussing_20260426T170248/"
-        "vis/170306_capture_wrist_cam_raw_left_round1_nail1.png"
-    ),
-    Path(
-        "/home/lecar/Project/lecar-tbd/logs/nail_bussing_20260426T170248/"
-        "vis/170417_capture_wrist_cam_raw_left_round2_nail1.png"
-    ),
-]
+INPUT_IMAGE_PATHS: list[Path] = []  # populate with local test images to run standalone
 
 DEFAULT_REWARD_BACKEND = "nvidia"
 DEFAULT_REWARD_MODEL = "gcp/google/gemini-3.1-pro-preview"

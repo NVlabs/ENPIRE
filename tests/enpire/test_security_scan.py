@@ -47,7 +47,7 @@ def _text_files() -> list[Path]:
             for path in root.rglob("*")
             if path.is_file()
             and not any(
-                part in {"__pycache__", ".venv", ".ruff_cache", "vendor"}
+                part in {"__pycache__", ".venv", ".ruff_cache", "vendor", "logs"}
                 for part in path.parts
             )
         )
