@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Script runner backends — robot-specific exec context, recording, and post-exec.
 
 The backend class is selected by the ``robot:`` Hydra config group:

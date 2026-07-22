@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Canonical right-arm hover pose for the GPU insertion task.
 
 Single source of truth for where the right arm (the motherboard-fixture holder)

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """DINOv3 Vision Transformer in Flax/JAX.
 
 Numerically equivalent port of the PyTorch DINOv3 ViT.

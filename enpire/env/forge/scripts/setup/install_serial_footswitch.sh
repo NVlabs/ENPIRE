@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Install udev rule for the Waveshare RP2040-Zero 3-button serial footswitch.
 #
 # Creates a stable symlink at /dev/serial-footswitch and grants rw access

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # planner_world.py — shared planner world refresh helpers
 from skill_library.namespace import *  # noqa: F401, F403
 

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """CAP Server — CONTROL_FREQ_HZ control loop that owns all hardware communication.
 
 Exposes Portal RPC methods for the agent/tool layer to call:

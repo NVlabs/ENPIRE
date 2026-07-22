@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Inference policy tool — run a VLA policy in an environment.
 
 Wraps cap.policy.inference_policy() as a CAP agent tool.

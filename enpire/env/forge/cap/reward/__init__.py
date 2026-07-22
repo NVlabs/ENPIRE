@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """enpire.env.forge.cap.reward — two layers share this package.
 
 - **RL reward servers** (``gemini_reward``, ``smolvlm_reward``,

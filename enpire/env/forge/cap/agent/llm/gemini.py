@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Gemini LLM backend using the google-genai SDK.
 
 Direct access to Google's Gemini models via ``generativelanguage.googleapis.com``.

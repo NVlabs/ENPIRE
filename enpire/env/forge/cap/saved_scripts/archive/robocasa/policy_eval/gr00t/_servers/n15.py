@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Standalone ZMQ server for GR00T N1.5 model.
 
 The benchmark repo embeds the server inside run_eval.py. This script

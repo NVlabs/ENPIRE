@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Convert forge gearraw episodes to PLD-Lite demo .pkl files.
 
 Forge's data-collection pipeline (`launch.py --mode=data_collection --use-fello` →

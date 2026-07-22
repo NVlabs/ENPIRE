@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # arm_motion.py — shared arm motion helpers for RoboCasa skill library
 from skill_library.namespace import *  # noqa: F401, F403
 

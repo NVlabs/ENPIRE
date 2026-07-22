@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Smoke test for the NVIDIA inference-gateway LLM backend.
 
 Verifies that ``cap.agent.llm.NvidiaLLM`` can talk to

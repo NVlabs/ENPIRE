@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # scrubbing_motion.py — sweep a grasped sponge across a cutting board surface
 from skill_library.namespace import *  # noqa: F401, F403
 

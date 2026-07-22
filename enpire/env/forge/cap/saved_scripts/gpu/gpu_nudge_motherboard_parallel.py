@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Nudge the motherboard until its long/bottom edge is parallel to the table edge.
 
 Minimal top-camera-first utility for real YAM.  It segments the motherboard

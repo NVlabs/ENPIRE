@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Launch arm servers and run all three camera calibrations in sequence.
 
 Faithful port of yam-calibration/launch.py into the ENPIRE repo.

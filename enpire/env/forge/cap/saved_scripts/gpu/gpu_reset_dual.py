@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reset both inserted GPUs in one run_script process.
 
 Runs slot 3 first, then slot 1, using the existing gpu_reset.py primitive for

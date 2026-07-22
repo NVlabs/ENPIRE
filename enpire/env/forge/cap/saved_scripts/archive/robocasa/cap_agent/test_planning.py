@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Test planning: pick and place using oracle object/place positions + AnyGrasp.
 #
 # Uses get_task_info() for oracle obj_pos and container_pos (no VLM for detection).

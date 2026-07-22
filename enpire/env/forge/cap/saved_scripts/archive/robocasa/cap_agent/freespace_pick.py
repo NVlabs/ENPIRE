@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Pick up an object in RoboCasa using freespace_move with remote cuRobo
 # (batch_size=1 single-target planning, fast solver config).
 #

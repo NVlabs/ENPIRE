@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Rich live dashboard for ``run_script.py``.
 
 Renders a tool-call-centric view while a generated / saved script runs:

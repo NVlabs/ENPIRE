@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 Pipe method is a simple way to send data from one process to another.
 Different to ReqRep, pipe doesnt require a response from the receiver.

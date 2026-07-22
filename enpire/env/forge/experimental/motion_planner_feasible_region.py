@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Helpers for visualizing the motion planner's feasible region.
 
 This module scans a dense XYZ grid with fixed per-arm orientation, stores the

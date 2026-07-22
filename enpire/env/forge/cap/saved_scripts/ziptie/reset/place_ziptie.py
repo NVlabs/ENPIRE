@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Place the plugged-in ziptie into the white box, then home.
 
 Loaded by ziptie/reset/flat.py via load_module(); call place_ziptie(holding, other, PLAN).

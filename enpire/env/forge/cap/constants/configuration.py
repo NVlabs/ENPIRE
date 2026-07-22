@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Canonical orientation constants + display-RPY ↔ quaternion conversion.
 
 Moved out of cap/constants/planning.py on 2026-05-20 so planning.py stays focused

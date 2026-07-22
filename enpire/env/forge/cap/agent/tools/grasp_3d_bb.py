@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """3D bounding-box grasp planning tool for the CAP agent.
 
 Uses RANSAC plane fitting on the segmented object point cloud to compute an

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Shared constants and utilities for GR00T N1.6 eval scripts.
 
 All external paths are configured via environment variables.  Set them in

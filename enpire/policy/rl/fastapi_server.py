@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """HTTP control surface for the RL runner.
 
 POST ``/home``, ``/pause``, ``/restart``, and ``/resume`` let an autonomous research driver

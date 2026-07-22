@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Giving ziptie reward (flat mode only!) in realtime.
 This script first transports both arms to the moment we start plugging ziptie in,
 waits for 5 seconds, and then starts computing reward at the given video fps.

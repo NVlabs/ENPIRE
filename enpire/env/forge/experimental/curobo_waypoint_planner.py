@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Offline waypoint trajectory planner: fast IK + cubic spline + CuRobo collision.
 
 Given Cartesian waypoints (xyz) with start/end orientations:

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Convert the actions in a parquet file from joint space to delta EE pose space.
 
 This script reads a LeRobotDataset parquet file with 14D joint actions and

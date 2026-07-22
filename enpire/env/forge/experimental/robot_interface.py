@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Lightweight RobotInterface wrapper for ACT policies.
 
 This simplified version loads a .pt checkpoint (TorchScript or pickled Module)

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reset {ZIPTIE_COLOR}-ziptie head: loop grasp + classify (distinguish.py); middle-top → flat.py,
 same-side → side.py, else lift LIFT_M + release + restart. Bounded by MAX_ATTEMPTS."""
 import time, cv2, threading, numpy as np

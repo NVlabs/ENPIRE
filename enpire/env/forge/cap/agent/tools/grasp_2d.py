@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Top-down 2D grasp planning tool for the CAP agent.
 
 This planner uses only a SAM3 segmentation mask plus camera intrinsics/extrinsics

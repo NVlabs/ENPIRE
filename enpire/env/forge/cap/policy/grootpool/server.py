@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """grootpool server — asyncio ROUTER loop + supervisor + admin.
 
 Run on OSMO inside the ``Isaac-GR00T-benchmark/model_server_venv`` (torch + gr00t)

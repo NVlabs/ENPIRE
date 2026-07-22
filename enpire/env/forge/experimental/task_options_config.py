@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 TASK_OPTIONS = ["cutter_buss_01", "cutter_buss_02"]
 
 TASK_DATA_PATHS = {

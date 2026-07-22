@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Shared constants and utilities for RoboCasa365 benchmark eval scripts.
 
 Separate from _common.py to avoid conflicts with the PandaOmron24 pipeline.

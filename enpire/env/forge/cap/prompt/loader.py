@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Index-based prompt memory backed by markdown files on disk.
 
 PromptMemory manages the ``cap/prompt/`` directory tree.  It scans subfolders

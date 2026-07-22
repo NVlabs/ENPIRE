@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # sink_spout_rotation.py — rotate the sink spout to left/center/right while polling success
 from skill_library.namespace import *  # noqa: F401, F403
 

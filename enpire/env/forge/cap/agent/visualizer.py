@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Viser-based 3D visualizer for the CAP agent.
 
 Shows the YAM robot station with live joint positions and detection markers.

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Visualization helpers for ziptie reward: per-cam overlays and merged composition."""
 import threading
 from datetime import datetime

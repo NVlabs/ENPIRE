@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Single-joint rotation tool with clipping and smooth keypoint trajectory. 
 Unlike IK related motion generatin, this is directly using joint control and thus will not fail. 
 Mathematical trajectory construction

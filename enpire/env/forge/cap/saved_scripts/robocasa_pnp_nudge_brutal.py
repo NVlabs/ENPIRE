@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Pick-and-place with nudge_brutal for sink escape.
 
 Identical to the iter_002 assembly that scored 4/8, with one change:

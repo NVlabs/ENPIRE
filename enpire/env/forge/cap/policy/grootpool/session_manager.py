@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Per-request dispatcher — stateless replacement for the old session manager.
 
 Old design: open() pins a worker for an entire episode (sticky session).

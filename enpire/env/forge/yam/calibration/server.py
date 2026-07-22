@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Six-axis calibration arm server, adapted from yam-calibration/arm_server.py."""
 
 from __future__ import annotations

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Regression test for the subprocess-mode reflection bug.
 
 Reproduces the bug observed on iter_000 of logs/20260419T065553_agent_Pick_up_the_object_from_the_sink_and_pla:

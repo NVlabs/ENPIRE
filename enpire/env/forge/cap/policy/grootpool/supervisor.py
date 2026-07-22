@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Worker supervisor — spawn, health-check, and respawn GR00T workers.
 
 For N1.5 we reuse ``cap/saved_scripts/robocasa/policy_eval/gr00t/_servers/n15.py``

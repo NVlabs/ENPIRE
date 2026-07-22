@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # pick_place_sink_to_counter — text reflection (skill_reflection disabled)
 SESSION="${TMUX_SESSION:-osmo-eval}"
 WINDOW="sink_counter_text"

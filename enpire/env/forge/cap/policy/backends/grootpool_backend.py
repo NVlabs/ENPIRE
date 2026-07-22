@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """PolicyBackend adapter for grootpool — carries obs-spec metadata.
 
 Extends ``cap.policy.grootpool.backend.GrootpoolBackend`` with class-level

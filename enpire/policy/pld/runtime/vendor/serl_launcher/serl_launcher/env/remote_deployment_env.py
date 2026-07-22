@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Remote Deployment Environment - ZMQ REP SERVER for RL data collection.
 
 Speaks the raw-style msgpack REQ/REP protocol that

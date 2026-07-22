@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """LLM token-usage tracking: per-call records, JSONL sink, and in-memory accumulation."""
 
 from __future__ import annotations

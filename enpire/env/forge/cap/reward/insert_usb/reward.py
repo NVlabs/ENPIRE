@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reward function: detects whether the configured USB drive is inserted.
 
 Returns 1.0 if USB_DRIVE_NAME is currently mounted, 0.0 otherwise.

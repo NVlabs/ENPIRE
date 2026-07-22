@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # thin_object_insertion.py — insert a thin grasped object (straw) into a narrow opening (cup mouth)
 from skill_library.namespace import *  # noqa: F401, F403
 

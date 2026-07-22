@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Real-time 6-DOF object tracking via BundleSDF.
 
 Wraps the ``tools/vision/serve_bundlesdf.py`` HTTP API so that the CAP agent (or

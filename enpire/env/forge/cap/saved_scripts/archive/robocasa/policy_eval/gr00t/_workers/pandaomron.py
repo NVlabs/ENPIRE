@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Client-side eval loop using inference_policy() interface.
 
 Runs in the robocasa_uv venv (for GrootRoboCasaEnv) with

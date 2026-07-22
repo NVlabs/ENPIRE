@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # from ._online_planning import solve_online_planning as solve_online_planning
 from ._solve_ik import solve_ik as solve_ik
 from ._solve_ik_vel_cost import solve_ik as solve_ik_vel_cost  # noqa: F401

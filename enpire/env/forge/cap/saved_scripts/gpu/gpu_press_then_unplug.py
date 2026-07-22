@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Press a successfully inserted GPU, then run the existing GPU unplug reset.
 
 This script is intended for the opt-in RL full-cycle launcher.  It assumes the

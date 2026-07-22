@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Follow a 3D Cartesian waypoint trajectory via mink IK + cubic spline.
 
 Thin CAP tool wrapper around experimental.curobo_waypoint_planner.

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Thin Portal RPC server wrapping RoboCasaEnv.
 
 Exposes the same RPC interface as CapServer so tools like

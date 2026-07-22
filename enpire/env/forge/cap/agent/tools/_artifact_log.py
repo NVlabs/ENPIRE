@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Official logging tool: save visual artifacts (annotated images, masks) from tool calls to the run log.
 
 Usage from any tool module::

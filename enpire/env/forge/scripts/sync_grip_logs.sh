@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Sync HIL gripper debug logs from <robot-host> to local Mac Mini.
 # Usage: ./scripts/sync_grip_logs.sh
 # Ctrl-C to stop.

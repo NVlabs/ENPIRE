@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Shared helper + single source of truth for the ziptie-handover ("hover") pose.
 
 The 4 macros below (LEFT/RIGHT x POS/RPY) are the ONE place the handover pose lives.

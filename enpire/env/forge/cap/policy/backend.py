@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Policy backend protocol — abstract interface to any VLA model server.
 
 A backend wraps one model endpoint. It receives a raw env observation,

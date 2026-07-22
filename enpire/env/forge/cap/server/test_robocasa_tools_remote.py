@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """End-to-end test: CAP agent tools against RoboCasa env with remote vision servers.
 
 Uses the same SSH-tunnel pattern as launch_table_bussing_remote.sh:

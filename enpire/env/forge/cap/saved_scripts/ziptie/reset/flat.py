@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import time, cv2, numpy as np
 from scipy.spatial.transform import Rotation
 from enpire.env.forge.cap.agent.tools._artifact_log import log_mask

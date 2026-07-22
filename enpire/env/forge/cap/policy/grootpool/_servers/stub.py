@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stub GR00T server — speaks the N1.5 torch-over-ZMQ protocol, returns zeros.
 
 Only requires ``torch`` + ``pyzmq``; no ``gr00t`` / ``flash-attn`` / GPU. Used by

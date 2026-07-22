@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """CAP Environment Layer — robot and simulation drivers.
 
 This package provides the env layer of CAP's 4-layer architecture::

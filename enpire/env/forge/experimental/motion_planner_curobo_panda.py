@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """cuRobo motion planner for single-arm Franka Panda (7-DOF).
 
 Simplified version of ``motion_planner_curobo.YamMotionPlannerCurobo`` for

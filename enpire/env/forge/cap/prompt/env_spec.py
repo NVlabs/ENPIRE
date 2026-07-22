@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Load per-environment tool API specs.
 
 Embodiment specs live as markdown files in ``cap/prompt/embodiment/``.

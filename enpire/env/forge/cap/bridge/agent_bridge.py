@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Generic CAP agent bridge with switchable Claude Code and OpenAI Codex backends."""
 
 from __future__ import annotations
