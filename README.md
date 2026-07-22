@@ -1,62 +1,141 @@
-# ENPIRE
+# ENPIRE: Agentic Robot Policy Self-Improvement in the Real World
 
-**Reset → execute → verify → record → refine.**
+<p align="center">
+  <img src="assets/main_figure.png" alt="ENPIRE overview" width="100%">
+</p>
 
-ENPIRE is a harness for repeatable robot policy improvement.  Two research
-modes are supported and can coexist on the same station:
+ENPIRE is a research harness for autonomous robot policy improvement on real hardware.
+An LLM agent proposes hypotheses, writes or edits policy code, runs trials on the
+physical robot, reads the outcome, and iterates — all without human intervention
+between trials.
 
-| Mode | Policy | What auto-research edits | Example tasks |
-|------|--------|--------------------------|---------------|
-| **CaP (heuristic)** | Python script calling robot tools | `cap/saved_scripts/<task>/` + `skill_library/` | cube-pick, push-T, GPU insertion, zip-tie |
-| **PLD (neural)** | JAX actor trained by SERL/HIL-SERL | `enpire/policy/pld/` + reward config | pin-insertion |
+The loop is: **reset → execute → verify → record → refine.**
 
-> **Agent / LLM users:** read `.codex/README.md` for full setup and
-> auto-research instructions.  `enpire/env/docs/NEW_TASK.md` explains how to
-> add a new task and launch auto-research on it.  Read `AGENTS.md` for
-> implementation rules.
+---
+
+## Highlights
+
+- **Code-as-Policy (CaP)** — the policy is Python. The agent edits skill scripts and
+  re-runs them; success is measured by a vision or contact heuristic the agent cannot modify.
+- **Online RL (PLD)** — a JAX actor trained live by SERL/HIL-SERL on real robot data.
+  The agent tunes hyperparameters and reward shaping between trial budgets.
+- **Both modes on the same station** — CaP and PLD tasks share the YAM arm, cameras,
+  and calibration infrastructure.
+- **One-command calibration** — `enpire station calibrate-all` launches arm servers,
+  runs all three ChArUco/hand-eye sequences in tmux, and writes the calibrated XML.
+- **Agent-readable** — `.codex/README.md` is a self-contained onboarding file;
+  an agent given only the repo URL can install, calibrate, and run auto-research
+  end-to-end.
+
+### Demonstrated tasks
+
+| Task | Mode | Policy |
+|------|------|--------|
+| GPU insertion | CaP | `cap/saved_scripts/gpu/` |
+| Pin insertion | PLD (online RL) | `enpire/policy/pld/` |
+| Push-T | CaP | `cap/saved_scripts/pusht/` |
+| Zip-tie cutting | CaP | `cap/saved_scripts/ziptie/` |
+| Cube pick | CaP | `cap/saved_scripts/examples/pick_cube.py` |
 
 ---
 
 ## Install
 
-Requires Python 3.11, [uv](https://docs.astral.sh/uv/), Linux x86-64, tmux.
+**Requirements:** Python 3.11, [uv](https://docs.astral.sh/uv/), Linux x86-64, tmux.
 
 ```bash
-git clone https://github.com/DarthUtopian/gear-enpire.git
-cd gear-enpire
-uv sync --extra dev                  # hardware-free baseline
-```
+git clone https://github.com/NVlabs/ENPIRE.git
+cd ENPIRE
 
-Full real-robot stack:
+# Hardware-free baseline (simulation + tests)
+uv sync --extra dev
 
-```bash
+# Full real-robot stack
 uv sync --extra dev --extra cap --extra vision --extra vision-local \
         --extra grasping-local --extra planning --extra planning-local \
         --extra control-yam --extra camera-realsense --extra calibration \
         --extra real-rl
 
-uv sync --project enpire/policy/pld/runtime --extra dev   # JAX learner/actor
+# JAX PLD learner/actor (isolated environment)
+uv sync --project enpire/policy/pld/runtime --extra dev
 ```
 
-Verify:
+Run the hardware-free hello-world to verify the install:
 
 ```bash
-uv run enpire --version && uv run enpire doctor && uv run enpire tools list
-uv run pytest -q tests/enpire && uv run ruff check enpire tests/enpire
+uv run enpire examples run 00_hello_environment
 ```
+
+Full installation notes: [`enpire/env/docs/INSTALL.md`](enpire/env/docs/INSTALL.md)
 
 ---
 
-## Station setup (one-time)
+## Station setup
+
+One-time setup per physical station (YAM arms + cameras):
 
 ```bash
 export ENPIRE_YAM_MODEL_ROOT=/path/to/yam-model-assets
-uv run enpire station init --station my-yam
-uv run enpire station register --station my-yam
+
+uv run enpire station init     --station my-yam
+uv run enpire station register --station my-yam   # detects CAN/USB serials
 uv run enpire station calibrate-all \
   --station my-yam \
   --output-xml /path/outside/repo/station_calibrated.xml \
   --confirm-motion
+```
+
+The `calibrate-all` command starts both arm servers automatically in a tmux
+session, runs the intrinsic → extrinsic → hand-eye sequence, and writes the
+calibrated MuJoCo XML to the path you specify.
+
+---
+
+## Running tasks
+
+### Start services (perception + arm servers)
+
+```bash
+uv run enpire services start --profile cap-real          # AnyGrasp, cameras
+uv run enpire services start --profile robot \
+  --station my-yam --confirm-motion                      # YAM arm servers
+```
+
+### Code-as-Policy tasks
+
+```bash
+uv run enpire cap run cube-pick    --station my-yam --confirm-motion
+uv run enpire cap run gpu-handover --station my-yam --confirm-motion
+uv run enpire cap run gpu-reset    --station my-yam --confirm-motion
+uv run enpire cap run ziptie-reset --station my-yam --confirm-motion
+```
+
+### Push-T (CaP auto-research)
+
+```bash
+export RL_DATA_PATH=/path/outside/repo/rl-data
+
+# Supervisor runs the CaP reset script in a loop and records per-trial results
+bash tmux/realworld_rl/rl_pusht.sh --station my-yam --use-spacemouse
+
+# Score a completed run
+uv run enpire rl score --data-dir "$RL_DATA_PATH/<run-id>" --window 50 --plot
+```
+
+### Pin insertion (PLD online RL)
+
+```bash
+export RL_DATA_PATH=/path/outside/repo/rl-data
+export ENPIRE_YAM_STATION=my-yam
+
+uv run enpire rl control health
+uv run enpire rl control pause   --confirm-control
+uv run enpire rl control restart --confirm-control        # → prints run_dir
+uv run enpire rl learner --task pin_insertion             # terminal 1
+uv run enpire rl actor   --task pin_insertion             # terminal 2
+bash tmux/realworld_rl/rl_gear.sh \
+  --task pin_insertion --station my-yam --use-spacemouse  # terminal 3
+uv run enpire rl control resume  --confirm-control
 ```
 
 ---
@@ -64,97 +143,34 @@ uv run enpire station calibrate-all \
 ## Repository layout
 
 ```
-cap/saved_scripts/
-├── skill_library/          shared robot tools (freespace_move, grasp, detect, …)
-├── pusht/                  push-T CaP skills (reset_t_skill.py)
-├── gpu/                    GPU insertion CaP scripts
-├── ziptie/                 zip-tie CaP scripts
-└── place_grasped_t_reset.py  push-T full reset policy (primary CaP script)
-
-enpire/
-├── env/
-│   ├── forge/              runtime, tool registry, YAM station, CaP runner
-│   ├── examples/           learning path + task capsules (example.yaml + main.py)
-│   └── docs/
-│       ├── NEW_TASK.md          ← how to add a task and launch auto-research
-│       ├── REAL_WORLD_WORKFLOWS.md
-│       ├── INSTALL.md
-│       └── DEPENDENCIES.md
-└── policy/
-    ├── autoresearch_instruction.md   PLD auto-research safety contract
-    ├── interface.py                  code/learned policy contract
-    └── pld/                          JAX actor/learner (isolated runtime)
-
-tmux/realworld_rl/          robot-side supervisors and RL launchers
-third_party/                vendored: cuRobo, PyRoki, i2rt, robocasa
+ENPIRE/
+├── assets/                   figures for this README
+├── cap/saved_scripts/
+│   ├── skill_library/        shared robot tools (freespace_move, grasp, detect …)
+│   ├── pusht/                push-T CaP skills
+│   ├── gpu/                  GPU insertion scripts
+│   └── ziptie/               zip-tie scripts
+├── enpire/
+│   ├── env/
+│   │   ├── forge/            runtime, tool registry, YAM station, CaP runner
+│   │   ├── examples/         learning path + task capsules
+│   │   └── docs/             INSTALL.md, REAL_WORLD_WORKFLOWS.md, NEW_TASK.md
+│   └── policy/
+│       ├── pld/              JAX PLD actor/learner (isolated runtime)
+│       └── autoresearch_instruction.md
+├── tmux/realworld_rl/        supervisors and RL launchers
+├── third_party/              vendored: cuRobo, PyRoki, i2rt, robocasa
+├── .codex/README.md          agent onboarding (full setup + auto-research)
+└── AGENTS.md                 coding-agent implementation rules
 ```
 
 ---
 
-## CaP auto-research — push-T
+## Adding a new task / launching auto-research
 
-Push-T is a heuristic (CaP) task.  The "policy" is `place_grasped_t_reset.py`
-and the skills in `cap/saved_scripts/pusht/`.  Auto-research means an LLM
-agent edits those scripts and re-runs them; the supervisor measures success
-via a vision heuristic (red-T mask match score).
-
-```bash
-export RL_DATA_PATH=/path/outside/repo/rl-data
-
-# Start AnyGrasp and arm servers first (see services setup in .codex/README.md)
-
-# Run the push-T supervisor — it calls the reset script in a loop,
-# measures success automatically, and records per-trial results.
-bash tmux/realworld_rl/rl_pusht.sh --station my-yam --use-spacemouse
-
-# Score a completed run
-uv run enpire rl score \
-  --data-dir /path/outside/repo/rl-data/<run-id> --window 50 --plot
-```
-
-The agent edits `cap/saved_scripts/pusht/reset_t_skill.py` (detection and
-motion primitives) or `place_grasped_t_reset.py` (sequencing).  The verifier
-(`reset_ok_v1`) must not be changed between trials.
-
-For the complete CaP auto-research loop and new-task setup, see
-`enpire/env/docs/NEW_TASK.md`.
-
----
-
-## PLD auto-research — pin insertion
-
-```bash
-export RL_DATA_PATH=/path/outside/repo/rl-data
-export ENPIRE_YAM_STATION=my-yam
-
-uv run enpire rl control health
-uv run enpire rl control pause --confirm-control
-uv run enpire rl control restart --confirm-control   # prints run_dir=...
-uv run enpire rl learner --task pin_insertion        # terminal 1
-uv run enpire rl actor  --task pin_insertion         # terminal 2
-bash tmux/realworld_rl/rl_gear.sh \
-  --task pin_insertion --station my-yam --use-spacemouse   # terminal 3
-uv run enpire rl control resume --confirm-control
-# at trial budget:
-uv run enpire rl control pause --confirm-control
-uv run enpire rl score \
-  --data-dir /path/outside/repo/rl-data/<run-id> --window 50 --plot
-```
-
----
-
-## Other CaP tasks
-
-```bash
-# Start services first
-uv run enpire services start --profile cap-real
-uv run enpire services start --profile robot --station my-yam --confirm-motion
-
-uv run enpire cap run cube-pick      --station my-yam --confirm-motion
-uv run enpire cap run gpu-handover   --station my-yam --confirm-motion
-uv run enpire cap run gpu-reset      --station my-yam --confirm-motion
-uv run enpire cap run ziptie-reset   --station my-yam --confirm-motion
-```
+See [`enpire/env/docs/NEW_TASK.md`](enpire/env/docs/NEW_TASK.md) for the
+complete guide: environment contract, file templates, per-iteration loop,
+allowed edit surface, and pre-live checklist.
 
 ---
 
@@ -165,14 +181,26 @@ uv run pytest -q tests/enpire
 uv run ruff check enpire tests/enpire
 ```
 
-Consult `enpire/env/docs/source_provenance.yaml` before moving migrated Forge
-code.  Add a characterization test before refactoring existing behavior.
+Consult `enpire/env/docs/source_provenance.yaml` before moving code migrated
+from upstream Forge branches.  Add a characterization test before refactoring.
 
 ---
 
-## Safety
+## License
 
-- Never put API keys, device serials, calibration results, or checkpoints in Git.
-- Never start robot motion without `--confirm-motion` / `--confirm-control`.
-- The verifier, reset, and score implementations are read-only to a research agent.
-- See `SECURITY.md` and `enpire/policy/autoresearch_instruction.md`.
+Copyright (c) 2025, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Licensed under the [Apache License 2.0](LICENSE).
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for third-party attributions.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions must be signed off
+under the Developer Certificate of Origin and licensed under Apache-2.0.
+
+## Security
+
+To report a security vulnerability, visit
+[https://www.nvidia.com/en-us/security/](https://www.nvidia.com/en-us/security/).
+See [SECURITY.md](SECURITY.md) for credential and hardware safety rules.
