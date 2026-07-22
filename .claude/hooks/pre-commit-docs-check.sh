@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Pre-commit hook: enforce Rule 6 — docs must be updated alongside code changes.
 # Called by Claude Code PreToolUse hook before git commit.
 # Exit 0 = allow commit, exit 1 = block with message.

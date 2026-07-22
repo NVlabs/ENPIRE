@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Nudge tool — apply a small delta EE pose to one arm.
 
 Composes a position offset and/or rotation offset with the current

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """GR00T Pool — stateless multi-worker inference middleware.
 
 N1.5 panda_omron is stateless (observation_indices=[0]).

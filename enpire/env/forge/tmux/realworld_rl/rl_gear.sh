@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 source "$(dirname "$0")/assert_env_var.sh" || exit 1
 RL_TASK_NAME="${RL_TASK_NAME:-pin_insertion}"
 PREPARE_GPU="${GPU_RL_PREPARE:-auto}"

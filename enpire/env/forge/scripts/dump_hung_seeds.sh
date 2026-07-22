@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Waits for run_script.py subprocesses to appear, sleeps past the env.reset
 # window, then dumps every subprocess's Python stack with py-spy.
 #

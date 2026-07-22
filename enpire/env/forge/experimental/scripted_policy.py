@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Scripted policy for interactive EE control via Viser UI.
 
 Controlled entirely through the Viser web panel — no CLI / keyboard input.

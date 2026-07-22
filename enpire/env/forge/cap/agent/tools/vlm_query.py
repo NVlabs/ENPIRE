@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Unified VLM query tool — agent-loop adapter on top of the VLM transport.
 
 Backend routing lives in :mod:`cap.agent.tools.vlm` (one registry, one

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """DiskBufferIngestor — load gearraw episodes into PLD's live replay/demo buffers.
 
 This is the **read-side** half of the PLD ↔ forge integration. Forge's existing

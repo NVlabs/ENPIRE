@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """TRT-backed variant of _compute_rew_rgb.py with tunable post-SAM3 thresholds.
 
 Two responsibilities:

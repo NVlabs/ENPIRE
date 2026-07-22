@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Evaluate GR00T on the RoboCasa365 benchmark (atomic_seen / composite_seen / composite_unseen).
 
 Supports both GR00T N1.5 (official benchmark) and N1.6 on the 50-task eval suite.

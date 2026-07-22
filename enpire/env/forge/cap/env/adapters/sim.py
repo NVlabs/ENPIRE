@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Sim adapters: wrap an EnvProtocol backend as CapServer arm/camera clients.
 
 These are drop-in replacements for the real hardware _ArmClient and _CameraClient

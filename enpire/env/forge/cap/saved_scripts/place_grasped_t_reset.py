@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reset the PushT T to the recorded reset pose from the beginning.
 
 Sequence: locate -> hover -> descend -> grasp -> lift -> move above reset ->

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Run a RoboCasa365 task with GR00T inference routed through grootpool.
 
 Minimal entry point to prove the pipeline end-to-end:

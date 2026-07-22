@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Offline language-command control dataset generator for the YAM bimanual robot.
 
 Generates (language_command, action_trajectory) pairs **entirely offline** —

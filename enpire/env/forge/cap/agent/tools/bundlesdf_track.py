@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """BundleSDF multi-object tracking tools wrapping tools/vision/serve_bundlesdf.py via HTTP.
 
 Four tools map directly to the new multi-session API:

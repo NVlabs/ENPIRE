@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Test remote vision stack (SAM3 + AnyGrasp) + remote cuRobo for RoboCasa pick-and-place.
 #
 # Uses AnyGrasp (via remote SAM3 segmentation) to get grasp candidates,

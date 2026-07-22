@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Turn on a microwave in RoboCasa.
 # Run with: uv run run_script.py --file robocasa_turn_on_microwave.py --env robocasa:TurnOnMicrowave
 #

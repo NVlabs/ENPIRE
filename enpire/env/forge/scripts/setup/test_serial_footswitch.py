@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Interactive test for the serial 3-button footswitch (Waveshare RP2040-Zero).
 
 Reads one serial button board and shows which raw button index fires on each press.

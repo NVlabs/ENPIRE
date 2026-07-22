@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Shared RGB+depth+intrinsics+extrinsics fetch for grasp tools.
 
 Centralizes the env-direct vs portal-RPC dispatch that was previously copy-

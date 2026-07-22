@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Skill execution tools — run a learned policy via cap_server.
 
 The actual policy inference loop runs inside cap_server (it takes over the

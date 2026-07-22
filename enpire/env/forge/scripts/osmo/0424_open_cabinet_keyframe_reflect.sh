@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # rc_open_cabinet — keyframe reflection (skill_reflection enabled)
 SESSION="${TMUX_SESSION:-osmo-eval}"
 WINDOW="cabinet_kf"

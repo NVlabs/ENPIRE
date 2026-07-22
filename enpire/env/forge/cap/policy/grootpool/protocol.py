@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Wire protocol — grootpool middleware (stateless request/response).
 
 N1.5 panda_omron uses observation_indices=[0] (current frame only, no

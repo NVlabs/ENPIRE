@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # under_water_holding.py — hold a grasped object under the faucet stream until success
 from skill_library.namespace import *  # noqa: F401, F403
 

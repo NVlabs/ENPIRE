@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """SAM3 text-prompted segmentation tool.
 
 Fetches camera image from cap_server via Portal RPC or loads from a local file,

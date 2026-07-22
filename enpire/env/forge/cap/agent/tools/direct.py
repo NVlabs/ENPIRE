@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Direct tool callables that bypass Portal RPC for the CAP server.
 
 ``make_direct_callables(server, registry)`` returns a dict of Python callables

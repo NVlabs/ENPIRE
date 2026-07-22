@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Per-tool profiling logs aggregated across iterations and exec seeds.
 
 Creates one JSON per tool under ``{run_dir}/tool_log/``, accumulating call

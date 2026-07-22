@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Demo: pick up an object in RoboCasa using CAP tools.
 
 Uses the same tool calls the LLM agent would generate:

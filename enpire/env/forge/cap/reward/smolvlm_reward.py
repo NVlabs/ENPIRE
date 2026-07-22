@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reward function: uses locally served SmolVLM to judge task completion.
 
 Sends camera images plus the task description to a vLLM-hosted SmolVLM model

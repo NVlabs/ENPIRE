@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Detection tools for BundleSDF-based object localization and tracking.
 
 This module also exports the SAM3 segment + filter + top-1 helpers that

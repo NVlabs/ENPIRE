@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Standalone ziptie SAM3 prompt strings — the single source shared by _compute_rew_rgb.py and
 _visualize_rew.py. Pure literals with NO load_module / imports of the reward modules, so neither has to
 load the other just for the prompts (that formed a circular load: _compute_rew_rgb -> _visualize_rew ->

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Episodic skill library for a single agent run.
 
 Manages the per-run skill library stored under ``{run_dir}/skill_library/``.

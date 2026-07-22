@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-refactor regression tests for CAP server and sim backend.
 
 These tests capture the golden baseline behavior of the sim backend and

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Test: verify CAP agent tools work through cap_server for the RoboCasa env.
 
 Checks get_robot_state, get_camera_image/depth/intrinsics/extrinsics,

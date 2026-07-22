@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """RoboCasa365 environment for CAP.
 
 Wraps a RoboCasa/robosuite environment and implements EnvProtocol,

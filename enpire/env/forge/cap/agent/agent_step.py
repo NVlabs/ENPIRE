@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Built-in pipeline steps for the CAP agent system.
 
 Each step reads from and writes to an AgentContext.  Compose them into an

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Zero-overhead UDP diagnostics emitter (bc_policy copy).
 
 Fire-and-forget: if no dashboard is listening, packets are silently dropped.

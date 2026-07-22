@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # One-command setup for GR00T N1.5 policy pool on OSMO.
 #
 # Idempotent — safe to re-run. Skips steps already done.

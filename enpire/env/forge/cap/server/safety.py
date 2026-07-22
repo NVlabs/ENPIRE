@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Safety module for the CAP server — e-stop and task-aware EE safety zones.
 
 The safety zone is defined per-arm as a set of keyposes (7D: pos + quat_xyzw).

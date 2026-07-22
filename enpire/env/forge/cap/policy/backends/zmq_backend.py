@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """ZMQ policy backend — connects to an Isaac-GR00T–style ZMQ server.
 
 The *server* (Gr00tSimPolicyWrapper) handles all model-specific logic:

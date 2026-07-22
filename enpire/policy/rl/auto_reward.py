@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Generic async reward worker + episode truncator for RL data collection with
 DELAYED, AUTONOMOUS, reward feedback.
 

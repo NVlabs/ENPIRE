@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # stove_knob_detection.py - TurnOffStove vision detection and target selection
 from skill_library.namespace import *  # noqa: F401, F403
 

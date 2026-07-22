@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Oracle reward evaluator — attributes failure to specific sub-predicates.
 
 Design principles (see docs/REWARD_MODULE.md):

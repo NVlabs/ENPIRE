@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Safety zone tools — set/clear/query task-aware EE safety zones on cap_server.
 
 The LLM agent uses these before launching RL training to restrict the

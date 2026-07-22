@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Evaluate GR00T N1.6 on PandaOmron tasks via inference_policy(). (GR00TN1.5 currently not supported yet)
 
 Launches one model server per GPU, splits tasks evenly across GPUs,

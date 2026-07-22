@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Build tool namespace for RoboCasa agent runs — no CapServer needed.
 
 Provides the same callable signatures and return types as

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Pick up an object in RoboCasa using cuRobo motion planning.
 #
 # Uses ground-truth object position from get_task_info() — no vision needed.

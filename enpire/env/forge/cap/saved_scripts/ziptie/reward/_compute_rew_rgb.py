@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 from concurrent.futures import ThreadPoolExecutor
 from scipy import ndimage as _ndimage
 import numpy as np

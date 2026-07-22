@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage-1 of the two-stage code generator: author new skills to the library.
 
 Reads:  ctx.task, ctx.session._skill_library, ctx.task_info, ctx.robot_state,

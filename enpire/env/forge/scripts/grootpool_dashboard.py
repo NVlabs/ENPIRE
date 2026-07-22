@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Live rich TUI dashboard for the grootpool middleware.
 
 Polls GET /status every --interval seconds and renders a full-screen panel

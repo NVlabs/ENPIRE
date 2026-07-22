@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reward function: uses Gemini VLM to judge whether a task has been completed.
 
 Sends all available camera images (top, left, right) plus the task description

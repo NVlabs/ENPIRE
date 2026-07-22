@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Giving ziptie reward (flat mode only!) in realtime.
 This script does not contain the hovering setup, and directly starts computing
 reward at the given video fps. Flat mode only — ziptie faces upward on the

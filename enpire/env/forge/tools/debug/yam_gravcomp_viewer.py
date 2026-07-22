@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Start YAM follower arm(s) in gravity compensation and show live state.
 
 This launches ``robot/yam/arm_server.py`` for the selected follower arm(s),

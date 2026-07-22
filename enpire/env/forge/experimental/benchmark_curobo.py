@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Benchmark cuRobo planning speed and reachable workspace.
 
 This script evaluates the current cuRobo integration in two ways:

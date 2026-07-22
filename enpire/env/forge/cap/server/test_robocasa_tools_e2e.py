@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """End-to-end test: CAP agent tools against RoboCasa env.
 
 Tests the full tool → cap_server → env pipeline for:

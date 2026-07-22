@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Oracle pick-and-place demo for RoboCasa, runnable directly via run_script.py.
 #
 # IMPORTANT: run_script.py builds the tool namespace with runtime_role="script",

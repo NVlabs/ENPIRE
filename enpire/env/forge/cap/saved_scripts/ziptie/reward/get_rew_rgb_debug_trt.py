@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """TRT-backed mirror of get_rew_rgb_debug.py.
 
 Only difference: load_module target is _compute_rew_rgb_trt.py (which redirects

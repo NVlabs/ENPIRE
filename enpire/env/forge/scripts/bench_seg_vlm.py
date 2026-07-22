@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Benchmark: seg+VLM (Gemini 3 Flash) vs direct VLM (Gemini 3 Pro with thinking).
 
 Iterates over labeled samples in a benchmark directory structured as:

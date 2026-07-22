@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Grasp tool — approach, grasp, and lift an object in one call.
 
 Encapsulates the proven grasp patterns from oracle scripts:

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Client-side eval loop for RoboCasa365 benchmark tasks.
 
 Uses robocasa365 gym envs (robocasa/{TaskName}) with split support.

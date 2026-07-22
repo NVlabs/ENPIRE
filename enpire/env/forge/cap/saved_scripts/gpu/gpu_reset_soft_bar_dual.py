@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Reset both inserted GPUs using the soft-bar unplug primitive.
 
 Runs slot 3 first, then slot 1, using `gpu_reset_soft_bar.py` for each slot.

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Scene object listing tool — uses Qwen3-VL to enumerate objects visible in the scene.
 
 Captures the top camera image, sends it to the remote Qwen3-VL model, and

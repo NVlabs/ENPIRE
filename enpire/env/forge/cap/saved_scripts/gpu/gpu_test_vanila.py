@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
 from skill_library.namespace import go_home
 from skill_library.pick_place import pick_and_place

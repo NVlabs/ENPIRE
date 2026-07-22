@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """MCP server exposing read-only robot tools to Claude Code.
 
 Runs as a stdio MCP server. Claude Code connects to it via mcp_config.json.

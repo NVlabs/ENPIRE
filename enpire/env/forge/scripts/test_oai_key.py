@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Quick smoke test for NVIDIA's OpenAI-compatible inference gateway.
 
 Defaults to the Claude Opus 4.7 model string used elsewhere in this repo and

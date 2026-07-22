@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """MuJoCo Warp simulation backend for the YAM station (--env yam-warp).
 
 GPU-accelerated physics (MuJoCo Warp) with ray-traced rendering via NVIDIA

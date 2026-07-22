@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Smoke test for image understanding via the NVIDIA inference gateway.
 
 Sends one image + one text question to an OpenAI-compatible vision model

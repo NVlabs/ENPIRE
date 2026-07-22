@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Comprehensive motion planner test suite for the YAM bimanual robot.
 
 Procedurally generates ~1000 test cases by systematically scanning the

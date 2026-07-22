@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Hybrid pick-place: skill-based pre-positioning → GR00T VLA for the rest.
 
 Phase 1 (skills): detect object, move arm above it, open gripper.

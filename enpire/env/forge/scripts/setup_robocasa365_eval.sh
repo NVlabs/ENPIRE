@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # One-command setup for RoboCasa365 benchmark eval on OSMO.
 #
 # Idempotent - safe to re-run. This script:

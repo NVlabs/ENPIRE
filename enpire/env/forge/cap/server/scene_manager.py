@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Scene management — YAML loading and MjSpec object injection.
 
 Scenes are defined as YAML files in ``robot/models/objects/scenes/``.

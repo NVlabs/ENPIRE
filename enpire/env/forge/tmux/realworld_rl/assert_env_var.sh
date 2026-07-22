@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Source this script to ensure RL_DATA_PATH and RL_KEYBOARD_DEVICE are set.
 # If already set, this is a no-op. Otherwise prompt / auto-detect and
 # persist the new value to ~/.bashrc.

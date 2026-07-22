@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Thin HTTP client for the pyroki IK / trajopt service.
 
 Mirrors cap-x's ``capx/integrations/motion/pyroki.py`` (MIT). The server is

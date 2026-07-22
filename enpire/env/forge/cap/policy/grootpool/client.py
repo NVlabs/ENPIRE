@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stateless client for the grootpool middleware.
 
 N1.5 with panda_omron uses observation_indices=[0] — one frame in,

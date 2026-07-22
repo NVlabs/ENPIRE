@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 """Evaluate VLM grasp alignment check on labeled saved camera images.
 
 Iterates over logs/saved_cams/true/ (aligned) and logs/saved_cams/false/ (misaligned),

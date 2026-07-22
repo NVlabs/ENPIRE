@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 import json, urllib.parse as up, webbrowser, os, numpy as np
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
