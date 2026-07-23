@@ -26,7 +26,6 @@ from dataclasses import dataclass, field
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -339,7 +338,7 @@ def run_tests(quick: bool = False) -> None:
             warned.append(tc.name)
         else:
             tag = "FAIL"
-            detail = f"Planning_Failed"
+            detail = "Planning_Failed"
             n_fail += 1
             failed.append((tc.name, detail))
 
@@ -362,7 +361,7 @@ def run_tests(quick: bool = False) -> None:
     print(f"  FAIL: {n_fail:4d}/{total}  ({100*n_fail/total:.1f}%)")
     print(f"  WARN: {n_warn:4d}/{total}  ({100*n_warn/total:.1f}%)  (IK unreachable)")
 
-    print(f"\n  Per-category breakdown:")
+    print("\n  Per-category breakdown:")
     for t_tag in sorted(tag_stats):
         s = tag_stats[t_tag]
         cat_total = s["pass"] + s["fail"] + s["warn"]

@@ -4,22 +4,20 @@
 from __future__ import annotations
 
 import ast
-from contextlib import contextmanager
 import os
-from pathlib import Path
 import sys
 import types
-from typing import Any
 import urllib.error
 import urllib.request
+from contextlib import contextmanager
+from typing import Any
 
 import numpy as np
 
-from enpire.env.forge.paths import FORGE_ROOT
 from enpire.env.forge.cap.agent.tools.base import ArmState, RobotState
 from enpire.env.forge.cap.agent.tools.segmentation import SegmentObjectTool
+from enpire.env.forge.paths import FORGE_ROOT
 from enpire.env.forge.robot.yam.kinematics import _quat_xyzw_to_rpy_display
-
 
 DEFAULT_REAL_YAM_SAM3_HOST = "127.0.0.1"
 DEFAULT_REAL_YAM_SAM3_PORT = 6767

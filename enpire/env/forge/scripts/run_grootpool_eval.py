@@ -83,8 +83,8 @@ def main() -> int:
     log_dir = Path(args.log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
 
-    from enpire.env.forge.cap.policy.grootpool.backend import GrootpoolBackend
     from enpire.env.forge.cap.policy import InferencePolicyConfig, inference_policy
+    from enpire.env.forge.cap.policy.grootpool.backend import GrootpoolBackend
 
     env_fn = _env_factory(args.env_name, split=args.split, adapter_n16=False)
 

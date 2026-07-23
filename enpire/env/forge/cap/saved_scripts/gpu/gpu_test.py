@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from math import dist
+
 from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
 from skill_library.namespace import detect_objects_oneshot, get_robot_state, go_home
 from skill_library.pick_place import pick_and_place

@@ -15,6 +15,5 @@ if str(REPO_ROOT) not in sys.path:
 
 from enpire.env.forge.tools.vision.serve_anygrasp_debug import main
 
-
 if __name__ == "__main__":
     main()

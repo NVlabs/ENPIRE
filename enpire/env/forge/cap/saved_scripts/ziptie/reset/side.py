@@ -2,9 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import time
+
 from skill_library.constants.robot import LEFT_HOME_XYZ
 from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
-from skill_library.namespace import close_gripper, freespace_move, go_home, open_gripper, rotate_joint
+from skill_library.namespace import (
+    close_gripper,
+    freespace_move,
+    go_home,
+    open_gripper,
+    rotate_joint,
+)
 from skill_library.pick import go_birdeye, pick_object
 
 OBJECT_NAME = "white strip"

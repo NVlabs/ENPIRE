@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import boto3
-from gear.common import get_s3_credentials_from_file
 import tyro
+from gear.common import get_s3_credentials_from_file
 
 
 def get_s3_bucket(bucket_name: str):

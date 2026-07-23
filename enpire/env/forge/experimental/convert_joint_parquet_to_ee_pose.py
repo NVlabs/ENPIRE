@@ -8,8 +8,8 @@ converts them to 16D ee_pose actions using forward kinematics.
 """
 
 import argparse
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd

@@ -11,9 +11,8 @@ the slot-specific soft-bar defaults.
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import traceback
-
+from pathlib import Path
 
 RESET_SCRIPT = Path.cwd() / "cap" / "saved_scripts" / "gpu" / "gpu_reset_soft_bar.py"
 SCRIPT_COMPLETED = False

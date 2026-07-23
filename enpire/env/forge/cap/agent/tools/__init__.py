@@ -14,8 +14,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from enpire.env.forge.cap.agent.tools.base import Tool, ToolResult
-
 # Re-export data types for convenience
 from enpire.env.forge.cap.agent.tools.base import (  # noqa: F401
     Detection3D,
@@ -25,7 +23,9 @@ from enpire.env.forge.cap.agent.tools.base import (  # noqa: F401
     RobotState,
     SegmentationResult,
     SkillResult,
+    Tool,
     ToolParameter,
+    ToolResult,
 )
 
 
@@ -108,9 +108,21 @@ def create_default_registry(
     sam3_port: int | None = None,
 ) -> ToolRegistry:
     """Build a registry with all built-in tools configured for the given endpoints."""
-    from enpire.env.forge.cap.config import CAP_SERVER_PORT, DETECTION_SERVER_PORT
-    from enpire.env.forge.cap.config import BUNDLESDF_SERVER_HOST, BUNDLESDF_SERVER_PORT
-    from enpire.env.forge.cap.config import SAM3_SERVER_HOST, SAM3_SERVER_PORT
+    from enpire.env.forge.cap.agent.tools.bundlesdf_track import (
+        AddDetectionTool,
+        EndDetectionTool,
+        GetDetectionTool,
+        ListDetectionsTool,
+    )
+    from enpire.env.forge.cap.agent.tools.detection import (
+        DetectObjectsOneshotTool,
+        DetectObjectTool,
+    )
+    from enpire.env.forge.cap.agent.tools.freespace_move import FreespaceMoveTool
+    from enpire.env.forge.cap.agent.tools.grasp import GraspTool, PlaceTool
+    from enpire.env.forge.cap.agent.tools.grasp_2d import SampleGraspPose2DTool
+    from enpire.env.forge.cap.agent.tools.grasp_3d_bb import SampleGraspPose3DBBoxTool
+    from enpire.env.forge.cap.agent.tools.grasp_anygrasp import SampleGraspPoseAnyGraspTool
     from enpire.env.forge.cap.agent.tools.native import (
         ClearTableTool,
         CloseGripperTool,
@@ -124,48 +136,47 @@ def create_default_registry(
         MoveJointKeypointsTool,
         OpenGripperFastTool,
         OpenGripperTool,
+        SetBodyPoseTool,
         SetGripperTool,
         SetupRewardTool,
-        SetBodyPoseTool,
         SetupSceneTool,
     )
-    from enpire.env.forge.cap.agent.tools.detection import DetectObjectTool, DetectObjectsOneshotTool
-    from enpire.env.forge.cap.agent.tools.skill import ExecuteSkillTool, LearnSkillTool
-    from enpire.env.forge.cap.agent.tools.vlm_query import VlmQueryTool
-    from enpire.env.forge.cap.agent.tools.bundlesdf_track import (
-        AddDetectionTool,
-        EndDetectionTool,
-        GetDetectionTool,
-        ListDetectionsTool,
-    )
-    from enpire.env.forge.cap.agent.tools.safety import (
-        SetSafetyZoneTool,
-        ClearSafetyZoneTool,
-        GetSafetyZoneTool,
-    )
-    from enpire.env.forge.cap.agent.tools.save_image import SaveImageTool
+    from enpire.env.forge.cap.agent.tools.nudge import NudgeTool
     from enpire.env.forge.cap.agent.tools.object_tracking import (
         GetObjectPoseTool,
         StopTrackingTool,
         TrackObjectTool,
         _TrackingContext,
     )
-    from enpire.env.forge.cap.agent.tools.freespace_move import FreespaceMoveTool
-    from enpire.env.forge.cap.agent.tools.pyroki_final_approach import PyrokiFinalApproachTool
-    from enpire.env.forge.cap.agent.tools.rotate_joint import RotateJointTool
-    from enpire.env.forge.cap.agent.tools.nudge import NudgeTool
-    from enpire.env.forge.cap.agent.tools.grasp import GraspTool, PlaceTool
     from enpire.env.forge.cap.agent.tools.policy_output import (
         StartPolicyOutputTool,
         StepPolicyOutputTool,
         StopPolicyOutputTool,
         UsePolicyOutputTool,
     )
+    from enpire.env.forge.cap.agent.tools.pyroki_final_approach import PyrokiFinalApproachTool
+    from enpire.env.forge.cap.agent.tools.rotate_joint import RotateJointTool
+    from enpire.env.forge.cap.agent.tools.safety import (
+        ClearSafetyZoneTool,
+        GetSafetyZoneTool,
+        SetSafetyZoneTool,
+    )
+    from enpire.env.forge.cap.agent.tools.save_image import SaveImageTool
     from enpire.env.forge.cap.agent.tools.scene_objects import ListSceneObjectsTool
-    from enpire.env.forge.cap.agent.tools.segmentation import SegmentAllObjectsTool, SegmentObjectTool
-    from enpire.env.forge.cap.agent.tools.grasp_anygrasp import SampleGraspPoseAnyGraspTool
-    from enpire.env.forge.cap.agent.tools.grasp_2d import SampleGraspPose2DTool
-    from enpire.env.forge.cap.agent.tools.grasp_3d_bb import SampleGraspPose3DBBoxTool
+    from enpire.env.forge.cap.agent.tools.segmentation import (
+        SegmentAllObjectsTool,
+        SegmentObjectTool,
+    )
+    from enpire.env.forge.cap.agent.tools.skill import ExecuteSkillTool, LearnSkillTool
+    from enpire.env.forge.cap.agent.tools.vlm_query import VlmQueryTool
+    from enpire.env.forge.cap.config import (
+        BUNDLESDF_SERVER_HOST,
+        BUNDLESDF_SERVER_PORT,
+        CAP_SERVER_PORT,
+        DETECTION_SERVER_PORT,
+        SAM3_SERVER_HOST,
+        SAM3_SERVER_PORT,
+    )
 
     srv_port = cap_server_port or CAP_SERVER_PORT
     det_port = detection_port or DETECTION_SERVER_PORT

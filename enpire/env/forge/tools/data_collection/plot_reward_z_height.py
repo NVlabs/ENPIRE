@@ -4,7 +4,10 @@
 
 import argparse,json,os; from pathlib import Path
 import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt; import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
+
+
 def episodes(p):
     p=Path(p).expanduser(); return [p] if (p/"action-source.json").exists() else [x for x in sorted(p.iterdir()) if (x/"action-source.json").exists()]
 def seg_ends(src):

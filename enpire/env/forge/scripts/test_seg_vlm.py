@@ -131,6 +131,7 @@ def main():
     cameras = {}
     if args.live:
         import portal
+
         from enpire.env.forge.cap.config import CAP_SERVER_PORT
         client = portal.Client(f"localhost:{CAP_SERVER_PORT}")
         for cam in ("top", "left"):
@@ -217,7 +218,7 @@ def main():
     ]
 
     print(f"\n{'='*60}")
-    print(f"BENCHMARK")
+    print("BENCHMARK")
     print(f"{'='*60}")
 
     for label, prompt, images, vlm_fn in methods:

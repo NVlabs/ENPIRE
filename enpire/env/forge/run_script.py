@@ -22,6 +22,7 @@ Usage::
 
 from __future__ import annotations
 
+import builtins
 import io
 import json
 import os
@@ -29,7 +30,6 @@ import socket
 import subprocess
 import sys
 import traceback
-import builtins
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -146,6 +146,7 @@ def _setup_skill_reflection(cfg, sr_cfg, namespace: dict, log_dir: Path):
     """Register a before/after hook on the SkillRegistry that fires an async
     Gemini query after each @skill call, capturing debug keyframes."""
     from concurrent.futures import ThreadPoolExecutor
+
     from enpire.env.forge.cap.agent.skill_registry import SkillRegistry
 
     cameras: list[str] = list(sr_cfg.cameras) if sr_cfg.cameras else ["top", "wrist"]

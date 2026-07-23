@@ -1,24 +1,26 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from dataclasses import dataclass
-from datetime import datetime
 import json
-from pathlib import Path
+import multiprocessing as mp
 import queue
 import shutil
 import socket
 import tempfile
 import threading
 import time
-from typing import Any
 import uuid
 import warnings
-import multiprocessing as mp
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
 import gymnasium as gym
 import numpy as np
-from enpire.env.forge.tools.data_collection.async_video_compression import _video_worker_loop
+
 from enpire.env.forge.robot.constants import DEFAULT_COMPRESSED_VIDEO_SHAPE
+from enpire.env.forge.tools.data_collection.async_video_compression import _video_worker_loop
 
 
 @dataclass
@@ -654,9 +656,8 @@ class RecordEpisodeWrapper(gym.Wrapper):
 
 
 def main():
-    from gymnasium.envs.registration import register
-
     from groot.control.envs.yam.yam_sim_env import SimDummyPolicy
+    from gymnasium.envs.registration import register
 
     # Environment
     register(id="YamSim-v0", entry_point="groot.control.envs.yam.yam_sim_env:YamSimEnv")

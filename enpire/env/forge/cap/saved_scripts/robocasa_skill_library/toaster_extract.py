@@ -3,7 +3,9 @@
 
 # toaster_extract.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
+
 from enpire.env.forge.cap.agent.skill_registry import skill
+
 
 @skill
 def toaster_extract_v1(side, place_pos, extract_distances=(0.10, 0.14, 0.18), rise=0.02,
@@ -86,6 +88,7 @@ def toaster_lever_press_v1(
     Returns ``(pressed, info)``.
     """
     import time as _time
+
     import numpy as np
 
     lever_pos = np.asarray(lever_pos, dtype=float)

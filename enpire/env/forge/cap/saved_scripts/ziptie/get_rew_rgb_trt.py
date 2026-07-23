@@ -34,15 +34,20 @@ Pre-launch the TRT-backed SAM3 server on :6868 (see the sam3only_onnx
 launch script).
 """
 
-import os, subprocess, threading, time
+import os
+import subprocess
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
+
 import numpy as np
+from skill_library.namespace import get_camera_image
+
 import enpire.env.forge.cap.agent.tools._artifact_log as _al
 from enpire.env.forge.cap.agent.tools._artifact_log import render_pool_stats
-from skill_library.namespace import get_camera_image
 
 # Pull functions AND shared constants from the TRT variant — flips SAM3_URL to :6868.
 _compute_rew_func = load_module("ziptie/reward/_compute_rew_rgb_trt.py")
@@ -178,7 +183,9 @@ print(
 )
 
 t_start = time.time()
-from enpire.env.forge.cap.agent.tools._artifact_log import _artifact_dir as _ARTIFACT_DIR  # noqa: E402
+from enpire.env.forge.cap.agent.tools._artifact_log import (
+    _artifact_dir as _ARTIFACT_DIR,  # noqa: E402
+)
 
 producer_th = threading.Thread(target=_producer_loop, name="ziptie-producer", daemon=True)
 worker_th   = threading.Thread(target=_worker_loop,   name="ziptie-worker",   daemon=True)

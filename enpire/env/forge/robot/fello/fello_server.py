@@ -16,25 +16,17 @@ if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
 import dataclasses
-from dataclasses import field
 import logging
 import signal
 import threading
 import time
-from typing import Sequence
-from typing import Annotated, Literal, Optional
+from dataclasses import field
+from typing import Annotated, Literal, Optional, Sequence
 
+import numpy as np
 import portal
 import tyro
-import numpy as np
 
-from enpire.env.forge.robot.fello.fello_config import (
-    get_config_value,
-    get_fello_xml_path,
-    load_fello_config,
-)
-from enpire.env.forge.robot.fello import fello as fello_module
-from enpire.env.forge.robot.fello.fello import FelloLeaderRobot, FelloRobot
 from enpire.env.forge.robot.constants import (
     CAN_BUSTYPE,
     LEFT_FELLO_CAN_INTERFACE,
@@ -42,6 +34,14 @@ from enpire.env.forge.robot.constants import (
     RIGHT_FELLO_CAN_INTERFACE,
     RIGHT_LEADER_PORT,
 )
+from enpire.env.forge.robot.fello import fello as fello_module
+from enpire.env.forge.robot.fello.fello import FelloLeaderRobot, FelloRobot
+from enpire.env.forge.robot.fello.fello_config import (
+    get_config_value,
+    get_fello_xml_path,
+    load_fello_config,
+)
+
 
 def _get_requested_side_from_argv(argv: Sequence[str]) -> str | None:
     for i, arg in enumerate(argv):

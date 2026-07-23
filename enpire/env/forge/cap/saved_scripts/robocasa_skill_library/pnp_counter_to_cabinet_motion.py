@@ -2,12 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # pnp_counter_to_cabinet_motion.py — PickPlaceCounterToCabinet motion helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import time
 
 import numpy as np
 from scipy.spatial.transform import Rotation as R
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import detect_object_v1
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.pnp_counter_to_cabinet_detection import (

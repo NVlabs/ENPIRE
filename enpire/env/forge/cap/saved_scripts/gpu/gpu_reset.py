@@ -26,11 +26,12 @@ from __future__ import annotations
 
 import ast
 import copy
-import numpy as np
 import os
-from pathlib import Path
 import time
 import types
+from pathlib import Path
+
+import numpy as np
 
 
 def _env_flag(name: str, default: bool) -> bool:

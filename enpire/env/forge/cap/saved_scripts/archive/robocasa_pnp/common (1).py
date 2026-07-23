@@ -10,7 +10,6 @@ from typing import Callable
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-
 _TOOL_GLOBALS: dict[str, object] = {}
 
 

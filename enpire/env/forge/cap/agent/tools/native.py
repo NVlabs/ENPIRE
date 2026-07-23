@@ -14,18 +14,18 @@ from typing import Any
 
 import numpy as np
 
-from enpire.env.forge.cap.config import (
-    CAP_SERVER_PORT,
-    GRIPPER_POLL_S,
-    GRIPPER_SETTLE_THRESH,
-    GRIPPER_SETTLE_TIMEOUT_S,
-)
 from enpire.env.forge.cap.agent.tools.base import (
     MoveResult,
     RobotState,
     Tool,
     ToolParameter,
     ToolResult,
+)
+from enpire.env.forge.cap.config import (
+    CAP_SERVER_PORT,
+    GRIPPER_POLL_S,
+    GRIPPER_SETTLE_THRESH,
+    GRIPPER_SETTLE_TIMEOUT_S,
 )
 
 

@@ -30,7 +30,6 @@ if _ROOT not in sys.path:
 
 def load_image_bytes(path: str) -> bytes:
     import cv2
-    import numpy as np
 
     p = Path(path).expanduser().resolve()
     if not p.exists():

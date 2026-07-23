@@ -21,8 +21,6 @@ below).
 
 from __future__ import annotations
 
-from enpire.env.forge.cap.agent.tools.vlm.transport import VLMBackend, query, register  # noqa: F401
-
 # Importing each backend module registers it with the transport registry.
 from enpire.env.forge.cap.agent.tools.vlm.backends import (  # noqa: F401
     gemini,
@@ -38,3 +36,4 @@ from enpire.env.forge.cap.agent.tools.vlm.backends.nvidia import (  # noqa: F401
     list_nvidia_keys,
     pick_nvidia_key,
 )
+from enpire.env.forge.cap.agent.tools.vlm.transport import VLMBackend, query, register  # noqa: F401

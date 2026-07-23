@@ -6,9 +6,9 @@ from typing import Dict, Optional, Tuple
 
 import cv2
 import numpy as np
-from packaging import version
 import pyrealsense2 as rs
 import tyro
+from packaging import version
 
 
 def get_device_info() -> Dict[str, str]:

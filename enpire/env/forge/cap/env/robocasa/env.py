@@ -1172,7 +1172,6 @@ class RoboCasaEnv:
         include_tokens: tuple,
         reference_pos: np.ndarray | None = None,
     ) -> dict | None:
-        from scipy.spatial.transform import Rotation as R
 
         round_types = {"cylinder", "capsule", "sphere", "ellipsoid"}
         geom_ids: list = []

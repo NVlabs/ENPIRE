@@ -20,16 +20,15 @@ import numpy as np
 os.environ.setdefault("MUJOCO_GL", "egl")
 os.environ.setdefault("PYOPENGL_PLATFORM", "egl")
 
-import gymnasium as gym  # noqa: E402
+from functools import partial  # noqa: E402
 
+import gymnasium as gym  # noqa: E402
 import robocasa  # noqa: E402, F401
 import robocasa.utils.gym_utils.gymnasium_groot  # noqa: E402, F401
 
-from functools import partial  # noqa: E402
-
 from enpire.env.forge.cap.policy import (  # noqa: E402
-    ZMQPolicyBackend,
     InferencePolicyConfig,
+    ZMQPolicyBackend,
     inference_policy,
 )
 

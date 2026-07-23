@@ -12,13 +12,17 @@ and keep only the per-frame reward log line.
 This script uses RGB-only inputs and no depth camera fetching
 """
 
-import os, subprocess, time
+import os
+import subprocess
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+
 import numpy as np
+from skill_library.namespace import get_camera_image
+
 import enpire.env.forge.cap.agent.tools._artifact_log as _al
 from enpire.env.forge.cap.agent.tools._artifact_log import render_pool_stats
-from skill_library.namespace import get_camera_image
 
 # Pull functions AND shared constants from the single source of truth _compute_rew.py
 _compute_rew_func = load_module("ziptie/reward/_compute_rew_rgb.py")
@@ -46,7 +50,10 @@ DURATION_S = 600.0
 print(f"[reward] running at {FPS} Hz for up to {DURATION_S:.0f}s → <log_dir>/vis/{{top,right,merged}}/...")
 period  = 1.0 / FPS
 t_start = time.time()
-from enpire.env.forge.cap.agent.tools._artifact_log import _artifact_dir as _ARTIFACT_DIR  # noqa: E402
+from enpire.env.forge.cap.agent.tools._artifact_log import (
+    _artifact_dir as _ARTIFACT_DIR,  # noqa: E402
+)
+
 _prev_status = "FAIL"
 _cap_pool = ThreadPoolExecutor(max_workers=2, thread_name_prefix="ziptie-cap")
 while time.time() - t_start < DURATION_S:

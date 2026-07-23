@@ -3,7 +3,9 @@
 
 # lift.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
+
 from enpire.env.forge.cap.agent.skill_registry import skill
+
 
 @skill
 def lift_v1(side, delta_z=0.20):
@@ -26,7 +28,6 @@ def lift_v1(side, delta_z=0.20):
 @skill
 def lift_v2(side, delta_z=0.20, step_size=0.04):
     """Lift EE by +delta_z using incremental nudge steps. More reliable than single freespace_move from constrained positions."""
-    import numpy as np
 
     state = get_robot_state()
     start_z = state.arms[side].ee_pos[2]

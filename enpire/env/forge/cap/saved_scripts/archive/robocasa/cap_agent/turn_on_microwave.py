@@ -52,6 +52,7 @@ except Exception as e:
 
 # Step 4: Hold briefly (let sim register the press)
 import time
+
 time.sleep(0.5)
 
 # Step 5: Retract — pull back along approach direction

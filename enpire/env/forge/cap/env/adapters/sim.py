@@ -7,6 +7,7 @@ These are drop-in replacements for the real hardware _ArmClient and _CameraClien
 used by CapServer when running in simulation mode.
 """
 
-from enpire.env.forge.cap.server.sim_backend import SimArmClient as SimArmAdapter, SimCameraClient as SimCameraAdapter  # re-export
+from enpire.env.forge.cap.server.sim_backend import SimArmClient as SimArmAdapter  # re-export
+from enpire.env.forge.cap.server.sim_backend import SimCameraClient as SimCameraAdapter
 
 __all__ = ["SimArmAdapter", "SimCameraAdapter"]

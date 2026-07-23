@@ -2,11 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # dishwasher_control.py — push top rack in + close dishwasher door
-from skill_library.namespace import *  # noqa: F401, F403
-
-import time
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import (
     debug_marker_v1,
@@ -16,7 +14,6 @@ from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.pnp_counter_to_cabinet_geometry import (
     fmt_xyz_v1,
 )
-
 
 DISHWASHER_QUERIES_V1 = ("dishwasher", "open dishwasher", "dishwasher with door open")
 TOP_RACK_QUERIES_V1 = (

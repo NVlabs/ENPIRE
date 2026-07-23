@@ -5,10 +5,10 @@ try:
     from skill_library.namespace import *  # noqa: F401,F403
 except AttributeError:
     pass
-from enpire.env.forge.cap.agent.skill_registry import skill  # noqa: F401
-
 import collections
 import json
+
+from enpire.env.forge.cap.agent.skill_registry import skill  # noqa: F401
 
 try:
     from skill_library.constants.vision import (  # type: ignore

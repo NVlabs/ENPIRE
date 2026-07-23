@@ -94,12 +94,12 @@ def main() -> int:
 
     if avg_hz < 15:
         print(f"  WARNING: {avg_hz:.0f} Hz is slow. Brief taps may be missed.")
-        print(f"  The min_hold_seconds latch (150ms) helps, but consider")
-        print(f"  updating the RP2040 firmware to stream faster (50-100 Hz).")
+        print("  The min_hold_seconds latch (150ms) helps, but consider")
+        print("  updating the RP2040 firmware to stream faster (50-100 Hz).")
     elif avg_hz < 30:
-        print(f"  OK for 30 Hz control loop. The 150ms latch covers brief taps.")
+        print("  OK for 30 Hz control loop. The 150ms latch covers brief taps.")
     else:
-        print(f"  Good — faster than the 30 Hz control loop.")
+        print("  Good — faster than the 30 Hz control loop.")
 
     return 0
 

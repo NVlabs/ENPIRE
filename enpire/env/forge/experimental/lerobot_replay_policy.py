@@ -7,14 +7,14 @@
 
 import os
 from pathlib import Path
+from typing import Any, Literal
 
 import numpy as np
 import pandas as pd
-
-from typing import Any, Literal
+from loguru import logger
 
 from enpire.policy.legacy import Policy
-from loguru import logger
+
 DEFAULT_PARQUET_PATH = Path(
     os.environ.get("ENPIRE_REPLAY_DATASET", "")
 )
@@ -323,8 +323,8 @@ class LerobotReplayPolicy(Policy):
                         if parsed is not None:
                             self._initial_state = parsed
                             print(
-                                f"[LerobotReplayPolicy] Extracted initial_state from "
-                                f"first frame observation.state (14D joint format)"
+                                "[LerobotReplayPolicy] Extracted initial_state from "
+                                "first frame observation.state (14D joint format)"
                             )
                             print(
                                 f"  left_joint_pos  = {parsed['left_joint_pos']}"
@@ -442,7 +442,9 @@ class LerobotReplayPolicy(Policy):
     @staticmethod
     def _load_action_quantiles(path: Path) -> tuple:
         """Load action q01/q99 from norm_stats.json without heavy flash_manip imports."""
-        import json, torch
+        import json
+
+        import torch
         raw = json.loads(path.read_text())
         entry = raw.get("norm_stats", {}).get("action")
         if entry is None:
@@ -459,11 +461,11 @@ class LerobotReplayPolicy(Policy):
         global-frame absolute targets (pos + quat_xyzw + grip per arm = 16D).
         """
         import torch
-        from scipy.spatial.transform import Rotation
         from flash_manip.datasets.umi_transforms import (
             build_ego_action_chunk,
             rotmat_from_6d,
         )
+        from scipy.spatial.transform import Rotation
 
         if self.norm_stats_path is None or not self.norm_stats_path.exists():
             raise FileNotFoundError(
@@ -874,14 +876,14 @@ class LerobotReplayPolicy(Policy):
 if __name__ =="__main__":
     replay_policy=LerobotReplayPolicy(control_mode="joint_position")
     print(f"num_steps: {replay_policy.num_steps}")
-    print(f"Reset:")
+    print("Reset:")
     replay_policy.reset()
     test_steps = 3
     for i in range(test_steps):
         action, info = replay_policy.get_action(None)
         print(f"Action: {action}")
         print(f"Info: {info}")
-    print(f"Reset:")
+    print("Reset:")
     replay_policy.reset()
     test_steps = 3
     for i in range(test_steps):

@@ -30,7 +30,6 @@ There is no tracking or remembered-grasp logic in this server anymore.
 
 from __future__ import annotations
 
-import importlib.util
 import os
 import sys
 from pathlib import Path
@@ -42,14 +41,6 @@ if str(REPO_ROOT) not in sys.path:
 from enpire.env.forge.tools._bootstrap import maybe_reexec_with_uv
 
 maybe_reexec_with_uv(__file__, REPO_ROOT, required_modules=["cv2", "uvicorn"])
-
-_SITE_MODULE_PATH = REPO_ROOT / "sitecustomize.py"
-_SITE_SPEC = importlib.util.spec_from_file_location("yam_repo_sitecustomize", _SITE_MODULE_PATH)
-if _SITE_SPEC is None or _SITE_SPEC.loader is None:
-    raise ImportError(f"Could not load repo sitecustomize from {_SITE_MODULE_PATH}")
-_SITE_MODULE = importlib.util.module_from_spec(_SITE_SPEC)
-_SITE_SPEC.loader.exec_module(_SITE_MODULE)
-apply_numpy_compat_aliases = _SITE_MODULE.apply_numpy_compat_aliases
 
 import argparse
 import base64
@@ -65,7 +56,11 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from enpire.env.forge.cap.utils.anygrasp_runtime import configure_anygrasp_imports, prepare_anygrasp_runtime
+from enpire.env.forge.cap.utils.anygrasp_runtime import (
+    configure_anygrasp_imports,
+    prepare_anygrasp_runtime,
+)
+from enpire.env.forge.compat import apply_numpy_compat_aliases
 
 apply_numpy_compat_aliases()
 

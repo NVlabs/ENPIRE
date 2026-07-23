@@ -8,7 +8,6 @@ from typing import Literal
 
 from enpire.policy.rl.initial_pose_manager import InitialPoseManager
 
-
 BoundaryKind = Literal["initial", "oor"]
 
 

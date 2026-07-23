@@ -3,11 +3,10 @@
 
 # drawer_handle_finish.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
-from enpire.env.forge.cap.agent.skill_registry import skill
 
+from enpire.env.forge.cap.agent.skill_registry import skill
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.arm_motion import (
     current_arm_pose,
-    go_home_checked,
     vec,
 )
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.drawer_control_state import (
@@ -38,6 +37,7 @@ def drawer_handle_finish_v1(
     drawer_open_progress_threshold=0.95,
 ):
     import time
+
     import numpy as np
 
     arm = grasp_log["arm"]

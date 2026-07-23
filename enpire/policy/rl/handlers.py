@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import time
+from pathlib import Path
 
 import numpy as np
 
@@ -17,7 +17,6 @@ from enpire.policy.rl.gpu_slot_hover import (
     move_to_gpu_slot_hover,
 )
 from enpire.policy.rl.reset_options import terminal_label_options
-
 
 HOME_POSITION_ATOL = 0.2
 

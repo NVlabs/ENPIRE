@@ -23,7 +23,6 @@ import zmq
 
 from enpire.env.forge.cap.policy.backend import PolicyBackend
 
-
 # -- msgpack serialization (matches Isaac-GR00T protocol) -------------------
 
 def _encode(obj: Any) -> Any:

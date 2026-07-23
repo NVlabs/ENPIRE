@@ -47,6 +47,7 @@ def load_image(path: str) -> np.ndarray:
 
 def capture_camera(camera: str) -> np.ndarray:
     import portal
+
     from enpire.env.forge.cap.config import CAP_SERVER_PORT
 
     client = portal.Client(f"localhost:{CAP_SERVER_PORT}")

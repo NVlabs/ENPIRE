@@ -24,8 +24,8 @@ import gymnasium as gym  # noqa: E402
 import robocasa.wrappers.gym_wrapper  # noqa: E402, F401  — registers robocasa/* envs
 
 from enpire.env.forge.cap.policy import (  # noqa: E402
-    ZMQPolicyBackend,
     InferencePolicyConfig,
+    ZMQPolicyBackend,
     inference_policy,
 )
 from enpire.env.forge.cap.policy.backend import PolicyBackend  # noqa: E402

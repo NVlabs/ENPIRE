@@ -36,13 +36,12 @@ import gc
 import io
 import json
 import os
-from pathlib import Path
 import sys
 import tempfile
 import threading
 import time
-import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
 # Must be set before torch is imported.
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
@@ -65,18 +64,16 @@ import numpy as np
 import torch
 import uvicorn
 import yaml
-from PIL import Image
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, StreamingResponse
-from pydantic import BaseModel
-
 from bundlesdf import BundleSdf
 from bundlesdf.run_live_bundlesdf import (
     SharedSam2Tracker,
     build_configs,
     has_valid_depth,
 )
-
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, StreamingResponse
+from PIL import Image
+from pydantic import BaseModel
 
 # ── Remote SAM3 client (calls tools/vision/serve_sam3.py over HTTP) ───────────────────────
 
@@ -1560,7 +1557,7 @@ def create_app(cap_server_host: str, cap_server_port: int, camera: str) -> FastA
                 if extr is not None:
                     T_cam_world = _build_SE3(extr, active_camera)
 
-            print(f"[serve_bundlesdf] Running SAM3 detection (single-frame) …")
+            print("[serve_bundlesdf] Running SAM3 detection (single-frame) …")
             mask_01, bbox_xywh, score = text_to_mask(rgb, req.text)
             _free_sam3_single_image()
 

@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import logging
 import socket
 import time
+from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
@@ -15,7 +15,6 @@ import portal
 from enpire.env.forge.experimental.curobo_depth_world import intrinsics_dict_to_matrix
 from enpire.env.forge.experimental.key_remapping_utils import _make_arrays_contiguous
 from enpire.env.forge.robot.yam.kinematics import YamKinematics
-
 
 logger = logging.getLogger(__name__)
 

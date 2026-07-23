@@ -3,39 +3,40 @@
 
 from __future__ import annotations
 
+import atexit
 import logging
-from pathlib import Path
+import queue
 import re
 import threading
 import time
 import typing
-from typing import Any, Literal
-import atexit
-import queue
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Literal
 
 import cv2
 import numpy as np
 import portal  # noqa: E402
-from scipy.spatial.transform import Rotation as R  # noqa: E402
 import trimesh  # noqa: E402
 import viser  # noqa: E402
+from PIL import Image, ImageDraw, ImageFont  # noqa: E402
+from scipy.spatial.transform import Rotation as R  # noqa: E402
 from viser.extras import ViserUrdf  # noqa: E402
 from yourdfpy import URDF  # noqa: E402
-from PIL import Image, ImageDraw, ImageFont  # noqa: E402
+
 from enpire.env.forge.experimental._pyroki_compat import import_pyroki  # noqa: E402
 
 pk = import_pyroki()
 
+# Import kinematics for converting ee_pose to joint positions
+import sys
+
+from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
 from enpire.env.forge.experimental.get_action_policy import PolicyAdapters
 from enpire.env.forge.experimental.key_remapping_utils import (
     _make_arrays_contiguous,
     hold_action_from_proprio,
 )
-from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
-
-# Import kinematics for converting ee_pose to joint positions
-import sys
 
 _TBD_ROOT = Path(__file__).resolve().parents[1]
 if str(_TBD_ROOT) not in sys.path:
@@ -299,8 +300,8 @@ def safe_call(func):
     - Tracks and logs cumulative exception counts per function
     - Returns None on error to allow graceful degradation
     """
-    from functools import wraps
     import traceback
+    from functools import wraps
 
     func_key = f"{func.__module__}.{func.__qualname__}"
 
@@ -2358,7 +2359,9 @@ class ViserUI:
                             float(planner_ik_rpy_weight),
                         )
                         if planner_key not in _mt_planner_cache:
-                            from enpire.env.forge.experimental.motion_planner import YamMotionPlanner
+                            from enpire.env.forge.experimental.motion_planner import (
+                                YamMotionPlanner,
+                            )
 
                             _mt_planner_cache[planner_key] = YamMotionPlanner(
                                 position_cost=float(planner_ik_xyz_weight),

@@ -4,11 +4,10 @@
 """Replay policy that loads actions from a LeRobotDataset."""
 
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
-
-from typing import Any
 
 from enpire.policy.legacy import Policy
 

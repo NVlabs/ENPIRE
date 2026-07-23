@@ -5,23 +5,22 @@ from __future__ import annotations
 
 import argparse
 import atexit
-from dataclasses import dataclass, field
 import errno
 import json
 import os
-from pathlib import Path
-import signal
 import shlex
+import signal
 import socket
 import subprocess
 import sys
 import threading
 import time
+from dataclasses import dataclass, field
+from pathlib import Path
 
 import requests
 import uvicorn
 from fastapi import FastAPI
-
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RL_RESET_REQUESTED = 10

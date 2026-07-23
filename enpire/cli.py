@@ -14,11 +14,11 @@ from pathlib import Path
 from typing import Sequence
 
 from enpire import __version__
-from enpire.policy.cap.commands import add_cap_parser
 from enpire.env.forge.registry import default_skill_registry, default_tool_registry
-from enpire.env.forge.yam.commands import add_station_parser
-from enpire.policy.pld.commands import add_rl_parser
 from enpire.env.forge.services.commands import add_services_parser
+from enpire.env.forge.yam.commands import add_station_parser
+from enpire.policy.cap.commands import add_cap_parser
+from enpire.policy.pld.commands import add_rl_parser
 
 
 def _tools_list(args: argparse.Namespace) -> int:

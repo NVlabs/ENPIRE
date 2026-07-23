@@ -6,10 +6,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from enpire.env.forge.cap.agent.llm.base import LLMBackend  # noqa: F401
+from enpire.env.forge.cap.agent.llm.bridge_llm import BridgeLLMBackend  # noqa: F401
 from enpire.env.forge.cap.agent.llm.cloud import CloudLLM  # noqa: F401
 from enpire.env.forge.cap.agent.llm.gemini import GeminiLLM  # noqa: F401
 from enpire.env.forge.cap.agent.llm.nvidia import NvidiaLLM  # noqa: F401
-from enpire.env.forge.cap.agent.llm.bridge_llm import BridgeLLMBackend  # noqa: F401
 
 
 def make_llm(

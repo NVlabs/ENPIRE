@@ -21,9 +21,16 @@ from typing import Any
 import numpy as np
 import requests
 
-from enpire.env.forge.cap.config import CAP_SERVER_PORT, CAMERA_NAMES as _CAMERA_NAMES, SAM3_SERVER_HOST, SAM3_SERVER_PORT
-from enpire.env.forge.cap.agent.tools.base import SegmentationResult, Tool, ToolParameter, ToolResult
 from enpire.env.forge.cap.agent.tools._artifact_log import log_mask
+from enpire.env.forge.cap.agent.tools.base import (
+    SegmentationResult,
+    Tool,
+    ToolParameter,
+    ToolResult,
+)
+from enpire.env.forge.cap.config import CAMERA_NAMES as _CAMERA_NAMES
+from enpire.env.forge.cap.config import CAP_SERVER_PORT, SAM3_SERVER_HOST, SAM3_SERVER_PORT
+
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 

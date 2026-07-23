@@ -114,11 +114,11 @@ def main():
     for i, (side, label) in enumerate(steps):
         if i == 0:
             print(f"\n{'─' * 60}")
-            print(f"  LEFT HANDLE footswitch (3 buttons)")
+            print("  LEFT HANDLE footswitch (3 buttons)")
             print(f"{'─' * 60}")
         elif i == 3:
             print(f"\n{'─' * 60}")
-            print(f"  RIGHT HANDLE footswitch (3 buttons)")
+            print("  RIGHT HANDLE footswitch (3 buttons)")
             print(f"{'─' * 60}")
 
         print(f"\n  [{i+1}/6] Press the {label} button now...")
@@ -154,10 +154,10 @@ def main():
     print("\n" + "=" * 60)
     print("  RESULTS")
     print("=" * 60)
-    print(f"\n  left footswitch:")
+    print("\n  left footswitch:")
     print(f"    device: {left_port}")
     print(f"    button_map: {left_map}  (save={left_map[0]}, takeover={left_map[1]}, start={left_map[2]})")
-    print(f"\n  right footswitch:")
+    print("\n  right footswitch:")
     print(f"    device: {right_port}")
     print(f"    button_map: {right_map}  (home={right_map[0]}, pause={right_map[1]}, start={right_map[2]})")
 

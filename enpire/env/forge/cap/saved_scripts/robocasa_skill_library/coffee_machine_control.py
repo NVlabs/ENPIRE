@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # coffee_machine_control.py — PrepareCoffee dispenser placement and start button press
-from skill_library.namespace import *  # noqa: F401, F403
-
 import time
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import (
     debug_marker_v1,
@@ -19,7 +18,6 @@ from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.pnp_counter_to_ca
     fmt_xyz_v1,
     normalize_v1,
 )
-
 
 COFFEE_MACHINE_QUERIES_V1 = (
     "coffee machine",

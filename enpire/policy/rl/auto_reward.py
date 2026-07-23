@@ -143,7 +143,6 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 
 import numpy as np
 
-
 # One per-camera snapshot — RGB at native resolution, depth (if the camera
 # exposes it, else None), and intrinsics (dict from the camera driver).
 CameraSnapshot = Tuple[np.ndarray, Optional[np.ndarray], Optional[Dict[str, float]]]
@@ -601,7 +600,9 @@ def _wait_for_video_convert_marker(ep: Path, wait_s: float = 60.0) -> None:
     rew=1 on disk together.
     """
     try:
-        from enpire.env.forge.tools.data_collection.async_video_compression import VIDEO_CONVERT_DONE_MARKER
+        from enpire.env.forge.tools.data_collection.async_video_compression import (
+            VIDEO_CONVERT_DONE_MARKER,
+        )
     except ImportError:
         VIDEO_CONVERT_DONE_MARKER = ".videos_converted"
     marker = ep / VIDEO_CONVERT_DONE_MARKER

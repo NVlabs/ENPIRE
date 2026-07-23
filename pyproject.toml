@@ -258,3 +258,22 @@ ignore = ["E501"]
 [tool.ruff.lint.per-file-ignores]
 "enpire/env/forge/yam/registration/_legacy_identify.py" = ["E501", "I001"]
 "tests/enpire/yam/test_calibration_cv.py" = ["E402"]
+# CaP skill scripts use `from skill_library.namespace import *` by design;
+# F821/F405 are expected and cannot be resolved without breaking the runtime contract.
+# E702/E701/E703 reflect terse one-liner style common in these dense skill files.
+"enpire/env/forge/cap/saved_scripts/**" = ["F821", "F405", "E402", "E702", "E701", "E703", "E741", "W291", "W293", "F541"]
+# These directories contain standalone scripts / servers that manipulate sys.path
+# before importing optional heavy dependencies — E402 is intentional there.
+"enpire/env/forge/cap/agent/**" = ["E402"]
+"enpire/env/forge/cap/server/**" = ["E402"]
+"enpire/env/forge/cap/skills/**" = ["E402"]
+"enpire/env/forge/experimental/**" = ["E402"]
+"enpire/env/forge/scripts/**" = ["E402"]
+"enpire/env/forge/robot/**" = ["E402"]
+"enpire/env/forge/run_agent.py" = ["E402"]
+"enpire/env/forge/run_script.py" = ["E402"]
+"enpire/policy/rl/**" = ["E402"]
+"enpire/env/forge/tools/**" = ["E402", "E702", "E701", "E741", "W291", "W293"]
+"enpire/env/forge/cap/agent/tools/detection.py" = ["E402", "E702", "E701", "E741", "F541"]
+"enpire/env/forge/cap/env/**" = ["E702", "E701", "E741", "W291", "W293"]
+"enpire/env/forge/robot/systemid/**" = ["E702", "E701", "E741"]

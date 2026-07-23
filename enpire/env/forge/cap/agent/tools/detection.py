@@ -42,9 +42,9 @@ except ImportError:  # pragma: no cover
     def _dumps(obj) -> bytes: return json.dumps(obj).encode()
     def _loads(buf): return json.loads(buf)
 
-from enpire.env.forge.cap.config import DETECTION_SERVER_PORT, make_bundlesdf_name
-from enpire.env.forge.cap.agent.tools.base import Detection3D, Tool, ToolParameter, ToolResult
 from enpire.env.forge.cap.agent.tools._artifact_log import log_detection
+from enpire.env.forge.cap.agent.tools.base import Detection3D, Tool, ToolParameter, ToolResult
+from enpire.env.forge.cap.config import DETECTION_SERVER_PORT, make_bundlesdf_name
 
 # Default SAM3 server endpoint. Resolved at call time inside the sam3_segment_*
 # helpers (not captured into their `url=` defaults), so a downstream module can
@@ -136,7 +136,8 @@ def _sam3_post_multi_image(
     # response. Enable with SAM3_CLIENT_TRACE=1 when you need to know whether
     # a slow /segment_multi_image is server-side queueing (urlopen step) or
     # client-side GIL contention slowing JSON/base64 (dumps/loads steps).
-    import os as _os, time as _time
+    import os as _os
+    import time as _time
     _trace = _os.environ.get("SAM3_CLIENT_TRACE", "").lower() in ("1", "true", "yes")
     _t0 = _time.perf_counter() if _trace else 0.0
     data = _dumps(body)
@@ -875,6 +876,7 @@ class DetectObjectTool(Tool):
     def _get_portal_client(self):
         if self._portal_client is None:
             import portal
+
             from enpire.env.forge.cap.config import CAP_SERVER_PORT
 
             port = self._cap_server_port or CAP_SERVER_PORT
@@ -1293,7 +1295,7 @@ class DetectObjectRealtimeTool(Tool):
         frame_count = 0
 
         print(f"[DetectRealtime] Starting continuous detection: query='{query}', camera={camera}")
-        print(f"[DetectRealtime] Press Home/Stop/E-Stop to end")
+        print("[DetectRealtime] Press Home/Stop/E-Stop to end")
 
         while not self._stop_event.is_set():
             result = self._detect_tool.execute(query=query, camera=camera)

@@ -42,6 +42,7 @@ def check(name: str, ok: bool, detail: str = ""):
 
 print("Starting CAP server with RoboCasa (no viewer)...", flush=True)
 import os
+
 os.environ.setdefault("ROBOCASA_LAYOUT_ID", "1")
 os.environ.setdefault("ROBOCASA_STYLE_ID", "1")
 

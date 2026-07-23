@@ -19,12 +19,12 @@ sys.stdout.reconfigure(line_buffering=True)
 
 import tyro
 
+from enpire.policy.rl.author import do_author, enter_author, exit_author
+from enpire.policy.rl.auto_eval import AutoEvalController
 from enpire.policy.rl.config import DataCollectionConfig, load_yaml_defaults
 from enpire.policy.rl.context import RLContext, build_context
 from enpire.policy.rl.events import TERMINAL_EVENTS
-from enpire.policy.rl.speech_announcer import TERMINAL_EVENT_PHRASES
-from enpire.policy.rl.author import do_author, enter_author, exit_author
-from enpire.policy.rl.auto_eval import AutoEvalController
+from enpire.policy.rl.gpu_success_full_cycle import maybe_request_gpu_success_full_cycle
 from enpire.policy.rl.handlers import (
     do_change_pose,
     do_home,
@@ -34,8 +34,8 @@ from enpire.policy.rl.handlers import (
     handle_restart,
     render,
 )
-from enpire.policy.rl.gpu_success_full_cycle import maybe_request_gpu_success_full_cycle
 from enpire.policy.rl.keyboard_events import dispatch_keyboard_events
+from enpire.policy.rl.speech_announcer import TERMINAL_EVENT_PHRASES
 
 
 def run(ctx: RLContext) -> None:

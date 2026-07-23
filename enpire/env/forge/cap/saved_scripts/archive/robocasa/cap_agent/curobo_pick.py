@@ -21,6 +21,7 @@
 #   --env "robocasa:PickPlaceCounterToCabinet" --cap-port 18600 --no-log
 
 import time
+
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 

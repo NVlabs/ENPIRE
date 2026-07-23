@@ -21,7 +21,6 @@ from typing import Any
 import numpy as np
 from PIL import Image
 
-
 INPUT_IMAGE_PATHS: list[Path] = []  # populate with local test images to run standalone
 
 DEFAULT_REWARD_BACKEND = "nvidia"

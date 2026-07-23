@@ -31,6 +31,7 @@
 #   - GEMINI_API_KEY for VLM
 
 import time
+
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
@@ -222,6 +223,7 @@ for i, g in enumerate(grasps):
 # Visualize grasps on camera image (green=feasible, red=failed) → saved to vis/
 # ---------------------------------------------------------------------------
 import cv2
+
 from enpire.env.forge.cap.agent.tools._artifact_log import log_image
 
 rgb = get_camera_image(CAMERA)
@@ -314,14 +316,14 @@ time.sleep(0.3)
 # Hover above grasp
 hover_pos = grasp_pos.copy()
 hover_pos[2] += HOVER_HEIGHT
-print(f"  Moving to hover above grasp...")
+print("  Moving to hover above grasp...")
 if not plan_and_move(hover_pos, grasp_quat, gripper=1.0, label="hover"):
     print("  ABORT: cannot reach hover pose. Trying next grasp or going home.")
     go_home()
     raise RuntimeError("ABORT")
 
 # Descend to grasp
-print(f"  Descending to grasp...")
+print("  Descending to grasp...")
 if not plan_and_move(grasp_pos, grasp_quat, label="descend"):
     print("  ABORT: cannot reach grasp pose.")
     go_home()
@@ -367,12 +369,12 @@ else:
     # Hover above place target
     place_hover = place_pos.copy()
     place_hover[2] += HOVER_HEIGHT
-    print(f"  Moving to place hover...")
+    print("  Moving to place hover...")
     if not plan_and_move(place_hover, lift_quat, gripper=0.0, label="place-hover"):
         print("  Cannot reach place hover — releasing here.")
 
     # Lower to place
-    print(f"  Lowering to place...")
+    print("  Lowering to place...")
     plan_and_move(place_pos, lift_quat, gripper=0.0, label="place-lower")
 
     # Release

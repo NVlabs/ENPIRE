@@ -18,10 +18,9 @@ import time
 from pathlib import Path
 
 import numpy as np
-
 from skill_library.namespace import *  # noqa: F401, F403
-from enpire.env.forge.cap.agent.skill_registry import skill
 
+from enpire.env.forge.cap.agent.skill_registry import skill
 
 DEFAULT_CAMERA = "top"
 DEFAULT_PLANE_PATH = Path("tmp/desk_plane.json")
@@ -1130,7 +1129,6 @@ def _draw_t_grasp_guides(canvas, camera, pose, plan):
 def _log_motion_checkpoint(stage, *, camera, side, plan=None, pose=None, waypoint=None, attempt=None):
     if not PICK_CHECKPOINT_IMAGES:
         return None
-    import cv2
 
     try:
         rgb = _as_rgb_uint8(get_camera_image(camera))

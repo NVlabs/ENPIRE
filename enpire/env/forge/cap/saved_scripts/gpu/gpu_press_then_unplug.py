@@ -12,8 +12,8 @@ goes home, and delegates unplugging to ``gpu_reset.py``.
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import time
+from pathlib import Path
 
 import numpy as np
 

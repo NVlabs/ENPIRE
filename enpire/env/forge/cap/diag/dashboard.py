@@ -31,6 +31,7 @@ import portal
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
+
 LEFT_FOLLOWER_PORT  = 11333
 RIGHT_FOLLOWER_PORT = 11334
 LEFT_LEADER_PORT    = 11335

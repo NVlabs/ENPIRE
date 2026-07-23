@@ -50,8 +50,8 @@ from typing import Any
 import numpy as np
 import portal
 
-from enpire.env.forge.cap.config import CAP_SERVER_PORT, JOINT_LIMITS_HIGH, JOINT_LIMITS_LOW
 from enpire.env.forge.cap.agent.tools.base import Tool, ToolParameter, ToolResult
+from enpire.env.forge.cap.config import CAP_SERVER_PORT, JOINT_LIMITS_HIGH, JOINT_LIMITS_LOW
 
 # 1-based per-joint (lo, hi) limits for a single arm. Left/right arms share
 # limits in cap.config, so we take the left arm slice.

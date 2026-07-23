@@ -3,7 +3,9 @@
 
 # cabinet_insert.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
+
 from enpire.env.forge.cap.agent.skill_registry import skill
+
 
 @skill
 def cabinet_insert_v1(side, insert_pos, settle_pos=None, hold_gripper=0.0):

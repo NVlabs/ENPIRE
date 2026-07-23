@@ -3,8 +3,8 @@
 
 """Signal processing utilities for smoothing policy outputs."""
 
-from collections import deque
 import time
+from collections import deque
 from typing import Any
 
 import numpy as np

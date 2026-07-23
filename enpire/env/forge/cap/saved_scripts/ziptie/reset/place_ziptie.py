@@ -20,8 +20,9 @@ from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
 _RC = dict(TABLE_SORT_RUN_CONFIG)
 _PLAN = {k: _RC[k] for k in ("planning_speed", "ik_error_threshold", "ik_xyz_weight", "ik_rpy_weight", "planner_backend") if k in _RC}
 
-from skill_library.namespace import (freespace_move, go_home, open_gripper)
-freespace_move(preview_only=False, **_PLAN, **{f"right_target_pos": [0.683, -0.115, 0.918], f"right_target_rpy": [2.1, 137.3, -25.3]})
+from skill_library.namespace import freespace_move, go_home, open_gripper
+
+freespace_move(preview_only=False, **_PLAN, **{"right_target_pos": [0.683, -0.115, 0.918], "right_target_rpy": [2.1, 137.3, -25.3]})
 # 2. drop the ziptie, then both arms home.
 open_gripper("right")
 go_home()

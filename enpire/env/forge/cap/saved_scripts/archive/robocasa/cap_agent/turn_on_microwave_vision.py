@@ -23,8 +23,9 @@
 #   5. Use VLM (wrist cam) to servo toward the start button
 #   6. Press and check result
 
-import numpy as np
 import time
+
+import numpy as np
 from scipy.spatial.transform import Rotation
 
 SIDE = "right"

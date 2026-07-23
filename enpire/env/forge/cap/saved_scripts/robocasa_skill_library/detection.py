@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Generic RoboCasa vision helpers.
-from skill_library.namespace import *  # noqa: F401, F403
-
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 
 def detect_object_v1(object_query, cameras="top", *, required=True):

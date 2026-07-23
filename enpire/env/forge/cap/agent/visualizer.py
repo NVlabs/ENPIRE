@@ -592,6 +592,7 @@ class CapVisualizer:
     def _setup_grasp_rotation_ui(self) -> None:
         """Dropdown + button to test grasp rotations on the left arm."""
         import threading as _th
+
         from scipy.spatial.transform import Rotation
 
         # Build 8 candidate rotations (as quaternion xyzw)

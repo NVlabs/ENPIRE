@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # grasp_object.py - reusable object grasp skill
-from skill_library.namespace import *  # noqa: F401, F403
-
 import time
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.agent.skill_registry import skill
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import detect_object_v1

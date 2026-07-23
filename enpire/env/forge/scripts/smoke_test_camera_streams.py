@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-# uv run python scripts/smoke_test_camera_streams.py --source rpc 
+# uv run python scripts/smoke_test_camera_streams.py --source rpc
 # --scale-zed-to-640480
 
 #!/usr/bin/env python3
@@ -10,17 +10,16 @@ from __future__ import annotations
 
 import argparse
 import os
-from datetime import datetime
-from pathlib import Path
 import subprocess
 import time
+from datetime import datetime
+from pathlib import Path
 
 import cv2
 import numpy as np
 import portal
 
 from enpire.env.forge.robot.camera_factory import create_camera
-
 
 CAMERAS = ("top", "left", "right")
 _ZED_NATIVE_SIZES = {

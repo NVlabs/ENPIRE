@@ -293,14 +293,20 @@ def _cfg_select(cfg: Any, path: str, default: Any = None) -> Any:
 
 def make_namespace(env, vlm_backend: str = "gemini", cfg: Any = None) -> dict[str, Any]:
     """Build the real-YAM direct-mode namespace from shared tool classes."""
-    from enpire.env.forge.cap.agent.tools.bundlesdf_track import EndDetectionTool, ListDetectionsTool
+    from enpire.env.forge.cap.agent.tools.bundlesdf_track import (
+        EndDetectionTool,
+        ListDetectionsTool,
+    )
     from enpire.env.forge.cap.agent.tools.camera import (
         GetCameraExtrinsicsTool,
         GetCameraIntrinsicsTool,
         RenderDepthTool,
         RenderRgbTool,
     )
-    from enpire.env.forge.cap.agent.tools.detection import DetectObjectTool, DetectObjectsOneshotTool
+    from enpire.env.forge.cap.agent.tools.detection import (
+        DetectObjectsOneshotTool,
+        DetectObjectTool,
+    )
     from enpire.env.forge.cap.agent.tools.freespace_move import FreespaceMoveTool
     from enpire.env.forge.cap.agent.tools.grasp_2d import SampleGraspPose2DTool
     from enpire.env.forge.cap.agent.tools.grasp_3d_bb import SampleGraspPose3DBBoxTool
@@ -314,7 +320,10 @@ def make_namespace(env, vlm_backend: str = "gemini", cfg: Any = None) -> dict[st
         SetGripperTool,
     )
     from enpire.env.forge.cap.agent.tools.nudge import NudgeTool
-    from enpire.env.forge.cap.agent.tools.segmentation import SegmentAllObjectsTool, SegmentObjectTool
+    from enpire.env.forge.cap.agent.tools.segmentation import (
+        SegmentAllObjectsTool,
+        SegmentObjectTool,
+    )
     from enpire.env.forge.cap.agent.tools.vlm_query import VlmQueryTool
 
     _install_direct_helpers(env)

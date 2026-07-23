@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # pnp_counter_to_cabinet_detection.py — PickPlaceCounterToCabinet vision helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import re
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import detect_object_v1
 

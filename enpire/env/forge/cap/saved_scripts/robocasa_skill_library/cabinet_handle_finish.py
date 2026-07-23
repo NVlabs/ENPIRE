@@ -3,8 +3,8 @@
 
 # cabinet_handle_finish.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
-from enpire.env.forge.cap.agent.skill_registry import skill
 
+from enpire.env.forge.cap.agent.skill_registry import skill
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.arm_motion import (
     current_arm_pose,
     go_home_checked,
@@ -46,6 +46,7 @@ def cabinet_handle_finish_v1(
     post_pull_vertical_pre_offset_m=0.10,
 ):
     import time
+
     import numpy as np
     from scipy.spatial.transform import Rotation as R
 

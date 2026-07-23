@@ -16,19 +16,17 @@ from _common.pandaomron import (  # noqa: F401
     CLIENT_PYTHON,
     EMBODIMENT,
     GROOT_ROOT,
-    REPO_DIR,
     LOG_ROOT,
     MODEL_PATH,
-    ModelServer,
+    REPO_DIR,
     SERVER_PYTHON,
     SERVER_SCRIPT,
+    ModelServer,
     TeeStream,
 )
-
 from _common.robocasa365 import (  # noqa: F401
     CLIENT_PYTHON_365,
     CLIENT_SCRIPT_365,
-    ModelServer365,
     N15_EMBODIMENT,
     N15_GROOT_ROOT,
     N15_MODEL_PATH,
@@ -40,6 +38,7 @@ from _common.robocasa365 import (  # noqa: F401
     N16_SERVER_PYTHON,
     N16_SERVER_SCRIPT,
     ROBOCASA365_ROOT,
+    ModelServer365,
     get_client_python_365,
     get_model_config,
 )

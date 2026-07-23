@@ -35,12 +35,12 @@ import base64
 import io
 import json
 import os
-from pathlib import Path
 import sys
 import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
 # Must be set before torch is imported.
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
@@ -63,18 +63,16 @@ import numpy as np
 import torch
 import uvicorn
 import yaml
-from PIL import Image
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, StreamingResponse
-from pydantic import BaseModel
-
 from bundlesdf import BundleSdf
 from bundlesdf.run_live_bundlesdf import (
     SharedSam2Tracker,
     build_configs,
     has_valid_depth,
 )
-
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, StreamingResponse
+from PIL import Image
+from pydantic import BaseModel
 
 # ── Remote SAM3 client (calls tools/vision/serve_sam3.py over HTTP) ───────────────────────
 

@@ -14,7 +14,6 @@ from scipy.spatial.transform import Rotation
 from enpire.env.forge.cap.agent.tools.base import Tool, ToolParameter, ToolResult
 from enpire.env.forge.cap.config import CAP_SERVER_PORT
 
-
 DEFAULT_PYROKI_URL = "http://127.0.0.1:9600"
 DEFAULT_MAX_FK_POSITION_ERROR_M = 0.02
 DEFAULT_MAX_FINAL_POSITION_ERROR_M = 0.03

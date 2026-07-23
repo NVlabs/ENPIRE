@@ -10,11 +10,12 @@ This module provides:
 - PortalPolicy: Main process client that forwards get_action/reset calls to subprocess
 """
 
-from dataclasses import dataclass
 import os
 import time
+from dataclasses import dataclass
 from typing import Any, Literal
 
+import numpy as np
 import portal
 
 from enpire.env.forge.experimental.key_remapping_utils import (
@@ -22,7 +23,6 @@ from enpire.env.forge.experimental.key_remapping_utils import (
     map_action,
     map_observation,
 )
-import numpy as np
 
 
 @dataclass

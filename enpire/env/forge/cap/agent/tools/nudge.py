@@ -37,8 +37,8 @@ from typing import Any
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from enpire.env.forge.cap.config import CAP_SERVER_PORT, MOVE_EEF_MAX_DURATION_S, MOVE_EEF_MAX_VEL
 from enpire.env.forge.cap.agent.tools.base import NudgeResult, Tool, ToolParameter, ToolResult
+from enpire.env.forge.cap.config import CAP_SERVER_PORT, MOVE_EEF_MAX_DURATION_S, MOVE_EEF_MAX_VEL
 
 
 class NudgeTool(Tool):

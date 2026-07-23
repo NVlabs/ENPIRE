@@ -28,7 +28,12 @@ import logging
 from typing import Any
 
 from enpire.env.forge.cap.agent.llm.base import LLMBackend
-from enpire.env.forge.cap.bridge.providers.base import AgentBackend, AgentBridgeConfig, ChatSession, ProviderContext
+from enpire.env.forge.cap.bridge.providers.base import (
+    AgentBackend,
+    AgentBridgeConfig,
+    ChatSession,
+    ProviderContext,
+)
 from enpire.env.forge.cap.chat.parsing import extract_code_blocks
 
 logger = logging.getLogger(__name__)

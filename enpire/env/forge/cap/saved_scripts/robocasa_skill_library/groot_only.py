@@ -3,7 +3,9 @@
 
 # groot_only.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
+
 from enpire.env.forge.cap.agent.skill_registry import skill
+
 
 @skill
 def groot_only_v1(model="grootpool/n15", replan_horizon=16):

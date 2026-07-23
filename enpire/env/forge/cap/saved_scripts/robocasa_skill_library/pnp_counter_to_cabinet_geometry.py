@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # pnp_counter_to_cabinet_geometry.py — PickPlaceCounterToCabinet geometry helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import numpy as np
 from scipy.spatial.transform import Rotation as R
+from skill_library.namespace import *  # noqa: F401, F403
 
 
 def camera_surface_normal_from_cameras_v1(

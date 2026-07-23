@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # kettle_switch_motion.py — shared kettle switch motion helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 
 def refresh_kettle_planner_world_v1(reason):

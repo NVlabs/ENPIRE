@@ -9,7 +9,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 PREFERRED_METRICS = [
     "env_obs_phase_ms",
     "left_follower_wait_ms",

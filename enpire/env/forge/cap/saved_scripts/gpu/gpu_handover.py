@@ -33,18 +33,15 @@ import ast
 import inspect
 import json
 import os
-from pathlib import Path
 import re
 import time
 import types
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import cv2
 import numpy as np
 from scipy.spatial.transform import Rotation
-
-import enpire.env.forge.cap.agent.tools.segmentation as _segmentation_tools
-
 from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
 from skill_library.namespace import (
     close_gripper,
@@ -63,6 +60,8 @@ from skill_library.namespace import (
     vlm_query,
 )
 from skill_library.pick_place import pick_object
+
+import enpire.env.forge.cap.agent.tools.segmentation as _segmentation_tools
 
 OBJECT_NAME = "graphics card"
 GPU_QUERIES = [

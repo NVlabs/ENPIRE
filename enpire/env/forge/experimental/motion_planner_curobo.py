@@ -25,13 +25,13 @@ import numpy as np
 import yaml
 from scipy.spatial.transform import Rotation
 
-from enpire.env.forge.paths import FORGE_ROOT, THIRD_PARTY_ROOT
 from enpire.env.forge.experimental.curobo_depth_world import (
     create_world_config_from_points,
     filter_depth_with_robot_mask,
     point_cloud_from_depth,
     transform_points,
 )
+from enpire.env.forge.paths import FORGE_ROOT, THIRD_PARTY_ROOT
 from enpire.env.forge.robot.yam.kinematics import YamKinematics
 
 _FORGE_ROOT = FORGE_ROOT

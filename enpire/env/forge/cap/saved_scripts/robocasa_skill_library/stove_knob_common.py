@@ -2,11 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # stove_knob_common.py - shared TurnOffStove constants and geometry helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import numpy as np
 from scipy.spatial.transform import Rotation as R
-
+from skill_library.namespace import *  # noqa: F401, F403
 
 STOVE_KNOB_QUERIES_V1 = (
     "stove knobs",

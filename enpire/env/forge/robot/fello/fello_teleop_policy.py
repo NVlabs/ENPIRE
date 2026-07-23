@@ -1,16 +1,13 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import argparse
-import sys
 import time
 from typing import Literal, Sequence
 
-import gymnasium as gym
 import numpy as np
 import portal
-from scipy.spatial.transform import Rotation
 import yaml
+from scipy.spatial.transform import Rotation
 
 from enpire.env.forge.robot.constants import (
     LEFT_LEADER_PORT,
@@ -1067,10 +1064,10 @@ def main() -> None:
     obs = {}
     try:
         while True:
-            obs[f"left_joint_pos"] = np.zeros(6, dtype=np.float32)
-            obs[f"left_gripper_pos"] = np.zeros(1, dtype=np.float32)
-            obs[f"right_joint_pos"] = np.zeros(6, dtype=np.float32)
-            obs[f"right_gripper_pos"] = np.zeros(1, dtype=np.float32)
+            obs["left_joint_pos"] = np.zeros(6, dtype=np.float32)
+            obs["left_gripper_pos"] = np.zeros(1, dtype=np.float32)
+            obs["right_joint_pos"] = np.zeros(6, dtype=np.float32)
+            obs["right_gripper_pos"] = np.zeros(1, dtype=np.float32)
             action, info = fello_policy.get_action(obs)
             print(f"Action: {action['right_ee_pos']}")
             # obs, _, _, _, _ = env.step(action)

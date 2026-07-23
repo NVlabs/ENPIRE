@@ -5,7 +5,6 @@ from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
 from skill_library.namespace import go_home
 from skill_library.pick_place import pick_and_place
 
-
 OBJECT_NAME = "small nvidia gpu"
 TARGET_NAME = "large mother board"
 RUN_CONFIG = dict(TABLE_SORT_RUN_CONFIG)

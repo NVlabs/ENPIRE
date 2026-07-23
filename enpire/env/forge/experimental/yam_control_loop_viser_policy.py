@@ -11,19 +11,16 @@ import os
 
 os.environ["HF_HUB_OFFLINE"] = "1"
 # os.environ["HF_HUB_CACHE"] = "/mnt/amlfs-02/shared/ckpts"
+import socket
 from collections import deque
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-import socket
 from typing import Any, Dict, List, Literal
 
 import gymnasium as gym
-from gymnasium.envs.registration import register
 import numpy as np
-from PIL import Image
 import tyro
-
 from groot.control.envs.yam.cloud_upload_wrapper import CloudUploadWrapper
 from groot.control.envs.yam.experimental.viser_policy import (
     ActionType,
@@ -34,6 +31,8 @@ from groot.control.envs.yam.record_episode_wrapper import RecordEpisodeWrapper
 from groot.vla.data.schema import EmbodimentTag
 from groot.vla.omni.inference.robot_interface import RobotInterface
 from groot.vla.omni.model.base.sim_policy import OmniDiffusionPolicy
+from gymnasium.envs.registration import register
+from PIL import Image
 
 PROPRIO_KEY_MAP_xdof_oss = {
     "left_joint_pos": "left_joint_pos",

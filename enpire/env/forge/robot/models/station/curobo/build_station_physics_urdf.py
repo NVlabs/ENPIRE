@@ -7,7 +7,6 @@ import math
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 URDF_IN = ROOT / "station.urdf"
 XML_IN = ROOT / "station.xml"

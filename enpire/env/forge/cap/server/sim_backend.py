@@ -12,7 +12,6 @@ from __future__ import annotations
 import concurrent.futures
 import os
 import threading
-from pathlib import Path
 
 # Must be set before `import mujoco` — gl_context.py reads MUJOCO_GL at import
 # time to select the GL backend. On headless NVIDIA machines, EGL is required.
@@ -24,7 +23,6 @@ import numpy as np
 
 from enpire.env.forge.cap.config import CONTROL_PERIOD_S
 from enpire.env.forge.cap.server.scene_manager import add_objects_to_spec, list_scenes, load_scene
-
 from enpire.env.forge.robot.models.station.paths import get_station_xml
 
 _MODEL_PATH = get_station_xml()

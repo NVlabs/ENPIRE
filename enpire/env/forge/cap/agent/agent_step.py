@@ -605,8 +605,9 @@ class ExecutorStep(AgentStep):
         def _on_tool_end(
             name: str, call_id: int, result: Any, error: Any, elapsed_ms: float
         ) -> None:
-            from enpire.env.forge.cap.agent.agent_context import ToolCallRecord
             import time as _time
+
+            from enpire.env.forge.cap.agent.agent_context import ToolCallRecord
 
             memory.record(
                 ToolCallRecord(
@@ -1473,6 +1474,7 @@ class SubprocessExecutorStep(AgentStep):
         elif exec_mode == "parallel" and total_jobs > 1:
             import threading
             from concurrent.futures import ThreadPoolExecutor
+
             from enpire.env.forge.cap.agent.agent_dashboard import current as _dash_current
 
             # Per-GPU semaphore — limits concurrent seeds per render GPU.
@@ -2166,6 +2168,8 @@ class SelfReflectionStep(AgentStep):
     def __init__(self, strategy: ReflectionStrategy | LLMBackend) -> None:
         from enpire.env.forge.cap.agent.reflection import (
             ReflectionStrategy as _RS,
+        )
+        from enpire.env.forge.cap.agent.reflection import (
             TextReflectionStrategy,
         )
 

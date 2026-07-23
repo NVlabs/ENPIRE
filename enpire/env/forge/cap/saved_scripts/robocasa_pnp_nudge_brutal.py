@@ -10,9 +10,9 @@ so the arm can escape the sink wall contact even when cuRobo refuses to plan.
 
 import numpy as np
 from skill_library.hover_above import hover_above_v1
-from skill_library.vertical_grasp import vertical_grasp_v1
-from skill_library.nudge_down_and_regrasp import nudge_down_and_regrasp_v1
 from skill_library.lift import lift_v2
+from skill_library.nudge_down_and_regrasp import nudge_down_and_regrasp_v1
+from skill_library.vertical_grasp import vertical_grasp_v1
 from skill_library.vertical_place import vertical_place_v1
 
 SIDE = "right"

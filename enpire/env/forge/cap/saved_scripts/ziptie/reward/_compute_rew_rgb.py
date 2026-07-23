@@ -2,12 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from concurrent.futures import ThreadPoolExecutor
-from scipy import ndimage as _ndimage
+
 import numpy as np
+from scipy import ndimage as _ndimage
+
 from enpire.env.forge.cap.agent.tools._artifact_log import background
 from enpire.env.forge.cap.agent.tools.detection import (
-    sam3_segment_multi_image, sam3_select_top1,
+    sam3_segment_multi_image,
+    sam3_select_top1,
 )
+
 
 def _load_viz_or_none():
     """Load the sibling viz helpers via CAP's ``load_module`` injection when

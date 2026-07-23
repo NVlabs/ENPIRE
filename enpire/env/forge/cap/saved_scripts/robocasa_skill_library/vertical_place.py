@@ -3,7 +3,9 @@
 
 # vertical_place.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
+
 from enpire.env.forge.cap.agent.skill_registry import skill
+
 
 @skill
 def vertical_place_v1(side, target_pos, z_offset=0.03):

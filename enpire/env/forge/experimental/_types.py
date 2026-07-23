@@ -5,7 +5,9 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+
 from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
+
 
 @dataclass
 class VLAStepData:

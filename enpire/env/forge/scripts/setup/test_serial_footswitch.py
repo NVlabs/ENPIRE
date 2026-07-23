@@ -171,7 +171,7 @@ def main() -> int:
         desc = ROLE_DESCRIPTIONS[role]
         while True:
             print(f"  [{prompt_idx + 1}/3] Press the button you want for: {desc}")
-            print(f"         (press and hold...)")
+            print("         (press and hold...)")
             btn = wait_for_press(ser)
             if btn is None:
                 continue

@@ -121,7 +121,6 @@ class AgentPipeline:
         """
         from omegaconf import open_dict
 
-        from enpire.env.forge.cap.agent.llm import make_llm
         from enpire.env.forge.cap.agent.agent_step import (
             CodeGeneratorStep,
             CodeReviewerStep,
@@ -131,6 +130,7 @@ class AgentPipeline:
             SelfReflectionStep,
             SubprocessExecutorStep,
         )
+        from enpire.env.forge.cap.agent.llm import make_llm
 
         oracle_mode = bool(getattr(cfg, "oracle", None))
 

@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # under_water_holding.py — hold a grasped object under the faucet stream until success
-from skill_library.namespace import *  # noqa: F401, F403
-
 import time
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.pnp_counter_to_cabinet_geometry import (
     fmt_xyz_v1,

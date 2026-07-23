@@ -10,7 +10,6 @@ import math
 from pathlib import Path
 from typing import Any
 
-
 DEFAULT_METRIC_ORDER = [
     "loop_total_ms",
     "env_obs_phase_ms",

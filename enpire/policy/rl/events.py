@@ -11,7 +11,6 @@ import numpy as np
 from enpire.policy.rl.config import DataCollectionConfig
 from enpire.policy.rl.initial_pose_manager import InitialPoseManager
 
-
 LEFT_TAKEOVER_BUTTON = 1
 RIGHT_TAKEOVER_BUTTON = 0
 SUCCESS_EVENT_BUTTON = 2

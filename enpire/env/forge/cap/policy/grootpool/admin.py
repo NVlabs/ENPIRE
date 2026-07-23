@@ -21,8 +21,8 @@ async def run_admin_server(
     shutdown: asyncio.Event,
 ) -> None:
     try:
-        from fastapi import FastAPI
         import uvicorn
+        from fastapi import FastAPI
     except ImportError:
         log.warning("fastapi/uvicorn not installed; admin endpoint disabled")
         await shutdown.wait()

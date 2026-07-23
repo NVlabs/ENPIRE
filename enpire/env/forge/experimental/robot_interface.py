@@ -11,14 +11,14 @@ and exposes a compatible `step(vla_step_data=...)` API used by
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import time
 from typing import Any, Dict, Optional, Union
 
 import numpy as np
 import torch
-from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
+
 from enpire.env.forge.experimental._types import VLAStepData
+from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
 
 try:
     from PIL import Image

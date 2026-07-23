@@ -2,12 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # stand_mixer_motion.py — shared OpenStandMixerHead motion helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import time
 
 import numpy as np
 from scipy.spatial.transform import Rotation as R
+from skill_library.namespace import *  # noqa: F401, F403
 
 
 def refresh_stand_mixer_planner_world_v1(reason):

@@ -11,9 +11,8 @@ between the two unplug operations.
 from __future__ import annotations
 
 import os
-from pathlib import Path
 import traceback
-
+from pathlib import Path
 
 RESET_SCRIPT = Path.cwd() / "cap" / "saved_scripts" / "gpu" / "gpu_reset.py"
 SCRIPT_COMPLETED = False

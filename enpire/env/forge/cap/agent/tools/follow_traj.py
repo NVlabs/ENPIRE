@@ -15,9 +15,8 @@ from typing import Any
 import numpy as np
 import portal
 
-from enpire.env.forge.cap.config import CAP_SERVER_PORT
 from enpire.env.forge.cap.agent.tools.base import Tool, ToolParameter, ToolResult
-
+from enpire.env.forge.cap.config import CAP_SERVER_PORT
 
 _planner = None
 

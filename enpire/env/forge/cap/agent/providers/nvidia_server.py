@@ -27,7 +27,6 @@ import tyro
 
 from enpire.env.forge.cap.agent.providers import nvidia
 
-
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
 RPM_WINDOW_S = 60.0

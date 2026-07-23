@@ -17,7 +17,6 @@ Run standalone:  uv run cap/server/cap_server.py
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
 import json
 import math
 import os
@@ -28,6 +27,7 @@ import sys
 import tempfile
 import threading
 import time
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -37,52 +37,58 @@ _PROJECT_ROOT = str(Path(__file__).resolve().parents[2])
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
+import logging
+
 import cv2
 import numpy as np
 import pink
 import pinocchio as pin
 import portal
-from enpire.env.forge.robot.camera_factory import create_camera, get_camera_backend, get_camera_type_name
-
-import logging
 
 from enpire.env.forge.cap.config import (
-    POLICY_MODEL_CONFIGS,
-    CAP_SERVER_PORT,
+    ALWAYS_TAKEOVERABLE,
     CAMERA_NAMES,
+    CAP_SERVER_PORT,
     CONTROL_FREQ_HZ,
     CONTROL_PERIOD_S,
+    FELLO_HOST,
     GO_HOME_MAX_JOINT_VEL,
+    GRIPPER_MAX,
+    GRIPPER_MIN,
     GRIPPER_POLL_S,
     GRIPPER_SETTLE_THRESH,
     GRIPPER_SETTLE_TIMEOUT_S,
     GRIPPER_STALL_THRESH,
     GRIPPER_TORQUE_LIMIT_HOLD_S,
-    HIL_LOG_DIR as _HIL_LOG_DIR,
+    HIL_POLICY_SLOWDOWN,
     HOME_JOINT_STATE,
     INTERP_KD,
     INTERP_KP,
-    FELLO_HOST,
+    JOINT_LIMITS_HIGH,
+    JOINT_LIMITS_LOW,
     LEFT_FOLLOWER_PORT,
     LEFT_LEADER_PORT,
     MOVE_EEF_MAX_DURATION_S,
     MOVE_EEF_MAX_VEL,
     POLICY_FREQ_HZ,
+    POLICY_MODEL_CONFIGS,
     POLICY_PERIOD_S,
     POLICY_SERVER_PORT,
+    REWARD_SERVER_PORT,
     RIGHT_FOLLOWER_PORT,
     RIGHT_LEADER_PORT,
-    ALWAYS_TAKEOVERABLE,
-    REWARD_SERVER_PORT,
     RL_EPISODE_MAX_STEPS,
     RL_POLICY_HOST,
     RL_POLICY_PORT,
     USE_FELLO,
-    HIL_POLICY_SLOWDOWN,
-    JOINT_LIMITS_LOW,
-    JOINT_LIMITS_HIGH,
-    GRIPPER_MIN,
-    GRIPPER_MAX,
+)
+from enpire.env.forge.cap.config import (
+    HIL_LOG_DIR as _HIL_LOG_DIR,
+)
+from enpire.env.forge.robot.camera_factory import (
+    create_camera,
+    get_camera_backend,
+    get_camera_type_name,
 )
 
 logger = logging.getLogger(__name__)
@@ -826,6 +832,8 @@ class CapServer:
             from enpire.env.forge.cap.env import create_env
             from enpire.env.forge.cap.env.adapters.sim import (
                 SimArmAdapter as SimArmClient,
+            )
+            from enpire.env.forge.cap.env.adapters.sim import (
                 SimCameraAdapter as SimCameraClient,
             )
 
@@ -3077,7 +3085,10 @@ class CapServer:
             extr["needs_optical_flip"] = True
             return extr
 
-        from enpire.env.forge.robot.models.station.paths import get_top_camera_frame, needs_optical_flip
+        from enpire.env.forge.robot.models.station.paths import (
+            get_top_camera_frame,
+            needs_optical_flip,
+        )
 
         cam_frame_map = {
             "top": os.environ.get("CAP_TOP_CAMERA_FRAME", get_top_camera_frame()),
@@ -3690,11 +3701,11 @@ class CapServer:
             _hil_substep = 0  # counts consecutive human-takeover steps
 
             from rich.progress import (
-                Progress,
                 BarColumn,
+                MofNCompleteColumn,
+                Progress,
                 TextColumn,
                 TimeRemainingColumn,
-                MofNCompleteColumn,
             )
 
             _progress = Progress(

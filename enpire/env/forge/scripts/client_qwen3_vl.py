@@ -5,9 +5,11 @@
 """Simple client for chatting with a running vLLM server."""
 
 from __future__ import annotations
+
 import argparse
 import base64
 from pathlib import Path
+
 from openai import OpenAI
 
 

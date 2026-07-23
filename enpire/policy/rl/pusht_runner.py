@@ -4,16 +4,16 @@
 # ruff: noqa: E402  (imports must follow the sys.path / bootstrap block)
 from __future__ import annotations
 
-from dataclasses import dataclass, fields
 import json
 import os
-from pathlib import Path
 import signal
 import socket
 import subprocess
 import sys
 import threading
 import time
+from dataclasses import dataclass, fields
+from pathlib import Path
 from typing import Any
 
 from enpire.env.forge.paths import FORGE_ROOT, REPOSITORY_ROOT
@@ -30,16 +30,23 @@ sys.stdout.reconfigure(line_buffering=True)
 
 import cv2
 import numpy as np
-from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
-from enpire.env.forge.experimental.rl_interface import PolicyAdapters
 import requests
 import tyro
 import yaml
 
+from enpire.env.forge.display_utils import put_latest_image
+from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
+from enpire.env.forge.experimental.rl_interface import PolicyAdapters
+from enpire.env.forge.robot.yam.kinematics import (
+    YamKinematics,
+    _quat_xyzw_to_rot6d,
+    _rot6d_to_rot_matrix,
+    _rpy_display_to_quat_xyzw,
+)
+from enpire.policy.rl.author import do_author, enter_author, exit_author
 from enpire.policy.rl.config import DataCollectionConfig
 from enpire.policy.rl.context import RLContext, build_context
 from enpire.policy.rl.events import TERMINAL_EVENTS
-from enpire.policy.rl.author import do_author, enter_author, exit_author
 from enpire.policy.rl.handlers import (
     do_change_pose,
     do_home,
@@ -47,13 +54,7 @@ from enpire.policy.rl.handlers import (
     handle_restart,
 )
 from enpire.policy.rl.policy import PolicyRouter
-from enpire.policy.rl.reset_options import terminal_label_options
-from enpire.env.forge.robot.yam.kinematics import (
-    YamKinematics,
-    _quat_xyzw_to_rot6d,
-    _rot6d_to_rot_matrix,
-    _rpy_display_to_quat_xyzw,
-)
+from enpire.policy.rl.pusht import gripper_overlay as pusht_gripper_overlay
 from enpire.policy.rl.pusht.reward import (
     SUCCESS_RECT_KEY,
     _as_bgr,
@@ -61,15 +62,13 @@ from enpire.policy.rl.pusht.reward import (
     _dominant_component,
     _draw_reward_overlay,
     _load_meta,
-    _red_mask,
     _rect_full_to_crop,
+    _red_mask,
     _scale_rect,
     _score_success,
     gate_score_by_avoid,
 )
-from enpire.policy.rl.pusht import gripper_overlay as pusht_gripper_overlay
-from enpire.env.forge.display_utils import put_latest_image
-
+from enpire.policy.rl.reset_options import terminal_label_options
 
 PUSHT_EXIT_RESET_REQUESTED = 10
 DELTA_EE_CONTROL_MODES = ("delta_ee_pose", "delta_ee_pose_translation")
@@ -470,10 +469,10 @@ def _patch_pusht_camera_image_shape(shape_wh: tuple[int, int]) -> None:
     if width <= 0 or height <= 0:
         raise ValueError(f"invalid pusht_camera_image_shape={shape_wh}")
 
-    from enpire.policy.rl import record_episode_wrapper
     import enpire.env.forge.robot.constants as robot_constants
     import enpire.env.forge.robot.yam._base_yam_env as base_yam_env
     import enpire.env.forge.robot.yam.yam_real_env as yam_real_env
+    from enpire.policy.rl import record_episode_wrapper
 
     for camera_name in ("top", "left", "right"):
         os.environ[f"CAP_{camera_name.upper()}_CAMERA_RESOLUTION"] = f"{width}x{height}"
@@ -1304,6 +1303,7 @@ def _pusht_top_camera_to_world(ctx: RLContext) -> np.ndarray | None:
     if calibrated_xml:
         try:
             import mujoco
+
             from enpire.env.forge.robot.models.station.paths import get_top_camera_frame
 
             model = mujoco.MjModel.from_xml_path(calibrated_xml)
@@ -1327,6 +1327,7 @@ def _pusht_top_camera_to_world(ctx: RLContext) -> np.ndarray | None:
                 setattr(ctx, "pusht_top_xml_projection_warned", True)
     try:
         import yourdfpy
+
         from enpire.env.forge.robot.models.station.paths import (
             get_station_urdf,
             get_top_camera_frame,

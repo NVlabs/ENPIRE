@@ -3,33 +3,36 @@
 
 from __future__ import annotations
 
-from collections import deque
-from dataclasses import dataclass
-from enum import Enum
-from pathlib import Path
-from typing import Any, Callable, Deque, Dict, Iterable, List, Optional, Tuple
 import atexit
 import queue
 import threading
 import time
+from collections import deque
+from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+from pathlib import Path
+from typing import Any, Callable, Deque, Dict, Iterable, List, Optional, Tuple
 
-from enpire.env.forge.experimental._solve_ik_with_multiple_targets import solve_ik_with_multiple_targets
 import cv2
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
-from scipy.spatial.transform import Rotation as R
 import trimesh
 import viser
+from PIL import Image, ImageDraw, ImageFont
+from scipy.spatial.transform import Rotation as R
 from viser.extras import ViserUrdf
 from yourdfpy import URDF
+
 from enpire.env.forge.experimental._pyroki_compat import import_pyroki
+from enpire.env.forge.experimental._solve_ik_with_multiple_targets import (
+    solve_ik_with_multiple_targets,
+)
 
 pk = import_pyroki()
 
 from enpire.env.forge.experimental._types import VLAStepData
-from enpire.env.forge.experimental.robot_interface import RobotInterface
 from enpire.env.forge.experimental.portal_policy import PortalPolicy
+from enpire.env.forge.experimental.robot_interface import RobotInterface
 
 
 @dataclass

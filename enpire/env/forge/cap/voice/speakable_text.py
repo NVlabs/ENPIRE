@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import re
 
-
 _FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
 _INLINE_CODE_RE = re.compile(r"`([^`]*)`")
 _LINK_RE = re.compile(r"\[([^\]]+)\]\([^)]+\)")

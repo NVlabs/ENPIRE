@@ -25,14 +25,14 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
+import artistic as art
 from base import (
     WandbRunFetcher,
+    clopper_pearson_ci,
     monotone_frontier_mask,
     sort_by_iter,
     wilson_ci,
-    clopper_pearson_ci,
 )
-import artistic as art
 
 # ---------------------------------------------------------------------------
 # Configuration

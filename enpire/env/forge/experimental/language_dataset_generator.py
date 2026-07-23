@@ -61,8 +61,8 @@ _TBD_ROOT = Path(__file__).resolve().parents[1]
 if str(_TBD_ROOT) not in sys.path:
     sys.path.insert(0, str(_TBD_ROOT))
 
-from enpire.env.forge.robot.yam.kinematics import YamKinematics
 from enpire.env.forge.experimental.scripted_policy import ScriptedPolicy
+from enpire.env.forge.robot.yam.kinematics import YamKinematics
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -1353,7 +1353,7 @@ def generate_dataset(
         if frames is None:
             skipped += 1
             if verbose:
-                print(f"  → SKIPPED (IK infeasible)")
+                print("  → SKIPPED (IK infeasible)")
             continue
 
         # Optional smoothness validation
@@ -1408,7 +1408,7 @@ def generate_dataset(
         "manifest_path":    str(manifest_path),
     }
     print("\n" + "=" * 60)
-    print(f"Dataset generation complete.")
+    print("Dataset generation complete.")
     print(f"  Episodes : {episode_idx}  (skipped: {skipped})")
     print(f"  Steps    : {global_step}")
     print(f"  Output   : {output_dir}")

@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # scrubbing_motion.py — sweep a grasped sponge across a cutting board surface
-from skill_library.namespace import *  # noqa: F401, F403
-
 import time
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import (
     debug_marker_v1,
@@ -16,7 +15,6 @@ from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.detection import 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.pnp_counter_to_cabinet_geometry import (
     fmt_xyz_v1,
 )
-
 
 CUTTING_BOARD_QUERIES_V1 = (
     "cutting board",

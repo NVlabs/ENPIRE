@@ -10,6 +10,10 @@ from .launcher import build_service_suite
 
 
 def _start(args: argparse.Namespace) -> int:
+    import os
+
+    if getattr(args, "station", None):
+        os.environ.setdefault("ENPIRE_STATION", args.station)
     selected = tuple(part.strip() for part in args.services.split(",") if part.strip())
     suite = build_service_suite(profile=args.profile, session=args.session, services=selected)
     for service in suite.services:
@@ -32,6 +36,7 @@ def add_services_parser(commands: argparse._SubParsersAction) -> None:
     start.add_argument("--profile", choices=("perception", "cap-real", "robot", "all"), default="cap-real")
     start.add_argument("--services", default="", help="Comma-separated services overriding the profile")
     start.add_argument("--session", default="enpire")
+    start.add_argument("--station", default=None, help="Station name; sets ENPIRE_STATION env var")
     start.add_argument("--confirm-motion", action="store_true")
     start.add_argument("--dry-run", action="store_true")
     start.set_defaults(handler=_start)

@@ -3,13 +3,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 import json
-from pathlib import Path
 import threading
 import time
-from typing import Any
 import warnings
+from collections.abc import Mapping
+from pathlib import Path
+from typing import Any
 
 import numpy as np
 

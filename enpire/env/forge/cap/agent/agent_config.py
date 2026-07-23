@@ -26,7 +26,6 @@ from typing import Any, List, Optional
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING, DictConfig, OmegaConf
 
-
 # ---------------------------------------------------------------------------
 # Sub-configs
 # ---------------------------------------------------------------------------

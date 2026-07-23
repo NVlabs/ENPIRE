@@ -14,18 +14,18 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import List, Optional, Literal
+from typing import List, Literal, Optional
 
 import numpy as np
-
 from damiao_motor import DaMiaoController, DaMiaoMotor
-from enpire.env.forge.robot.systemid.motor_calibrator import MotorCalibrator
-from enpire.env.forge.robot.yam.mujoco_utils import MuJoCoKDL
+
+from enpire.env.forge.experimental.footswitch import FootSwitchMonitor, KeyboardFootSwitchMonitor
 from enpire.env.forge.robot.fello.fello_config import (
     get_config_value,
     load_fello_config,
 )
-from enpire.env.forge.experimental.footswitch import FootSwitchMonitor, KeyboardFootSwitchMonitor
+from enpire.env.forge.robot.systemid.motor_calibrator import MotorCalibrator
+from enpire.env.forge.robot.yam.mujoco_utils import MuJoCoKDL
 
 logging.basicConfig(level=logging.INFO)
 
@@ -40,9 +40,10 @@ def _reset_gs_usb_device(channel: str = "can0") -> None:
     try:
         import re
         import time as _time
+
         import usb.core
-        from usb.backend import libusb1
         from gs_usb.gs_usb import GsUsb
+        from usb.backend import libusb1
 
         m = re.search(r"(\d+)$", str(channel))
         target_index = int(m.group(1)) if m else 0
@@ -713,7 +714,10 @@ class FelloLeaderRobot:
         fs_type = footswitch_cfg.get("type", "").strip().lower()
 
         if fs_type == "serial":
-            from enpire.env.forge.experimental.footswitch import SerialButtonHub, SerialButtonMonitor
+            from enpire.env.forge.experimental.footswitch import (
+                SerialButtonHub,
+                SerialButtonMonitor,
+            )
             serial_port = footswitch_cfg.get("serial_port")
             button_map = footswitch_cfg.get("button_map", [0, 1, 2])
             baudrate = footswitch_cfg.get("serial_baudrate", 115200)

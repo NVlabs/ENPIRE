@@ -24,8 +24,8 @@ joint configuration before applying deltas.
 
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -330,12 +330,12 @@ def convert_joint_to_ee_delta_pose(
     _validate_joint_state(states[-1], "observation.state", len(states) - 1)
     _validate_joint_state(actions[0], "action", 0)
     print(
-        f"  Validated: observation.state and action are 14D joint format "
-        f"with reasonable value ranges."
+        "  Validated: observation.state and action are 14D joint format "
+        "with reasonable value ranges."
     )
 
     # Print first-frame state for visual inspection
-    print(f"  First-frame observation.state (14D joint):")
+    print("  First-frame observation.state (14D joint):")
     print(f"    left_joint_pos  = {states[0, 0:6]}")
     print(f"    left_gripper    = {states[0, 6]:.4f}")
     print(f"    right_joint_pos = {states[0, 7:13]}")
@@ -425,8 +425,8 @@ def convert_joint_to_ee_delta_pose(
     print(f"  Input:  {input_path}  (14D joint actions)")
     print(f"  Output: {output_path} (16D delta EE pose actions)")
     print(
-        f"  observation.state: preserved as 14D joint format "
-        f"(first-frame calibration for replay)"
+        "  observation.state: preserved as 14D joint format "
+        "(first-frame calibration for replay)"
     )
 
 

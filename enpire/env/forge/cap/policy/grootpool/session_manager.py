@@ -19,7 +19,7 @@ import time
 from collections import deque
 
 from enpire.env.forge.cap.policy.grootpool import protocol as P
-from enpire.env.forge.cap.policy.grootpool.supervisor import WorkerHandle, WorkerSupervisor
+from enpire.env.forge.cap.policy.grootpool.supervisor import WorkerSupervisor
 
 log = logging.getLogger(__name__)
 

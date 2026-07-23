@@ -11,7 +11,6 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-
 out_path = os.environ.get("PUSHT_TOP_FRAME_PATH", "").strip()
 if not out_path:
     raise RuntimeError("PUSHT_TOP_FRAME_PATH is required")

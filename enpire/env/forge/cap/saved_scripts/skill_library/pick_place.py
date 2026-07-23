@@ -5,12 +5,11 @@ try:
     from skill_library.namespace import *  # noqa: F401,F403
 except AttributeError:
     pass
-from enpire.env.forge.cap.agent.skill_registry import skill  # noqa: F401
-
 import collections
 
 import numpy as np
 
+from enpire.env.forge.cap.agent.skill_registry import skill  # noqa: F401
 from skill_library import grasp_geometry
 
 try:
@@ -92,6 +91,13 @@ try:
     from skill_library.constants.manipulation import MAX_GRASP_ATTEMPTS  # type: ignore
 except Exception:
     MAX_GRASP_ATTEMPTS = 5
+
+import os as _os
+
+# Minimum gripper width (m) required to count as a successful grasp.
+# A reading of exactly 0 (or within sensor noise of 0) means the fingers
+# closed all the way — the object is not in the gripper.
+GRASP_SUCCESS_MIN_WIDTH_M = float(_os.environ.get("GRASP_SUCCESS_MIN_WIDTH_M", "0.003"))
 
 TARGET_DROP_Z_OFFSETS = dict(TABLE_TARGET_DROP_Z_OFFSETS)
 
@@ -422,11 +428,12 @@ def _execute_grasp(side, grasp, label="grasp", **config):
         return None
     close_gripper(side, **close_kwargs)
     gripper_pos = _gripper_pos_for_side(get_robot_state(), side)
-    print(f"  Gripper pos after close: {gripper_pos:.4f}")
-    if gripper_pos > 0.0:
+    min_w = float(config.get("grasp_success_min_width_m", GRASP_SUCCESS_MIN_WIDTH_M))
+    print(f"  Gripper pos after close: {gripper_pos:.4f} (threshold={min_w:.4f})")
+    if gripper_pos >= min_w:
         print("  Grasp check passed")
         return True
-    print("  Grasp check failed (gripper at/near zero)")
+    print("  Grasp check failed (gripper below minimum width — likely empty hand)")
     open_gripper(side, **open_kwargs)
     return False
 

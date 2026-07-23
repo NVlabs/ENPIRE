@@ -203,7 +203,9 @@ class RealYamBackend(ScriptRunnerBackend):
                     )
                 else:
                     try:
-                        from enpire.env.forge.cap.env.real_bimanual_yam.dashboard import YamDashboard
+                        from enpire.env.forge.cap.env.real_bimanual_yam.dashboard import (
+                            YamDashboard,
+                        )
 
                         dash = YamDashboard(self._env, get_robot_state)
                         dash.start()

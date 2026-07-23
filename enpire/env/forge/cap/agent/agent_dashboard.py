@@ -604,7 +604,10 @@ class AgentDashboard:
 
     def _ensure_known_nvidia_keys_locked(self) -> None:
         try:
-            from enpire.env.forge.cap.agent.providers.nvidia import list_nvidia_keys, nvidia_key_label
+            from enpire.env.forge.cap.agent.providers.nvidia import (
+                list_nvidia_keys,
+                nvidia_key_label,
+            )
 
             for key in list_nvidia_keys():
                 self._nvidia_stats_for_key(nvidia_key_label(key))

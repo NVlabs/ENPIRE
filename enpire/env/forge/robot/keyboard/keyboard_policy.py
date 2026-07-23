@@ -1,10 +1,11 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from evdev import InputDevice, categorize, ecodes
 import os
 import threading
 import time
+
+from evdev import InputDevice, categorize, ecodes
 
 
 class KeyboardPolicy:

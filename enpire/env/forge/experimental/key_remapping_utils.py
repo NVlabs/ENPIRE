@@ -196,7 +196,7 @@ def map_action(action: Dict[str, Any], embodiment_tag: EmbodimentTag):
             )
     else:
         raise ValueError(f"Embodiment tag {embodiment_tag} not supported")
-    
+
     for key, value in ACTION_KEY_MAP.items():
         if key in action:
             action_dict[value] = action[key]
@@ -246,7 +246,7 @@ def hold_action_from_proprio(proprio: dict[str, Any]) -> dict[str, Any]:
     """
     # Try ee_pose format first (for cartesian_position control mode)
     ee_pose_keys = [
-        ("ee_pos_obs_left", "ee_quat_obs_left", "gripper_pos_obs_left", 
+        ("ee_pos_obs_left", "ee_quat_obs_left", "gripper_pos_obs_left",
          "ee_pos_obs_right", "ee_quat_obs_right", "gripper_pos_obs_right"),
     ]
     for lep, leq, lg, rep, req, rg in ee_pose_keys:
@@ -268,7 +268,7 @@ def hold_action_from_proprio(proprio: dict[str, Any]) -> dict[str, Any]:
                 ).reshape(-1)[:1],
                 "source": None,
             }
-    
+
     # Try joint space format (for joint_position control mode)
     joint_keys = [
         ("left_joint_pos", "left_gripper_pos", "right_joint_pos", "right_gripper_pos"),

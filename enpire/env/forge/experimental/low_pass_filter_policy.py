@@ -3,9 +3,11 @@
 
 """Low-pass filter policy wrapper for smoothing policy actions."""
 
-from enpire.env.forge.experimental.filter_utils import FIRFilter
 from typing import Any
+
 import numpy as np
+
+from enpire.env.forge.experimental.filter_utils import FIRFilter
 
 
 class LowPassFilterPolicyWrapper:

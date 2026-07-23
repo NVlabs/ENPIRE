@@ -37,7 +37,6 @@ import numpy as np
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-
 from enpire.env.forge.robot.models.station.paths import get_station_xml
 
 _MODEL_XML = get_station_xml()

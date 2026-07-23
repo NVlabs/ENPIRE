@@ -6,7 +6,6 @@ from __future__ import annotations
 import shutil
 import subprocess
 
-
 TERMINAL_EVENT_PHRASES = {
     "success": "success",
     "out-of-range": "out of range",

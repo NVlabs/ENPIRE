@@ -51,6 +51,9 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
+from enpire.env.forge.cap.agent.executor import ExecutionLog, ExecutionResult, Executor
+from enpire.env.forge.cap.agent.tools import ToolRegistry, create_default_registry
+from enpire.env.forge.cap.agent.visualizer import CapVisualizer
 from enpire.env.forge.cap.config import (
     BRIDGE_HOST,
     BRIDGE_PORT,
@@ -62,9 +65,6 @@ from enpire.env.forge.cap.config import (
     DETECTION_SERVER_PORT,
     VISER_PORT,
 )
-from enpire.env.forge.cap.agent.executor import ExecutionLog, ExecutionResult, Executor
-from enpire.env.forge.cap.agent.tools import ToolRegistry, create_default_registry
-from enpire.env.forge.cap.agent.visualizer import CapVisualizer
 
 logger = logging.getLogger(__name__)
 
@@ -221,8 +221,9 @@ class _SimulatedRobot:
     # -- public API (matches tool callable signatures) -----------------------
 
     def get_state(self):
-        from enpire.env.forge.cap.agent.tools.base import ArmState, RobotState
         from scipy.spatial.transform import Rotation as R
+
+        from enpire.env.forge.cap.agent.tools.base import ArmState, RobotState
 
         def _rpy(q):
             e = R.from_quat(q).as_euler("xyz", degrees=True)
@@ -1608,6 +1609,8 @@ def create_app(
         # of floats cause serialization failures at large payload sizes.
         from enpire.env.forge.cap.config import (
             CONTROL_PERIOD_S as _CTRL_DT,
+        )
+        from enpire.env.forge.cap.config import (
             MOVE_EEF_MAX_VEL as _DEFAULT_VEL,
         )
 
@@ -1931,14 +1934,15 @@ def create_app(
         await _broadcast_status()
 
         # ── File logging (same as run_script.py) ─────────────────────
+        from datetime import datetime
+        from pathlib import Path
+
         from enpire.env.forge.cap.agent.profiler import (
             close_file_logging,
             enable_file_logging,
             set_state_fn,
         )
         from enpire.env.forge.cap.agent.tools._artifact_log import set_artifact_dir
-        from datetime import datetime
-        from pathlib import Path
 
         _logs_root = Path(__file__).resolve().parent.parent.parent / "logs"
         _script_tag = (
@@ -2011,9 +2015,10 @@ def create_app(
     @app.post("/api/save_cameras", response_model=OkResponse)
     async def save_cameras() -> OkResponse:
         """Save RGB, depth, and intrinsics for each camera to logs/saved_cams/."""
-        import cv2
         import json
         from datetime import datetime
+
+        import cv2
 
         loop = asyncio.get_running_loop()
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")

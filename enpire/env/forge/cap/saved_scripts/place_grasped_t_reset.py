@@ -15,24 +15,23 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 import time
+from pathlib import Path
 
 from skill_library.reset_t_skill import (
-    RESET_T_HOLD_GRIPPER_POS,
     RESET_OK_REFERENCE_IMAGE,
     RESET_OK_REFERENCE_META,
+    RESET_T_HOLD_GRIPPER_POS,
     _as_rgb_uint8,
     _red_mask,
     _reset_ok_dominant_component,
     _reset_ok_load_reference,
     move_to_t_grasp_pose_v1,
     normalize_upside_down_t_v1,
-    place_grasped_t_for_left_handoff_v1,
     place_grasped_t_at_reset_v1,
+    place_grasped_t_for_left_handoff_v1,
     reset_ok_v1,
 )
-
 
 SIDE = os.environ.get("PUSHT_RESET_SIDE", "auto").strip().lower() or "auto"
 RIGHT_TO_LEFT_HANDOFF = os.environ.get(

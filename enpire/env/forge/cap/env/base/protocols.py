@@ -13,7 +13,6 @@ from typing import Protocol, runtime_checkable
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # Core env contract (required)
 # ---------------------------------------------------------------------------

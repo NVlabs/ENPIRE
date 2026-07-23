@@ -18,7 +18,7 @@ if _ROOT not in sys.path:
 import cv2
 import numpy as np
 
-from enpire.env.forge.cap.agent.tools.vlm_query import _query_qwen, _query_gemini
+from enpire.env.forge.cap.agent.tools.vlm_query import _query_gemini, _query_qwen
 
 VLM_BACKEND = "gemini"
 VLM_TEMPERATURE = 0.2
@@ -58,10 +58,11 @@ def load_rgb(path: Path) -> np.ndarray:
 
 def query_vlm(images: list[np.ndarray], text: str) -> str:
     if VLM_BACKEND == "qwen":
-        from enpire.env.forge.cap.config import QWEN_VL_URL, QWEN_VL_MODEL
+        from enpire.env.forge.cap.config import QWEN_VL_MODEL, QWEN_VL_URL
         return _query_qwen(text, images, QWEN_VL_URL, QWEN_VL_MODEL, VLM_TEMPERATURE)
     elif VLM_BACKEND == "gemini":
         import os
+
         from enpire.env.forge.cap.config import GEMINI_VL_MODEL
         api_key = os.environ.get("GEMINI_API_KEY", "")
         if not api_key:
@@ -172,7 +173,7 @@ def main():
     print(f"  False pos:   {false_pos} (misaligned → YES)")
     print(f"  False neg:   {false_neg} (aligned → NO)")
     if false_pos + false_neg > 0:
-        print(f"\n  Wrong predictions:")
+        print("\n  Wrong predictions:")
         for r in results:
             if not r["correct"]:
                 gt_str = "aligned" if r["ground_truth"] else "misaligned"

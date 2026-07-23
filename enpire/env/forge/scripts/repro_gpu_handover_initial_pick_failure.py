@@ -15,7 +15,6 @@ import re
 import sys
 from pathlib import Path
 
-
 DEFAULT_SOURCE = Path("cap/saved_scripts/gpu/gpu_handover.py")
 DEFAULT_LOGS = [
     Path(

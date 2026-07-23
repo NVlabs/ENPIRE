@@ -14,6 +14,17 @@ uv run pytest -q tests/enpire
 
 ## Real YAM practitioner install
 
+`planning-local` compiles the vendored cuRobo CUDA extensions with
+`no-build-isolation`. On a completely fresh Python 3.11 environment `setuptools`
+may not yet be present. Run this one-time bootstrap first if `uv sync` fails
+during the cuRobo build step:
+
+```bash
+uv pip install "setuptools>=75"
+```
+
+Then install the full stack:
+
 ```bash
 uv sync \
   --extra dev \
@@ -29,9 +40,8 @@ uv sync \
   --extra real-rl
 ```
 
-`planning-local` compiles the vendored cuRobo CUDA extensions. A compiler,
-NVIDIA CUDA toolkit, and matching driver must already be present. The install
-does not modify drivers or system CUDA files.
+A compiler, NVIDIA CUDA toolkit, and matching driver must already be present.
+The install does not modify drivers or system CUDA files.
 
 The licensed AnyGrasp SDK, checkpoint, and license archive are not distributed
 by this repository. Set `ANYGRASP_SDK_ROOT`, `ANYGRASP_CHECKPOINT`, and

@@ -46,17 +46,16 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-from scipy.stats import beta as beta_dist
-
 from _common.robocasa365 import (
     CLIENT_SCRIPT_365,
-    REPO_DIR,
     LOG_ROOT,
+    REPO_DIR,
     ModelServer365,
     TeeStream,
     get_client_python_365,
     get_model_config,
 )
+from scipy.stats import beta as beta_dist
 
 # Task registry loaded from a pre-extracted JSON file.
 # Generated from robocasa365 dataset_registry via a RoboCasa365-capable client env.
@@ -152,7 +151,7 @@ def run_task(
     gpu_id: int = 0,
     record_video: bool = False,
 ) -> dict | None:
-    from _common.robocasa365 import N16_GROOT_ROOT, N15_GROOT_ROOT
+    from _common.robocasa365 import N15_GROOT_ROOT, N16_GROOT_ROOT
 
     env_name = f"robocasa/{task_name}"
     # Both versions need the benchmark repo for the gymnasium-1.0-compatible

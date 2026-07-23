@@ -46,7 +46,6 @@ from scipy.spatial.transform import Rotation, Slerp
 
 from enpire.env.forge.cap.integrations.motion import pyroki_snippets as pks  # type: ignore
 
-
 # ---------------------------------------------------------------------------
 # Planning helpers (linear-interp + per-waypoint IK)
 # ---------------------------------------------------------------------------
@@ -262,6 +261,7 @@ def _load_urdf(robot_urdf_name: str, urdf_path: str | None):
 
     if robot_urdf_name in ("yam", "yam_station"):
         import yourdfpy
+
         from enpire.env.forge.robot.models.station.paths import get_station_urdf
 
         path = Path(get_station_urdf()).resolve()

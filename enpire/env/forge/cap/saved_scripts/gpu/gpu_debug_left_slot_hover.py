@@ -20,11 +20,11 @@ import ast
 import importlib
 import json
 import os
-from pathlib import Path
 import sys
 import time
 import types
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -66,7 +66,6 @@ def _env_float_tuple(name: str, default: tuple[float, ...]) -> tuple[float, ...]
 
 
 import enpire.env.forge.cap.agent.tools.segmentation as _segmentation_tools
-
 
 _ORIGINAL_SEGMENT_LOG_MASK = _segmentation_tools.log_mask
 

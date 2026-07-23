@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from skill_library.namespace import *  # noqa: F401, F403
+
 from enpire.env.forge.cap.agent.skill_registry import skill
 
 

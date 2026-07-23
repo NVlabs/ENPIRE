@@ -39,16 +39,15 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-from scipy.stats import beta as beta_dist
-
 from _common import (
     CLIENT_PYTHON,
-    REPO_DIR,
     LOG_ROOT,
     MODEL_PATH,
+    REPO_DIR,
     ModelServer,
     TeeStream,
 )
+from scipy.stats import beta as beta_dist
 
 CLIENT_SCRIPT = Path(__file__).resolve().parent / "_workers" / "pandaomron.py"
 

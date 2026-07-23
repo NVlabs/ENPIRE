@@ -8,7 +8,6 @@ import logging
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from typing import Any
 
 from .backends import _get_env
 

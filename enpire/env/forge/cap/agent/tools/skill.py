@@ -18,8 +18,8 @@ from typing import Any
 
 import portal
 
-from enpire.env.forge.cap.config import CAP_SERVER_PORT, RL_POLICY_HOST, RL_POLICY_PORT
 from enpire.env.forge.cap.agent.tools.base import SkillResult, Tool, ToolParameter, ToolResult
+from enpire.env.forge.cap.config import CAP_SERVER_PORT
 
 
 class ExecuteSkillTool(Tool):

@@ -8,8 +8,8 @@ converts them to delta joint actions (differences between consecutive frames).
 """
 
 import argparse
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -40,7 +40,7 @@ def convert_joint_to_delta_joint(
     # state: The current joint positions from proprioception (T, 14)
     actions = np.stack(df["action"].values)
     state = np.stack(df["observation.state"].values)
- 
+
     if actions.shape[1] != 14:
         raise ValueError(
             f"Expected 14D actions, but got {actions.shape[1]}D."
@@ -52,7 +52,7 @@ def convert_joint_to_delta_joint(
     # No loop needed. NumPy handles element-wise subtraction for the whole array.
     # Logic: To get to 'action' (target) from 'state' (current), move by 'delta'
     delta_actions = actions - state
-    
+
     # ------------------------------
     # Convert back to list of arrays for pandas storage
     # (Pandas Parquet often expects a list of arrays for array-columns)

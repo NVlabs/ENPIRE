@@ -5,17 +5,16 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
 import time
 from dataclasses import dataclass
 from typing import Any
 
 import cv2
+import hydra
 import numpy as np
 import portal
 import torch
 import yaml
-import hydra
 from data4robotics.transforms import get_transform_by_name
 from normalizer import MeanStdNormalize
 
@@ -155,7 +154,7 @@ class PolicyServer:
         self._server.start()
 
     def _prepare_images(self, images: dict[str, Any]) -> dict[str, torch.Tensor]:
-        
+
         # print("image keys", images.keys())
         if not self.image_keys:
             image_keys = list(images.keys())
@@ -163,7 +162,7 @@ class PolicyServer:
             image_keys = self.image_keys
         device = torch.device(self.config.device)
         output: dict[str, torch.Tensor] = {}
-        
+
         print("image keys", image_keys)
         for idx, key in enumerate(image_keys):
             value = self._get_image_value(images, key)

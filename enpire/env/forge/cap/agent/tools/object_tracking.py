@@ -38,13 +38,13 @@ import portal
 import requests
 from scipy.spatial.transform import Rotation
 
+from enpire.env.forge.cap.agent.tools.base import Detection3D, Tool, ToolParameter, ToolResult
 from enpire.env.forge.cap.config import (
     BUNDLESDF_SERVER_HOST,
     BUNDLESDF_SERVER_PORT,
     CAP_SERVER_PORT,
     make_bundlesdf_name,
 )
-from enpire.env.forge.cap.agent.tools.base import Detection3D, Tool, ToolParameter, ToolResult
 
 logger = logging.getLogger(__name__)
 

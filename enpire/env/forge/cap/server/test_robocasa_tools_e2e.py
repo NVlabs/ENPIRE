@@ -25,16 +25,16 @@ import json
 import os
 import sys
 import time
-import urllib.request
 import urllib.error
+import urllib.request
 
 import numpy as np
 
 os.environ.setdefault("ROBOCASA_LAYOUT_ID", "1")
 os.environ.setdefault("ROBOCASA_STYLE_ID", "1")
 
-from enpire.env.forge.cap.server.cap_server import CapServer
 from enpire.env.forge.cap.agent.tools import create_default_registry
+from enpire.env.forge.cap.server.cap_server import CapServer
 
 PASS = 0
 FAIL = 0

@@ -27,7 +27,6 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-
 _IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 
 

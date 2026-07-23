@@ -6,6 +6,7 @@ from typing import Any, Callable
 
 import numpy as np
 from PIL import Image
+
 from enpire.env.forge.experimental._types import VLAStepData
 from enpire.env.forge.experimental.robot_interface import RobotInterface
 
@@ -71,7 +72,7 @@ class GetActionPolicy:
         task_description = observation["annotation.task"]
         vla_step_data = self._prepare_vla_step_data(images, proprio, task_description)
         response = self.policy.step(vla_step_data=vla_step_data)[0]
-        
+
         # Extract attention data if present
         attention_data = response.get("attention", None)
         if attention_data is None:
@@ -79,7 +80,7 @@ class GetActionPolicy:
         else:
             action_chunk = response.copy()
             action_chunk.pop("attention")
-            
+
 
         # Map to environment action space
         if self.adapters.map_action is not None:
@@ -92,7 +93,7 @@ class GetActionPolicy:
         }
         if attention_data is not None:
             info["attention"] = attention_data
-            
+
         return action, info
 
     # Private API only from here on out

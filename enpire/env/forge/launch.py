@@ -1,20 +1,20 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from dataclasses import dataclass
 import subprocess
-from typing import Literal
 import time
+from dataclasses import dataclass
+from typing import Literal
 
 import tyro
 
-from enpire.env.forge.robot.fello.fello_config import get_config_value, load_fello_config
 from enpire.env.forge.robot.constants import (
     LEFT_LEADER_CAN_INTERFACE,
     LEFT_LEADER_PORT,
     RIGHT_LEADER_CAN_INTERFACE,
     RIGHT_LEADER_PORT,
 )
+from enpire.env.forge.robot.fello.fello_config import get_config_value, load_fello_config
 
 
 def _load_default_force_feedback_ratios() -> tuple[
@@ -138,7 +138,7 @@ class Args:
     attach: bool = True
     """Whether to attach to the main session."""
 
-    monitor_motor_temperature: bool = False 
+    monitor_motor_temperature: bool = False
     """Whether to monitor the motor temperatures of all arms."""
 
 
@@ -180,8 +180,8 @@ def main(args: Args):
         )
 
     # Live motor temperature table (followers + leaders)
-    # Be careful: this procedure burns like 1.5 CPU core and could cause fluctuating latency issues in data collection. 
-    # Turn it off if its save to reserve more CPU power. 
+    # Be careful: this procedure burns like 1.5 CPU core and could cause fluctuating latency issues in data collection.
+    # Turn it off if its save to reserve more CPU power.
     if args.monitor_motor_temperature:
         robots_session.new_window("motor_temps", "uv run robot/monitor_motor_temps.py")
 

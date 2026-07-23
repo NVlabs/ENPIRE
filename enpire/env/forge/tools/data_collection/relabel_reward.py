@@ -1,9 +1,15 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import json, urllib.parse as up, webbrowser, os, numpy as np
+import json
+import os
+import urllib.parse as up
+import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+
+import numpy as np
+
 HTML=r"""<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Reward Relabel</title>
 <style>body{margin:0;background:#f7f7f4;color:#171717;font:14px ui-sans-serif,system-ui,sans-serif}header{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;padding:12px 16px;background:#fffffc;border-bottom:1px solid #ddd}main{padding:18px;max-width:1320px;margin:auto}.brand{font-weight:700}input{width:min(46vw,620px)}input,select,button{font:inherit;border:1px solid #c9c9c2;border-radius:7px;background:white;padding:8px 10px}button{cursor:pointer}.nav{margin-left:auto;display:flex;gap:8px;align-items:center}.score{font-size:18px;font-weight:800;margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.col{min-width:0}.col h2{font-size:15px;margin:0 0 10px}.card{background:white;border:1px solid #deded8;border-radius:8px;padding:10px;margin:0 0 12px;box-shadow:0 1px 2px #0000000a}.top{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}.tag{font-size:12px;font-weight:700;border-radius:999px;padding:3px 8px;background:#ece9e1;color:#111}.meta{color:#666;font-size:12px}.imgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.shot{min-width:0}.shot img,.shot video{width:100%;aspect-ratio:1.35;object-fit:cover;background:#111;border-radius:6px}.cap{margin-top:3px;color:#666;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:8px;margin-top:9px}.ok,.bad{border:0;color:white;font-weight:700;flex:1}.rv1{color:#166534}.rv0{color:#7f1d1d}.ok{background:#166534;color:white}.bad{background:#7f1d1d;color:white}.toast{position:fixed;right:18px;bottom:18px;background:#18181b;color:white;border-radius:8px;padding:10px 12px;opacity:0;transform:translateY(8px);transition:.18s}.toast.show{opacity:1;transform:none}@media(max-width:850px){header{flex-wrap:wrap}.grid{grid-template-columns:1fr}input{width:100%}.nav{margin-left:0}}</style></head>
 <body><header><span class=brand>Reward Relabel</span><input id=root placeholder="YAM_RAW_PATH or gearraw folder"><button onclick=load()>Load</button><select id=ep onchange=load(this.value)></select><input id=clip type=number min=0 step=.1 value=0 title="clip seconds, 0 = last frame" onchange=render() style="width:72px"><span id=info class=meta></span><div class=nav><button onclick=page(-1)>Prev</button><span id=pg class=meta></span><button onclick=page(1)>Next</button><input id=jump type=number min=1 title="episode number" style="width:62px"><button onclick=go()>Go</button></div></header><main><div id=score class=score></div><div class=grid><section class="col human"><h2>Human segment ends</h2><div id=human></div></section><section class="col rl"><h2>RL segment ends</h2><div id=rl></div></section></div></main><div id=toast class=toast></div>
@@ -59,7 +65,11 @@ def read_frame(root, ep, cam, i):
     if not ok: raise RuntimeError("JPEG encode failed")
     return buf.tobytes()
 def read_clip(root, ep, cam, i, dur):
-    import cv2, tempfile, os, subprocess
+    import os
+    import subprocess
+    import tempfile
+
+    import cv2
     f=epdir(root, ep)/f"{cam}-images-rgb.mp4"; cap=cv2.VideoCapture(str(f)); fps=cap.get(cv2.CAP_PROP_FPS) or 30; cap.release(); d=max(.001,float(dur)); st=max(0,(int(i)+1)/fps-d)
     tmp=tempfile.NamedTemporaryFile(suffix=".mp4",delete=False); name=tmp.name; tmp.close()
     cmd=["ffmpeg","-hide_banner","-loglevel","error","-y","-ss",str(st),"-t",str(d),"-i",str(f),"-an","-vf","format=yuv420p","-c:v","libx264","-preset","ultrafast","-movflags","+faststart",name]

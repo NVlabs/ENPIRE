@@ -15,9 +15,6 @@ uv run launch.py --mode=data_collection --use-fello --use-voice
 uv run python tools/data_collection/run_data_collection.py --station=1 --use-voice
 
 """
-from dataclasses import dataclass
-from datetime import datetime
-from pathlib import Path
 import os
 import random
 import re
@@ -26,6 +23,9 @@ import subprocess
 import sys
 import threading
 import time
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -38,19 +38,22 @@ maybe_reexec_with_uv(__file__, REPO_ROOT, required_modules=["gymnasium", "tyro"]
 # Ensure prints show up immediately over SSH/uv
 sys.stdout.reconfigure(line_buffering=True)
 
+import queue
+
 import gymnasium as gym
+import numpy as np
+import tyro
+from enpire.env.forge.tools.teleop_voice_annotate.voice_annotation import (
+    start_voice_annotation_thread,
+)
 from gymnasium.envs.registration import register
 from prompt_toolkit.shortcuts import radiolist_dialog
-import tyro
-
-from enpire.policy.rl.record_episode_wrapper import RecordEpisodeWrapper
 from teleop_policy import DEFAULT_FORCE_FEEDBACK_RATIOS, TeleopPolicy
 from timing_jsonl import TimingJsonlLogger
 from viser_env_wrapper import ViserEnvWrapper
+
 from enpire.env.forge.display_utils import ImageDisplayer, put_latest_image
-from enpire.env.forge.tools.teleop_voice_annotate.voice_annotation import start_voice_annotation_thread
-import queue
-import numpy as np
+from enpire.policy.rl.record_episode_wrapper import RecordEpisodeWrapper
 
 
 @dataclass

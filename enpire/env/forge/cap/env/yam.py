@@ -15,8 +15,8 @@ from __future__ import annotations
 import time
 
 import numpy as np
-import pinocchio as pin
 import pink
+import pinocchio as pin
 
 from enpire.env.forge.cap.config import (
     CONTROL_PERIOD_S,

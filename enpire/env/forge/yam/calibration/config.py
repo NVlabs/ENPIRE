@@ -14,13 +14,13 @@ import os
 from pathlib import Path
 
 from enpire.env.forge.paths import forge_path
-from enpire.env.forge.yam.station import enpire_data_home
 from enpire.env.forge.robot.constants import (
     LEFT_FOLLOWER_CAN_INTERFACE,
     LEFT_FOLLOWER_PORT,
     RIGHT_FOLLOWER_CAN_INTERFACE,
     RIGHT_FOLLOWER_PORT,
 )
+from enpire.env.forge.yam.station import enpire_data_home
 
 CAN_INTERFACE = LEFT_FOLLOWER_CAN_INTERFACE
 CAN_INTERFACE_RIGHT = RIGHT_FOLLOWER_CAN_INTERFACE

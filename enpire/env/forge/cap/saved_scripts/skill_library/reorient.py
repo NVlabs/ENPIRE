@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from skill_library.namespace import *  # noqa: F401, F403
 from enpire.env.forge.cap.agent.skill_registry import skill
+from skill_library.namespace import *  # noqa: F401, F403
 
 
 def _tool(name):
     import builtins
+
     import skill_library.namespace as namespace
 
     if name in globals():

@@ -37,7 +37,6 @@ from enpire.env.forge.experimental.motion_planner import YamMotionPlanner
 from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
 from enpire.env.forge.robot.yam.kinematics import YamKinematics
 
-
 HOME_LEFT = np.array([-0.3, 1.35, 1.6, -0.8, 0.3, -0.25], dtype=np.float64)
 HOME_RIGHT = np.array([0.3, 1.35, 1.6, -0.8, -0.3, 0.25], dtype=np.float64)
 ZERO_LEFT = np.zeros(6, dtype=np.float64)

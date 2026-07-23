@@ -6,10 +6,10 @@ import threading
 
 import numpy as np
 import portal
+from enpire.env.forge.experimental.pico.xr_client import XrClient
 from scipy.spatial.transform import Rotation as R
 
 from enpire.env.forge.robot.constants import PICO_PORT
-from enpire.env.forge.experimental.pico.xr_client import XrClient
 
 R_HEADSET_TO_WORLD = np.array(
     [

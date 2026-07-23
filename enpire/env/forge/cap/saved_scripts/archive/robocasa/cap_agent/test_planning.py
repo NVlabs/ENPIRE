@@ -20,6 +20,7 @@
 #   - get_camera_extrinsics      — camera rotation, position
 
 import time
+
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
@@ -161,6 +162,7 @@ print(f"\n  AnyGrasp target name (oracle): '{pick_name}'")
 # Grasp planning helper (AnyGrasp + cuRobo feasibility + visualization)
 # ---------------------------------------------------------------------------
 import cv2
+
 from enpire.env.forge.cap.agent.tools._artifact_log import log_image
 
 
@@ -367,12 +369,12 @@ else:
     # Hover above place target
     place_hover = place_pos.copy()
     place_hover[2] += HOVER_HEIGHT
-    print(f"  Moving to place hover...")
+    print("  Moving to place hover...")
     if not plan_and_move(place_hover, lift_quat, gripper=0.0, label="place-hover"):
         print("  Cannot reach place hover — releasing here.")
 
     # Lower to place
-    print(f"  Lowering to place...")
+    print("  Lowering to place...")
     plan_and_move(place_pos, lift_quat, gripper=0.0, label="place-lower")
 
     # Release

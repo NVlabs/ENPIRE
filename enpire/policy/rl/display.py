@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-import cv2
-import numpy as np
 import time
 
-from enpire.policy.rl.config import DataCollectionConfig
+import cv2
+import numpy as np
 
+from enpire.policy.rl.config import DataCollectionConfig
 
 _TERMINAL_LABEL = {
     "success": ("Success", (0, 255, 0)),

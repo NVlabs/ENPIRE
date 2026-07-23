@@ -11,7 +11,7 @@ from enpire.env.forge.experimental.rl_interface import RLInterface
 from enpire.env.forge.robot.fello.fello_teleop_policy import _IDENTITY_ROT6D, DualFelloPolicy
 from enpire.env.forge.robot.spacemouse.spacemouse_policy import SpaceMouseTeleopPolicy
 from enpire.policy.rl.config import DataCollectionConfig
-from enpire.policy.rl.events import Z_UP_KEY, RIGHT_TAKEOVER_BUTTON
+from enpire.policy.rl.events import RIGHT_TAKEOVER_BUTTON, Z_UP_KEY
 
 
 def _gripper_from_obs(obs: dict, side: str) -> np.ndarray:

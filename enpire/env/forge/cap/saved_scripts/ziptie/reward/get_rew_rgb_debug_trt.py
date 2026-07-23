@@ -10,13 +10,17 @@ Run the RTT/SAM3-only launch stack before launching this script:
     tmux/table_bussing/launch_table_bussing_local_realsense_sam3only_rtt.sh
 """
 
-import os, subprocess, time
+import os
+import subprocess
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+
 import numpy as np
+from skill_library.namespace import get_camera_image
+
 import enpire.env.forge.cap.agent.tools._artifact_log as _al
 from enpire.env.forge.cap.agent.tools._artifact_log import render_pool_stats
-from skill_library.namespace import get_camera_image
 
 # Pull functions AND shared constants from the TRT variant — flips SAM3_URL to :6868.
 _compute_rew_func = load_module("ziptie/reward/_compute_rew_rgb_trt.py")
@@ -44,7 +48,10 @@ DURATION_S = 600.0
 print(f"[reward-trt] running at {FPS} Hz for up to {DURATION_S:.0f}s → <log_dir>/vis/{{top,right,merged}}/...")
 period  = 1.0 / FPS
 t_start = time.time()
-from enpire.env.forge.cap.agent.tools._artifact_log import _artifact_dir as _ARTIFACT_DIR  # noqa: E402
+from enpire.env.forge.cap.agent.tools._artifact_log import (
+    _artifact_dir as _ARTIFACT_DIR,  # noqa: E402
+)
+
 _prev_status = "FAIL"
 _cap_pool = ThreadPoolExecutor(max_workers=2, thread_name_prefix="ziptie-cap")
 while time.time() - t_start < DURATION_S:

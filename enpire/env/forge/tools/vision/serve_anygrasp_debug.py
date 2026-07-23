@@ -24,7 +24,6 @@ import io
 import json
 import logging
 import os
-from pathlib import Path
 import sys
 import threading
 import time
@@ -32,6 +31,7 @@ import urllib.error
 import urllib.request
 import warnings
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -57,6 +57,11 @@ from enpire.env.forge.cap.config import (
     GRIPPER_SETTLE_TIMEOUT_S,
     GRIPPER_TCP_OFFSET_Z_M,
 )
+
+try:
+    from enpire.env.forge.cap.agent.tools.grasp_2d import plan_top_down_grasps_from_mask
+except ImportError:
+    plan_top_down_grasps_from_mask = None  # type: ignore[assignment]
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -170,6 +175,8 @@ class RunRequest(BaseModel):
     object_input_mode: str = "segmented_object_cloud"
     tcp_offset_z_m: float = GRIPPER_TCP_OFFSET_Z_M
     disable_planner_z_clipping: bool = False
+    grasp_backend: str = "anygrasp"  # "anygrasp" | "2dgrasp" | "anygrasp+2d-fallback"
+    grasp_z_m: float | None = None
 
 
 class RunResponse(BaseModel):
@@ -192,6 +199,12 @@ class RunResponse(BaseModel):
     planner_z_clipping_enabled: bool = True
     n_planner_z_clipped: int = 0
     grasps: list[GraspPoseRow] = Field(default_factory=list)
+    backend: str = "anygrasp"
+    fallback_from: str | None = None
+    fallback_reason: str | None = None
+    major_axis_ratio: float | None = None
+    axis_guided: bool | None = None
+    grasp_z_m: float | None = None
 
 
 class PlannerRequest(BaseModel):
@@ -202,6 +215,7 @@ class PlannerRequest(BaseModel):
     solver_speed: str = DEFAULT_SOLVER_SPEED
     planning_speed: float = 3.0
     ik_error_threshold: float = DEFAULT_IK_THRESHOLD_M
+    ik_rot_threshold_deg: float | None = None
     ik_xyz_weight: float = 1.0
     ik_rpy_weight: float = 0.3
     execute: bool = False
@@ -242,6 +256,7 @@ class SortIkRequest(BaseModel):
     solver_speed: str = DEFAULT_SOLVER_SPEED
     planning_speed: float = 3.0
     ik_error_threshold: float = DEFAULT_IK_THRESHOLD_M
+    ik_rot_threshold_deg: float | None = None
     ik_xyz_weight: float = 1.0
     ik_rpy_weight: float = 0.3
     grasps: list[GraspPoseRow] = Field(default_factory=list)
@@ -253,6 +268,7 @@ class SortIkResponse(BaseModel):
     side: str | None = None
     pose_mode: str | None = None
     ik_error_threshold: float = DEFAULT_IK_THRESHOLD_M
+    ik_rot_threshold_deg: float | None = None
     grasps: list[GraspPoseRow] = Field(default_factory=list)
     timing_total_ms: float = 0.0
     timing_plan_eval_ms: float = 0.0
@@ -665,6 +681,13 @@ def _point_cloud_z_extent(
     return z_min, z_max, float(z_max - z_min)
 
 
+def _compute_segmented_cloud_stats(object_points: np.ndarray) -> tuple[int, float]:
+    """Return (point_count, thickness_m) for the segmented object cloud."""
+    n_pts = int(object_points.shape[0]) if object_points.ndim == 2 else 0
+    _, _, thickness = _point_cloud_z_extent(object_points)
+    return n_pts, float(thickness) if thickness is not None else 0.0
+
+
 def _normalize_angle_deg(angle_deg: float) -> float:
     return float((float(angle_deg) + 180.0) % 360.0 - 180.0)
 
@@ -955,6 +978,7 @@ def _planner_request_cache_key(req: PlannerRequest) -> tuple[Any, ...]:
         _normalize_solver_speed(req.solver_speed),
         round(float(req.planning_speed), 6),
         round(float(req.ik_error_threshold), 6),
+        round(float(req.ik_rot_threshold_deg), 6) if req.ik_rot_threshold_deg is not None else None,
         round(float(req.ik_xyz_weight), 6),
         round(float(req.ik_rpy_weight), 6),
         tuple(round(float(v), 6) for v in req.xyz),
@@ -1632,6 +1656,29 @@ def _preview_pose_with_path(req: PlannerRequest) -> PlannerResponse:
 
         status = plan_result["status"]
         if status == "IK_Failed":
+            curobo_pos_err = plan_result.get("position_error_m")
+            curobo_rot_err = plan_result.get("rotation_error_deg")
+            if curobo_pos_err is not None or curobo_rot_err is not None:
+                pos_err = float(curobo_pos_err) if curobo_pos_err is not None else 0.0
+                rot_err = float(curobo_rot_err) if curobo_rot_err is not None else 0.0
+                return PlannerResponse(
+                    ok=False,
+                    status="IK_Failed",
+                    executed=False,
+                    side=side,
+                    pose_mode=pose_mode,
+                    start_xyz=_round_list(cur_l_pos if side == "left" else cur_r_pos, 5),
+                    goal_xyz=_round_list(xyz, 5),
+                    final_pos_error_m=pos_err,
+                    final_rot_error_deg=rot_err,
+                    final_pose_error=pos_err,
+                    reason=(
+                        f"IK did not converge (reported by cuRobo): "
+                        f"pos_err={pos_err:.4f} m, rot_err={rot_err:.2f} deg "
+                        f"(threshold={ik_threshold:.4f} m)."
+                    ),
+                    error="IK failed",
+                )
             kin = diagnostic_kin
             kin.forward_kinematics(cur_left_jp, cur_right_jp)
             gl, gr = kin.inverse_kinematics(
@@ -2171,6 +2218,9 @@ def _run_sort_grasps_by_ik_error(req: SortIkRequest) -> SortIkResponse:
                     "width": float(grasp.width),
                 }
             )
+        extra_ik_kwargs = {}
+        if req.ik_rot_threshold_deg is not None:
+            extra_ik_kwargs["ik_rot_threshold_deg"] = float(req.ik_rot_threshold_deg)
         batch_tool_result = tool.execute(
             grasp_candidates=batch_candidates,
             batch_side=side,
@@ -2182,6 +2232,7 @@ def _run_sort_grasps_by_ik_error(req: SortIkRequest) -> SortIkResponse:
             ik_rpy_weight=float(req.ik_rpy_weight),
             planner_backend="curobo",
             batch_validate_trajectory=False,
+            **extra_ik_kwargs,
         )
         plan_eval_elapsed_ms = (time.perf_counter() - plan_eval_start) * 1000.0
         batch_data = batch_tool_result.data
@@ -2286,6 +2337,7 @@ def _run_sort_grasps_by_ik_error(req: SortIkRequest) -> SortIkResponse:
             side=side,
             pose_mode=pose_mode,
             ik_error_threshold=float(req.ik_error_threshold),
+            ik_rot_threshold_deg=float(req.ik_rot_threshold_deg) if req.ik_rot_threshold_deg is not None else None,
             grasps=ranked_rows,
             timing_total_ms=round(total_elapsed_ms, 3),
             timing_plan_eval_ms=round(plan_eval_elapsed_ms, 3),
@@ -2607,6 +2659,7 @@ def _run_pipeline(req: RunRequest) -> RunResponse:
         t0 = time.perf_counter()
         tcp_offset_z_m = float(req.tcp_offset_z_m)
         disable_planner_z_clipping = bool(req.disable_planner_z_clipping)
+        grasp_backend = str(req.grasp_backend).strip().lower()
         rgb, depth, K, T_cam_world = _get_camera_data(req.camera)
         h, w = rgb.shape[:2]
         segmap = _segment_object(rgb, req.prompt)
@@ -2622,6 +2675,7 @@ def _run_pipeline(req: RunRequest) -> RunResponse:
             if np.any(object_flags)
             else np.empty((0, 3), dtype=np.float32)
         )
+        n_cloud_pts, cloud_thickness = _compute_segmented_cloud_stats(object_points)
         (
             segmented_cloud_z_min_m,
             segmented_cloud_z_max_m,
@@ -2638,6 +2692,61 @@ def _run_pipeline(req: RunRequest) -> RunResponse:
             )
         except Exception:
             logger.exception("[anygrasp-debug] Failed to update cloud preview")
+
+        # 2dgrasp mode: skip anygrasp entirely
+        use_2d = grasp_backend == "2dgrasp"
+        fallback_from: str | None = None
+        fallback_reason: str | None = None
+        if grasp_backend == "anygrasp+2d-fallback" and n_cloud_pts == 0:
+            use_2d = True
+            fallback_from = "anygrasp"
+            fallback_reason = "short_or_empty_segmented_cloud"
+
+        if use_2d:
+            fn = plan_top_down_grasps_from_mask
+            if fn is None:
+                raise PipelineUserError("error", "plan_top_down_grasps_from_mask unavailable")
+            two_d_result = fn(
+                rgb=rgb,
+                mask=segmap,
+                cam_K=K,
+                T_cam_world=T_cam_world,
+                object_name=req.prompt,
+                camera=req.camera,
+                max_grasps=req.max_grasps,
+                projection_z_m=req.grasp_z_m,
+            )
+            pose_rows = list(getattr(two_d_result, "grasp_rows", []) or [])
+            candidates = list(getattr(two_d_result, "candidates", []) or [])
+            debug = dict(getattr(two_d_result, "debug", {}) or {})
+            overlay_bytes = getattr(two_d_result, "overlay_jpeg", b"") or b""
+            return RunResponse(
+                status="ok" if candidates else "no_grasps",
+                n_grasps=len(candidates),
+                best_score=float(candidates[0].score) if candidates else None,
+                overlay_b64=base64.b64encode(overlay_bytes).decode() if overlay_bytes else None,
+                cloud_preview_url=cloud_preview_url,
+                image_width=w,
+                image_height=h,
+                latency_ms=(time.perf_counter() - t0) * 1000.0,
+                object_input_mode="mask_only",
+                segmented_cloud_z_min_m=segmented_cloud_z_min_m,
+                segmented_cloud_z_max_m=segmented_cloud_z_max_m,
+                segmented_cloud_thickness_m=segmented_cloud_thickness_m,
+                two_d_top_down_z_m=float(TWO_D_TOP_DOWN_Z_M),
+                tcp_offset_z_m=tcp_offset_z_m,
+                planner_z_floor_m=float(ANYGRASP_MIN_PLANNER_Z_M),
+                planner_z_clipping_enabled=not disable_planner_z_clipping,
+                n_planner_z_clipped=0,
+                grasps=pose_rows,
+                backend="2dgrasp",
+                fallback_from=fallback_from,
+                fallback_reason=fallback_reason,
+                major_axis_ratio=debug.get("major_axis_ratio"),
+                axis_guided=debug.get("axis_guided"),
+                grasp_z_m=req.grasp_z_m,
+            )
+
         grasps, scores, widths, overlay_bytes, best_score = _call_anygrasp_viz(
             rgb,
             depth,
@@ -2692,6 +2801,10 @@ def _run_pipeline(req: RunRequest) -> RunResponse:
             planner_z_clipping_enabled=not disable_planner_z_clipping,
             n_planner_z_clipped=int(n_z_clipped),
             grasps=pose_rows,
+            backend="anygrasp",
+            fallback_from=None,
+            fallback_reason=None,
+            grasp_z_m=req.grasp_z_m,
         )
     except PipelineUserError as e:
         log_fn = logger.warning if e.log_level == "warning" else logger.info

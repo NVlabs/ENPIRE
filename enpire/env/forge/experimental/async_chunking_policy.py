@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-from collections import deque
 import threading
 import time
-from typing import Any, Literal
 import warnings
 import weakref
+from collections import deque
+from typing import Any, Literal
 
 import numpy as np
 

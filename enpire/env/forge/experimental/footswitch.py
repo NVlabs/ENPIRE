@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import struct
 import threading
 import time
-import fcntl
 from pathlib import Path
 from select import select
 from typing import Protocol, runtime_checkable

@@ -35,7 +35,6 @@ import re
 from pathlib import Path
 from typing import Literal
 
-
 # Default root: cap/prompt/ relative to this file's location
 _DEFAULT_ROOT = Path(__file__).resolve().parent
 

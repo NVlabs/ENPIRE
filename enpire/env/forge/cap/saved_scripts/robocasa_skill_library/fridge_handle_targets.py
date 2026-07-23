@@ -3,8 +3,8 @@
 
 # fridge_handle_targets.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
-from enpire.env.forge.cap.agent.skill_registry import skill
 
+from enpire.env.forge.cap.agent.skill_registry import skill
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.fridge_control_state import (
     fridge_progress,
     get_control_target,

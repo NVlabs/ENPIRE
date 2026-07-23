@@ -9,10 +9,9 @@ import numpy as np
 import yaml
 from scipy.spatial.transform import Rotation
 
+from enpire.env.forge.robot.yam.kinematics import _rot6d_to_rot_matrix
 from enpire.policy.rl.context import RLContext
 from enpire.policy.rl.handlers import apply_collision_filter, record_action_delta
-from enpire.env.forge.robot.yam.kinematics import _rot6d_to_rot_matrix
-
 
 AUTHOR_INITIAL_POSITIONS_PATH = Path(
     "tmux/realworld_rl/tasks_config/pin_insertion/initial_position.yaml"

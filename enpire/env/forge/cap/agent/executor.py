@@ -284,8 +284,8 @@ class Executor:
 
         # Inject live skill_library.namespace into sys.modules so that
         # `from skill_library.namespace import go_home` resolves to real callables.
-        import types as _types
         import sys as _sys
+        import types as _types
         _ns_mod = _types.ModuleType("skill_library.namespace")
         for _k, _v in self._tools.items():
             if not _k.startswith("_") and callable(_v):

@@ -3,8 +3,8 @@
 
 # move_to_target_xyz.py — skill library, append-only
 from skill_library.namespace import *  # noqa: F401, F403
-from enpire.env.forge.cap.agent.skill_registry import skill
 
+from enpire.env.forge.cap.agent.skill_registry import skill
 
 MOVE_XYZ_BATCH_TOP_K = 16
 
@@ -64,8 +64,9 @@ def move_to_target_xyz_v1(
         carries ``reason``/``batch_status`` so the caller can decide whether to
         widen the offsets, change ``nominal_rpy``, or fall back.
     """
-    import numpy as np
     from types import SimpleNamespace
+
+    import numpy as np
 
     target_xyz = np.asarray(target_xyz, dtype=float).reshape(3).tolist()
     nom_roll, nom_pitch, nom_yaw = (float(v) for v in nominal_rpy)

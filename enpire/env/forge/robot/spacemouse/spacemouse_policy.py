@@ -3,15 +3,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from pathlib import Path
 import threading
 import time
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Sequence
 
 import numpy as np
 from evdev import InputDevice, ecodes, list_devices
-
 
 IDENTITY_ROT6D = np.array([1, 0, 0, 0, 1, 0], dtype=np.float32)
 

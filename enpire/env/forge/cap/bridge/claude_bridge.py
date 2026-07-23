@@ -3,8 +3,7 @@
 
 """Backward-compatible entrypoint for the generic CAP agent bridge."""
 
-from enpire.env.forge.cap.bridge.agent_bridge import main
-from enpire.env.forge.cap.bridge.agent_bridge import create_app
+from enpire.env.forge.cap.bridge.agent_bridge import create_app, main
 
 __all__ = ["create_app", "main"]
 

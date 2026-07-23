@@ -35,26 +35,28 @@ Usage from generated code::
 from __future__ import annotations
 
 import logging
+import os
 import threading
 import time
 import uuid
 from collections import OrderedDict
-import os
 from typing import Any
 
 import numpy as np
 
-from enpire.env.forge.cap.config import CAP_SERVER_PORT, CONTROL_PERIOD_S
-from enpire.env.forge.cap.constants.planning import (
-    DEFAULT_IK_POSITION_THRESHOLD_M as SHARED_DEFAULT_IK_POSITION_THRESHOLD_M,
-    DEFAULT_IK_ROT_THRESHOLD_DEG as SHARED_DEFAULT_IK_ROT_THRESHOLD_DEG,
-)
 from enpire.env.forge.cap.agent.tools.base import (
     FreespaceBatchCandidate,
     FreespaceResult,
     Tool,
     ToolParameter,
     ToolResult,
+)
+from enpire.env.forge.cap.config import CAP_SERVER_PORT, CONTROL_PERIOD_S
+from enpire.env.forge.cap.constants.planning import (
+    DEFAULT_IK_POSITION_THRESHOLD_M as SHARED_DEFAULT_IK_POSITION_THRESHOLD_M,
+)
+from enpire.env.forge.cap.constants.planning import (
+    DEFAULT_IK_ROT_THRESHOLD_DEG as SHARED_DEFAULT_IK_ROT_THRESHOLD_DEG,
 )
 from enpire.env.forge.robot.yam.kinematics import YamKinematics
 
@@ -2279,7 +2281,9 @@ class FreespaceMoveTool(Tool):
         """Send joint trajectory through Portal or the direct env. Returns an error string."""
 
         if self._env is not None:
-            from enpire.env.forge.cap.agent.tools.native import execute_bimanual_joint_keypoints_direct
+            from enpire.env.forge.cap.agent.tools.native import (
+                execute_bimanual_joint_keypoints_direct,
+            )
 
             result = execute_bimanual_joint_keypoints_direct(
                 self._env,

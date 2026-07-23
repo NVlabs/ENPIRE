@@ -6,11 +6,13 @@ Compress a video to H.264 in a commanded shape in a separate daemon process aysn
 
 """
 
-from pathlib import Path
-import subprocess
-import cv2
 import multiprocessing as mp
+import subprocess
+from pathlib import Path
+
+import cv2
 import numpy as np
+
 from enpire.env.forge.robot.constants import DEFAULT_COMPRESSED_VIDEO_SHAPE
 
 

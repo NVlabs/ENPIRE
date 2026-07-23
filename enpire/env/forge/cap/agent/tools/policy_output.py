@@ -19,6 +19,8 @@ from enpire.env.forge.cap.agent.tools.base import SkillResult, Tool, ToolParamet
 from enpire.env.forge.cap.config import (
     CAP_SERVER_PORT,
     POLICY_MODEL_CONFIGS,
+)
+from enpire.env.forge.cap.config import (
     PORTAL_EMPTY_SENTINEL as _PORTAL_EMPTY,
 )
 

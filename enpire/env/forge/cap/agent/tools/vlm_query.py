@@ -35,9 +35,10 @@ from enpire.env.forge.cap.agent.tools.vlm.backends.gpt import _query_gpt  # noqa
 from enpire.env.forge.cap.agent.tools.vlm.backends.nvidia import (  # noqa: F401 (back-compat)
     _query_nvidia,
     list_nvidia_keys,
-    pick_nvidia_key as _pick_nvidia_key,
 )
-from enpire.env.forge.cap.agent.tools.vlm.backends.qwen import _query_qwen  # noqa: F401 (back-compat)
+from enpire.env.forge.cap.agent.tools.vlm.backends.qwen import (
+    _query_qwen,  # noqa: F401 (back-compat)
+)
 from enpire.env.forge.cap.agent.tools.vlm.backends.smolvlm import (  # noqa: F401 (back-compat)
     _query_smolvlm,
 )
@@ -193,8 +194,9 @@ class VlmQueryTool(Tool):
 
     @staticmethod
     def _load_image_from_url(url: str) -> np.ndarray:
-        import cv2
         import urllib.request
+
+        import cv2
 
         with urllib.request.urlopen(url, timeout=15) as resp:
             data = np.frombuffer(resp.read(), dtype=np.uint8)

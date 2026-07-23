@@ -83,8 +83,8 @@ class CuroboWaypointPlanner:
         device: str = "cuda:0",
         solver_speed: str = "fast",
     ):
-        from enpire.env.forge.robot.yam.kinematics import YamKinematics
         from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
+        from enpire.env.forge.robot.yam.kinematics import YamKinematics
 
         self._kin = YamKinematics()
         self._curobo = YamMotionPlannerCurobo(

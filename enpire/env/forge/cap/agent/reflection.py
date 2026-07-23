@@ -512,6 +512,7 @@ def _compute_visual_diff(
         return ""
 
     import numpy as np
+
     from enpire.env.forge.cap.agent.tools._artifact_log import log_image
 
     pm = getattr(ctx, "prompt_memory", None)

@@ -28,6 +28,7 @@ same numbers we baselined).
 """
 
 import enpire.env.forge.cap.agent.tools.detection as _det
+
 _det.SAM3_URL = "http://localhost:6868"
 
 # Re-export the sibling PyTorch reward helpers explicitly. CAP's load_module()
@@ -77,14 +78,18 @@ RIGHT_CAM_UNION_CROP = _base_reward["RIGHT_CAM_UNION_CROP"]
 _POOL = _base_reward["_POOL"]
 
 # ── Tunable per-half reward overrides ──────────────────────────────────────
+import time as _time
+
 import numpy as _np
 from scipy import ndimage as _ndimage_local
+
+from enpire.env.forge.cap.agent.tools._artifact_log import background as _bg
 from enpire.env.forge.cap.agent.tools.detection import (
     sam3_segment_multi_image as _sam3_segment_multi_image,
+)
+from enpire.env.forge.cap.agent.tools.detection import (
     sam3_select_top1 as _sel_top1,
 )
-from enpire.env.forge.cap.agent.tools._artifact_log import background as _bg
-import time as _time
 
 
 def _get_reward_from_top_cam(rgb, top_dets, *, top_dilate: int = 0,

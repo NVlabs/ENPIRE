@@ -1143,6 +1143,22 @@ class SampleGraspPose2DTool(Tool):
                 source="tool_segmented_region_2d_ransac_obb",
             )
 
+            # If no explicit projection plane was supplied, derive it from the
+            # median Z of the segmented object cloud.  This avoids the fixed
+            # TABLE_SURFACE_Z_M default misaligning the projection when the
+            # object surface sits even a few centimetres above the nominal table.
+            effective_projection_z_m = projection_z_m
+            if effective_projection_z_m is None and segmented_cloud_point_count > 0:
+                median_z = float(np.median(points_world[:, 2]))
+                if np.isfinite(median_z):
+                    effective_projection_z_m = median_z
+                    logger.debug(
+                        "[2dgrasp] derived projection_z_m=%.4f from segmented cloud median "
+                        "(n=%d points)",
+                        median_z,
+                        segmented_cloud_point_count,
+                    )
+
             result = plan_top_down_grasps_from_mask(
                 rgb=rgb,
                 mask=mask,
@@ -1151,7 +1167,7 @@ class SampleGraspPose2DTool(Tool):
                 object_name=object_name,
                 camera=camera,
                 max_grasps=max_grasps,
-                projection_z_m=projection_z_m,
+                projection_z_m=effective_projection_z_m,
             )
             self.last_overlay_jpeg = result.overlay_jpeg
             self.last_graspnet_debug = {

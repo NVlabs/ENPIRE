@@ -9,50 +9,52 @@ Mostly adapted from `yam_env.py` in the `xdof_samples` starter code.
 
 import os
 import re
-import signal
 import shutil
+import signal
 import subprocess
 
 os.environ["MUJOCO_GL"] = "egl"
 os.environ["HF_HUB_OFFLINE"] = "1"
 # os.environ["HF_HUB_CACHE"] = "/mnt/amlfs-02/shared/ckpts"
+import socket
+import threading
+import time
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-import socket
-import threading
-import time
 from typing import Any, Literal
 
 import gymnasium as gym
-from gymnasium.envs.registration import register
 import numpy as np
 import portal
-from scipy.spatial.transform import Rotation
 import tyro
+from gymnasium.envs.registration import register
+from scipy.spatial.transform import Rotation
 
 from enpire.env.forge.experimental.async_chunking_policy import AsyncChunkingPolicy
-from enpire.env.forge.experimental.realtime_rtc_chunking_policy import RealtimeRTCChunkingPolicy
-
+from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
 from enpire.env.forge.experimental.filter_utils import PeriodicAverageAccumulator
+from enpire.env.forge.experimental.hil_policy import HILPolicyWrapper
 from enpire.env.forge.experimental.key_remapping_utils import map_action, map_observation
+from enpire.env.forge.experimental.lerobot_replay_policy import LerobotReplayPolicy
+from enpire.env.forge.experimental.pico_policy import PicoPolicy
+from enpire.env.forge.experimental.realtime_rtc_chunking_policy import RealtimeRTCChunkingPolicy
+from enpire.env.forge.experimental.robot_interface import RobotInterface
+from enpire.env.forge.experimental.scripted_policy import SafetyLimits, ScriptedPolicy
 from enpire.env.forge.experimental.start_stop_play_policy import (
     StartStopPlayPolicyWrapper,
     run_viser_subprocess,
 )
 from enpire.env.forge.experimental.sync_chunking_policy import SyncChunkingPolicy
 from enpire.env.forge.experimental.viser_policy import PolicyAdapters
-from enpire.env.forge.experimental.lerobot_replay_policy import LerobotReplayPolicy
-from enpire.policy.rl.record_episode_wrapper import RecordEpisodeWrapper
-from enpire.env.forge.experimental.embodiment_tags import EmbodimentTag
-from enpire.env.forge.experimental.robot_interface import RobotInterface
-from enpire.env.forge.experimental.hil_policy import HILPolicyWrapper
-from enpire.env.forge.experimental.pico_policy import PicoPolicy
 from enpire.env.forge.robot.constants import LEFT_LEADER_PORT, RIGHT_LEADER_PORT
+from enpire.env.forge.robot.fello.fello_teleop_policy import (
+    DualFelloPolicy as DualFelloTeleopPolicy,
+)
+from enpire.env.forge.robot.fello.fello_teleop_policy import FelloTeleopPolicy
 from enpire.env.forge.robot.yam.kinematics import YamKinematics
-from enpire.env.forge.robot.fello.fello_teleop_policy import DualFelloPolicy as DualFelloTeleopPolicy, FelloTeleopPolicy
-from enpire.env.forge.experimental.scripted_policy import ScriptedPolicy, SafetyLimits
+from enpire.policy.rl.record_episode_wrapper import RecordEpisodeWrapper
 
 _SS_PID_RE = re.compile(r"pid=(\d+)")
 
@@ -1073,7 +1075,9 @@ def main(cfg: EvalConfig) -> None:
                 _rt_root = Path(__file__).resolve().parents[2] / "RealtimeSTT"
                 if _rt_root.exists():
                     _sys.path.insert(0, str(_rt_root))
-                    from RealtimeSTT import AudioToTextRecorder as _Recorder  # type: ignore[assignment]
+                    from RealtimeSTT import (
+                        AudioToTextRecorder as _Recorder,  # type: ignore[assignment]
+                    )
 
                     AudioToTextRecorder = _Recorder
                     print(f"[Main] RealtimeSTT loaded from: {_rt_root}")

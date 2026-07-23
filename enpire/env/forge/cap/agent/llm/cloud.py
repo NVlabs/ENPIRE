@@ -91,7 +91,7 @@ class CloudLLM(LLMBackend):
                 user_parts.append(f"What still failed:\n{champion['feedback']}\n")
                 non_champ = [a for a in failure_history if a["iteration"] != champ_iter]
                 if non_champ:
-                    user_parts.append(f"=== SUBSEQUENT ATTEMPTS (all scored WORSE, showing last 3) ===")
+                    user_parts.append("=== SUBSEQUENT ATTEMPTS (all scored WORSE, showing last 3) ===")
                     for attempt in non_champ[-3:]:
                         n = attempt["iteration"]
                         score = attempt.get("score", 0.0)

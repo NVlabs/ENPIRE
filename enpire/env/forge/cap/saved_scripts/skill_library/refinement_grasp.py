@@ -5,12 +5,11 @@ try:
     from skill_library.namespace import *  # noqa: F401,F403
 except AttributeError:
     pass
-from enpire.env.forge.cap.agent.skill_registry import skill  # noqa: F401
-
 import collections
 
 import numpy as np
 
+from enpire.env.forge.cap.agent.skill_registry import skill  # noqa: F401
 from skill_library import grasp_geometry
 from skill_library.pick_place import (
     _birdseye_config,

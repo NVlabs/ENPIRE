@@ -3,16 +3,36 @@
 
 """Reset {ZIPTIE_COLOR}-ziptie head: loop grasp + classify (distinguish.py); middle-top → flat.py,
 same-side → side.py, else lift LIFT_M + release + restart. Bounded by MAX_ATTEMPTS."""
-import time, cv2, threading, numpy as np
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
-from enpire.env.forge.cap.agent.tools._artifact_log import log_mask
-from enpire.env.forge.cap.config import TABLE_SURFACE_Z_M
-from enpire.env.forge.cap.constants import TOPDOWN_RPY, handedness_transform_ee, handedness_transform_joint
+
+import cv2
+import numpy as np
 from skill_library.constants.robot import LEFT_HOME_XYZ
 from skill_library.constants.sorting import TABLE_SORT_RUN_CONFIG
-from skill_library.namespace import (close_gripper, freespace_move, nudge, get_camera_extrinsics, get_camera_image, get_camera_intrinsics,
-    get_robot_state, go_home, open_gripper, render_depth, rotate_joint, segment_all_objects)
+from skill_library.namespace import (
+    close_gripper,
+    freespace_move,
+    get_camera_extrinsics,
+    get_camera_image,
+    get_camera_intrinsics,
+    get_robot_state,
+    go_home,
+    open_gripper,
+    render_depth,
+    rotate_joint,
+    segment_all_objects,
+)
 from skill_library.pick import go_birdeye, pick_object
+
+from enpire.env.forge.cap.agent.tools._artifact_log import log_mask
+from enpire.env.forge.cap.config import TABLE_SURFACE_Z_M
+from enpire.env.forge.cap.constants import (
+    TOPDOWN_RPY,
+    handedness_transform_ee,
+    handedness_transform_joint,
+)
 
 # `reward/` isn't a sandbox-whitelisted top-level package, so pull its definitions
 # in via CAP's injected load_module (path relative to saved_scripts/, returns a

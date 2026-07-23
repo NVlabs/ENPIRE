@@ -329,9 +329,8 @@ def visualize_pico_inputs():
 
 def run_env(real: bool):
     import gymnasium as gym
-    from gymnasium.envs.registration import register
-
     from groot.control.envs.yam.yam_sim_env import MujocoViewerWrapper
+    from gymnasium.envs.registration import register
 
     # Environment
     if real:

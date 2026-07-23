@@ -32,8 +32,9 @@ import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-import termcolor
+
 import numpy as np
+import termcolor
 from scipy.spatial.transform import Rotation
 
 logger = logging.getLogger(__name__)
@@ -48,6 +49,7 @@ SCRIPTED_IK_ORIENTATION_COST = 0.05
 # Safety configuration (kept for API compatibility with yam_control_loop)
 # ---------------------------------------------------------------------------
 from enpire.env.forge.robot.constants import MAX_JOINT_VELOCITY_RAD_S
+
 
 @dataclass
 class SafetyLimits:

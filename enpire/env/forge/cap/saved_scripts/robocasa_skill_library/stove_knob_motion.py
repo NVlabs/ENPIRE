@@ -2,12 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # stove_knob_motion.py - TurnOffStove hover, contact, and rotation helpers
-from skill_library.namespace import *  # noqa: F401, F403
-
 import math
 import time
 
 import numpy as np
+from skill_library.namespace import *  # noqa: F401, F403
 
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.stove_knob_common import *  # noqa: F401, F403
 from enpire.env.forge.cap.saved_scripts.robocasa_skill_library.stove_knob_detection import (  # noqa: E402
