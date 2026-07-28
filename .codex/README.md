@@ -82,7 +82,7 @@ uv run ruff check enpire tests/enpire
 ## 2. Repository layout
 
 ```
-gear-enpire/
+ENPIRE/
 ├── enpire/
 │   ├── env/
 │   │   ├── forge/          runtime, tool registry, YAM station support, CaP runner

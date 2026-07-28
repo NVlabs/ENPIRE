@@ -6,7 +6,7 @@ policy:
 
 repositories:
   target:
-    path_hint: gear-enpire
+    path_hint: ENPIRE
     branch: release
     commit: 2b34f9d
     license_status: Apache-2.0
