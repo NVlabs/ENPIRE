@@ -57,7 +57,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Maps robot/payload state keys → env proprio_keys
 _STATE_KEY_MAP: dict[str, str] = {
-    # lecar-tbd XDOF format (from PROPRIO_KEY_MAP_xdof)
+    # enpire XDOF format (from PROPRIO_KEY_MAP_xdof)
     "joint_pos_obs_left": "left_joint_pos",
     "gripper_pos_obs_left": "left_gripper_pos",
     "joint_pos_obs_right": "right_joint_pos",
@@ -339,17 +339,17 @@ class RemoteDeploymentEnv(gym.Env[ObsType, ActType]):
             host: ZMQ server bind host. Use the actor machine LAN hostname/IP
                 for multi-machine deployments, or "0.0.0.0" to bind all IPv4
                 interfaces.
-            port: ZMQ server port (must match lecar-tbd's --server-address port).
+            port: ZMQ server port (must match enpire's --server-address port).
             image_keys: Camera obs keys, e.g. ["top_camera_image", "left_camera_image"].
                 Used for observation_space and obs parsing. Should match the cameras
-                that lecar-tbd sends.
+                that enpire sends.
             proprio_keys: Proprioceptive keys. Dimension is inferred from _PROPRIO_KEY_DIMS.
-                Must match what lecar-tbd sends (after key remapping).
+                Must match what enpire sends (after key remapping).
             action_dim: Flat action dimension. Joint actions are 14-D bimanual
                 or 7-D single-arm; delta-EEF actions are 16/8-D quaternion,
                 20/10-D rot6d, or 6/3-D position-only.
             action_exec_horizon: Number of action steps per policy call. Should match
-                lecar-tbd's --action-horizon. Actions are tiled to fill the horizon.
+                enpire's --action-horizon. Actions are tiled to fill the horizon.
             image_size: (H, W) placeholder image size for observation_space before
                 SERLObsWrapper applies the configured RL image resolution.
             instruction: Language instruction returned by get_language_instruction().
@@ -623,7 +623,7 @@ class RemoteDeploymentEnv(gym.Env[ObsType, ActType]):
                 raise TimeoutError(
                     "[RemoteDeploymentEnv] Timed out waiting for robot to connect "
                     "and send first observation. "
-                    "Make sure lecar-tbd is running with --server-address pointing here."
+                    "Make sure enpire is running with --server-address pointing here."
                 )
             # Skip episode-boundary sentinels from a previous episode
             if item is not None:

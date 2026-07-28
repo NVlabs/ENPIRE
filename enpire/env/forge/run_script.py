@@ -71,7 +71,7 @@ def _resolve_file(path_str: str, saved_scripts_dir: Path) -> Path:
         if result:
             return result
 
-    # 3. Paths copied with a repo prefix, e.g. lecar-tbd/cap/saved_scripts/foo.py.
+    # 3. Paths copied with a repo prefix, e.g. enpire/cap/saved_scripts/foo.py.
     parts = Path(raw).parts
     for idx in range(len(parts) - 1):
         if parts[idx] == "cap" and parts[idx + 1] == "saved_scripts":

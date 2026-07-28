@@ -20,7 +20,7 @@ Replace Tonghe's discrete button-nudge scripted policy (PR #17) with **draggable
 
 ### Inspiration
 
-NVIDIA GR00T's `viser_policy.py` implements this pattern: two `server.scene.add_transform_controls()` gizmos with IK solving. We adapt the same idea for lecar-tbd's experimental control loop. See also `experimental/viser_policy.py` for the local ViserPolicy implementation.
+NVIDIA GR00T's `viser_policy.py` implements this pattern: two `server.scene.add_transform_controls()` gizmos with IK solving. We adapt the same idea for enpire's experimental control loop. See also `experimental/viser_policy.py` for the local ViserPolicy implementation.
 
 ---
 

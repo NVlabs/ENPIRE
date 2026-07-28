@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Adversarial tests for GET /api/tasks/{task_id}/episodes/{idx}/component_timestamps.
 
 Tests cover happy paths, error paths, caching, concurrent access, malformed

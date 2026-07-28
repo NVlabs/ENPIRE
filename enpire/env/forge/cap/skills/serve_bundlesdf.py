@@ -24,7 +24,7 @@ delivered via long-lived HTTP chunked response — no snapshot polling.
 
 Usage
 -----
-    cd /path/to/lecar-tbd
+    cd /path/to/enpire
     python cap/skills/serve_bundlesdf.py                        # default port 8119
     python cap/skills/serve_bundlesdf.py --port 8120
     python cap/skills/serve_bundlesdf.py --cap_server_port 8300

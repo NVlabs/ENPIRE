@@ -9,10 +9,9 @@ This document lists all third-party software incorporated into or distributed wi
 | 1 | cuRobo | vendored (planning) | NVIDIA Research License | [NVlabs/curobo – LICENSE](https://github.com/NVlabs/curobo/blob/main/LICENSE) |
 | 2 | PyRoki | vendored (planning) | MIT | [chungmin99/pyroki – LICENSE](https://github.com/chungmin99/pyroki/blob/main/LICENSE) |
 | 3 | i2rt | vendored (control) | MIT | [i2rt-robotics/i2rt – LICENSE](https://github.com/i2rt-robotics/i2rt/blob/main/LICENSE) |
-| 4 | RoboCasa | vendored (simulation) | MIT | [robocasa/robocasa – LICENSE](https://github.com/robocasa/robocasa/blob/main/LICENSE) |
-| 5 | robosuite | vendored (simulation) | MIT | [ARISE-Initiative/robosuite – LICENSE](https://github.com/ARISE-Initiative/robosuite/blob/master/LICENSE) |
-| 6 | numpy | core | BSD-3-Clause | [numpy/numpy – LICENSE](https://github.com/numpy/numpy/blob/main/LICENSE.txt) |
-| 7 | PyYAML | core | MIT | [yaml/pyyaml – LICENSE](https://github.com/yaml/pyyaml/blob/master/LICENSE) |
+| 4 | RealtimeSTT | vendored (voice) | MIT | [KoljaB/RealtimeSTT – LICENSE](https://github.com/KoljaB/RealtimeSTT/blob/master/LICENSE) |
+| 5 | numpy | core | BSD-3-Clause | [numpy/numpy – LICENSE](https://github.com/numpy/numpy/blob/main/LICENSE.txt) |
+| 6 | PyYAML | core | MIT | [yaml/pyyaml – LICENSE](https://github.com/yaml/pyyaml/blob/master/LICENSE) |
 | 8 | opencv-python / opencv-contrib-python | vision, calibration | Apache-2.0 | [opencv/opencv – LICENSE](https://github.com/opencv/opencv/blob/4.x/LICENSE) |
 | 9 | Pillow | vision, VLM | HPND | [python-pillow/Pillow – LICENSE](https://github.com/python-pillow/Pillow/blob/main/LICENSE) |
 | 10 | requests | vision, VLM | Apache-2.0 | [psf/requests – LICENSE](https://github.com/psf/requests/blob/main/LICENSE) |

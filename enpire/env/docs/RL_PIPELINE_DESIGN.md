@@ -5,7 +5,7 @@
 
 ## Goal
 
-Use the CAP skill infrastructure (`lecar-tbd/`) as the RL actor environment. The `learn_skill()` method on `CapServer` communicates with an external `rl_policy_server` over Portal RPC, receiving single-step actions and sending back (obs, action, reward, done) transitions. Human-in-the-loop takeover via Fello arms is fully supported: human actions are tagged as `action_source="human"` and routed to the intervention buffer on the RL server.
+Use the CAP skill infrastructure (`enpire/`) as the RL actor environment. The `learn_skill()` method on `CapServer` communicates with an external `rl_policy_server` over Portal RPC, receiving single-step actions and sending back (obs, action, reward, done) transitions. Human-in-the-loop takeover via Fello arms is fully supported: human actions are tagged as `action_source="human"` and routed to the intervention buffer on the RL server.
 
 ## Cross-References
 
@@ -20,7 +20,7 @@ Use the CAP skill infrastructure (`lecar-tbd/`) as the RL actor environment. The
 
 ## Projects Involved
 
-- **`lecar-tbd/`** — CAP server & agent: robot control loop (`CONTROL_FREQ_HZ`), skill execution (`POLICY_FREQ_HZ`), Fello human takeover, camera pipeline, reward server, diagnostics dashboard, safety zones
+- **`enpire/`** — CAP server & agent: robot control loop (`CONTROL_FREQ_HZ`), skill execution (`POLICY_FREQ_HZ`), Fello human takeover, camera pipeline, reward server, diagnostics dashboard, safety zones
 - **`bc_policy/`** — (Optional, for full RL training) SAC agent, agentlace actor-learner communication, replay buffers, training loop (`train_delta_rlpd.py`)
 - **`scripts/serve_rl_policy.py`** — Dummy RL policy server for testing (random delta actions, no GPU needed)
 
@@ -46,7 +46,7 @@ Use the CAP skill infrastructure (`lecar-tbd/`) as the RL actor environment. The
               │  Network (LAN)
               │
 ┌─────────────┼────────────────────────────────────────────────────────┐
-│             │              lecar-tbd (Robot machine)                  │
+│             │              enpire (Robot machine)                  │
 │  ┌──────────▼────────────┐                                           │
 │  │     CAP Server         │                                          │
 │  │   (cap_server.py)      │                                          │
@@ -830,7 +830,7 @@ Or use the test script:
 ### Full RL Training
 
 ```bash
-# Robot machine (lecar-tbd/)
+# Robot machine (enpire/)
 # Terminal 1: CAP Server
 uv run cap/server/cap_server.py
 
@@ -848,7 +848,7 @@ uv run scripts/pld_lite/serve_rl_policy.py \
     --config-dir ../../configs --config-name config \
     train=delta_rlpd
 
-# Robot machine (lecar-tbd/)
+# Robot machine (enpire/)
 # Terminal 5: Run episodes (loop or from agent)
 import portal
 client = portal.Client("localhost:8300")

@@ -193,13 +193,13 @@ Machine-specific runtime paths are configured outside the repo via
 
 ### Source chain
 
-1. `~/.config/lecar-tbd/runtime_env.sh` (user env file, written by `configure_runtime_env.sh`)
+1. `~/.config/enpire/runtime_env.sh` (user env file, written by `configure_runtime_env.sh`)
 2. `~/.bashrc` (which sources the above if configured)
 3. `tools/runtime_env.sh` (repo entry point, sourced by all launchers at startup)
 
 Loading order in `tools/runtime_env.sh:162-165`:
 ```
-source_user_runtime_env_file()   # reads ~/.config/lecar-tbd/runtime_env.sh
+source_user_runtime_env_file()   # reads ~/.config/enpire/runtime_env.sh
 source_user_bashrc()             # reads ~/.bashrc
 sanitize_python_launcher_env()   # unsets VIRTUAL_ENV/CONDA_PREFIX/etc.
 export_repo_runtime_defaults()   # sets PROJECT_ROOT, CUDA_HOME, HF_HOME, etc.
@@ -270,7 +270,7 @@ Checked at S1 startup (`launch_remote_gpu.sh:113-119`):
 |--------|---------|-----|
 | `launch_remote_gpu.sh` | Starts SAM3 + BundleSDF + AnyGrasp + cuRobo on S1 in a tmux session | `tmux/remote_serving/launch_remote_gpu.sh` |
 | `stop_lecar_s1.sh` | Kills the remote tmux serving session | `tmux/remote_serving/stop_lecar_s1.sh` |
-| `configure_runtime_env.sh` | Interactive/scripted writer for `~/.config/lecar-tbd/runtime_env.sh` | `tmux/remote_serving/configure_runtime_env.sh` |
+| `configure_runtime_env.sh` | Interactive/scripted writer for `~/.config/enpire/runtime_env.sh` | `tmux/remote_serving/configure_runtime_env.sh` |
 | `sync_lecar_s1_assets.sh` | Runs `git lfs pull` on both local and remote clones, verifies dependencies | `tmux/remote_serving/sync_lecar_s1_assets.sh` |
 | `sync_remote_model_cache.sh` | Rsyncs SAM3 + SAM2 HF model caches to S1 | `tmux/remote_serving/sync_remote_model_cache.sh` |
 | `install_curobo_s1.sh` | Verifies or installs cuRobo into the S1 repo `.venv` | `tmux/remote_serving/install_curobo_s1.sh` |
@@ -416,19 +416,19 @@ bash tmux/table_bussing/launch_table_bussing_remote.sh
 
 ### Local sim test
 ```bash
-cd /home/<user>/Project/lecar-tbd
+cd /home/<user>/Project/enpire
 bash tmux/table_bussing/launch_table_bussing_local.sh --sim
 ```
 
 ### Remote real test
 ```bash
-cd /home/<user>/Project/lecar-tbd
+cd /home/<user>/Project/enpire
 bash tmux/table_bussing/launch_table_bussing_remote.sh
 ```
 
 ### Remote sim smoke test
 ```bash
-cd /home/<user>/Project/lecar-tbd
+cd /home/<user>/Project/enpire
 bash tmux/table_bussing/launch_table_bussing_remote.sh --sim --no-arms --no-browser
 ```
 
@@ -556,7 +556,7 @@ The AnyGrasp launch script also:
 
 ```bash
 ssh LeCAR_4xRTX6000BlackWell_97GB
-cd /path/to/lecar-tbd
+cd /path/to/enpire
 bash tmux/remote_serving/configure_runtime_env.sh \
   --tmp-root /usr0/<user>/tmp \
   --deps-root ~/runtime-deps \
@@ -564,7 +564,7 @@ bash tmux/remote_serving/configure_runtime_env.sh \
   --yes
 ```
 
-This writes `~/.config/lecar-tbd/runtime_env.sh` and adds a source line to `~/.bashrc`.
+This writes `~/.config/enpire/runtime_env.sh` and adds a source line to `~/.bashrc`.
 
 ### 2. Sync Git LFS assets to both machines
 
@@ -585,7 +585,7 @@ bash tmux/remote_serving/sync_remote_model_cache.sh
 ```bash
 # Done automatically by launchers, or manually:
 ssh LeCAR_4xRTX6000BlackWell_97GB
-cd /path/to/lecar-tbd
+cd /path/to/enpire
 bash tmux/remote_serving/install_curobo_s1.sh
 ```
 

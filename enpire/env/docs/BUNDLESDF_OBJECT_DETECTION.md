@@ -603,7 +603,7 @@ See [remote_serving.md](remote_serving.md) for remote GPU serving configuration.
 ## File Structure
 
 ```
-lecar-tbd/
+enpire/
 |-- tools/vision/
 |   |-- serve_bundlesdf.py                 # Main tracking server (FastAPI, ~1720 lines)
 |   +-- serve_sam3.py                      # SAM3 segmentation server (FastAPI, port 6767)

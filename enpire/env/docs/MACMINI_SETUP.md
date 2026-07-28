@@ -23,7 +23,7 @@ Run the CAP simulation stack on an Apple Silicon Mac Mini (no real hardware need
 ## Install
 
 ```bash
-cd ~/Project/lecar-tbd
+cd ~/Project/enpire
 uv sync --only-group macmini
 ```
 
@@ -239,12 +239,9 @@ Once the tmux session is up (cap_server, cap_agent, reward_server, cap_ui all ru
 open the CAP UI at `http://localhost:5173` and execute scripts via oracle mode. Example:
 
 ```
-cap/saved_scripts/robocasa_pnp_test.py        # RoboCasa pick-and-place
+cap/saved_scripts/examples/pick_cube.py       # example pick-and-place
 cap/saved_scripts/test_freespace_move.py      # YAM cuRobo free-space move
 ```
-
-These scripts use `backend="oracle"` for object detection (MuJoCo ground-truth positions)
-where applicable, so no external pose servers (BundleSDF, AnyGrasp) are needed.
 
 ---
 

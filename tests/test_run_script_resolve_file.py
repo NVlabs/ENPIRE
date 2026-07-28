@@ -84,7 +84,7 @@ def _load_run_script_module() -> types.ModuleType:
 def test_resolve_file_accepts_repo_prefixed_saved_script_path() -> None:
     module = _load_run_script_module()
     resolved = module.resolve_file(
-        "lecar-tbd/cap/saved_scripts/table_bussing/nclass_sorting_nvidiagemini.py"
+        "enpire/cap/saved_scripts/table_bussing/nclass_sorting_nvidiagemini.py"
     )
     assert resolved == EXPECTED_SCRIPT
 

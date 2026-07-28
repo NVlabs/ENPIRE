@@ -2,7 +2,7 @@
 # Remote deployment environment - Portal SERVER for RL data collection
 #
 # This env runs a Portal server (same protocol as serve_policy.py).
-# The remote robot (lecar-tbd yam_control_loop) connects as the Portal CLIENT.
+# The remote robot (enpire yam_control_loop) connects as the Portal CLIENT.
 #
 # Robot sends:  step({images, states, text, embodiment, ...}) -> action_dict
 # This env:     queues obs for RL actor, sends action_dict from RL actor to robot
@@ -11,7 +11,7 @@
 #   uv run scripts/pld_lite/train_delta_rlpd.py task=remote_yam \
 #     env.remote_port=8964 train.actor=True
 #
-# Then on robot machine (lecar-tbd):
+# Then on robot machine (enpire):
 #   uv run python -m experimental.yam_control_loop \
 #     --action-horizon=20 --server-address="<RL_MACHINE_IP>:8964"
 
@@ -41,7 +41,7 @@ image_width: 256
 # Action config
 remote_action_dim: 14         # 6+1+6+1 bimanual joint+gripper unless action_repr overrides semantics
 action_repr: "joint"          # "joint", "delta_eef_quat", "delta_eef_rot6d", or "delta_eef_pos"
-remote_action_exec_horizon: 20  # must match --action-horizon in lecar-tbd
+remote_action_exec_horizon: 20  # must match --action-horizon in enpire
 
 # Placeholder input size before SERLObsWrapper applies image_height/image_width.
 remote_image_height: 480

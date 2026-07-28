@@ -32,7 +32,7 @@ Coordinate frame convention (world / robot base frame):
     z = up
 
 Usage:
-    cd ~/Project/lecar-tbd
+    cd ~/Project/enpire
     uv run python -m experimental.language_dataset_generator
     uv run python -m experimental.language_dataset_generator --output-dir /tmp/lang_data
 """

@@ -1,10 +1,8 @@
 # Viser Interactive cuRobo Motion Planner
 
-Standalone Viser 3D UI for interactive collision-free motion planning with cuRobo in RoboCasa.
+Standalone Viser 3D UI for interactive collision-free motion planning with cuRobo on YAM.
 
 **Related docs:**
-- [`docs/CUROBO_ISAACSIM_SETUP.md`](CUROBO_ISAACSIM_SETUP.md) -- cuRobo setup, robot configs, collision spheres
-- [`docs/ROBOCASA_INTEGRATION.md`](ROBOCASA_INTEGRATION.md) -- RoboCasa environment integration
 - [`docs/VISER_IK_TELEOP_DESIGN.md`](VISER_IK_TELEOP_DESIGN.md) -- Viser gizmo teleop (YAM)
 
 ---
@@ -39,16 +37,15 @@ The script is a **standalone client** -- it does not run inside the CAP sandbox.
 
 ### Prerequisites
 
-1. cap_server running with a RoboCasa environment
-2. cuRobo remote server running (e.g. on LeCAR-S1 GPU box, port 8611)
+1. cap_server running with a YAM environment
+2. cuRobo remote server running (port 8611 by default)
 
 ### Launch
 
 ```bash
-# Terminal 1: cap_server
-CAP_ROBOT_TYPE=panda ROBOCASA_CONTROLLER_TYPE=joint_position \
-uv run python -u cap/server/cap_server.py \
-  --env robocasa:PickPlaceCounterToCabinet --port 18600
+# Terminal 1: cap_server (real YAM)
+source .forge_env && uv run python -u cap/server/cap_server.py \
+  --env yam-real --port 18600
 
 # Terminal 2: Viser planner
 CAP_PORT=18600 CAP_CUROBO_PORT=8611 \

@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """Tests for GET /api/tasks/{task_id}/timing_health and _compute_timing_health."""
 
 from __future__ import annotations

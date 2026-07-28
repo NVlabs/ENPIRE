@@ -23,8 +23,15 @@ The following projects are vendored as editable local packages under `third_part
 | cuRobo | [NVlabs/curobo](https://github.com/NVlabs/curobo) | NVIDIA Research License |
 | PyRoki | [chungmin99/pyroki](https://github.com/chungmin99/pyroki) | MIT |
 | i2rt | [i2rt-robotics/i2rt](https://github.com/i2rt-robotics/i2rt) | MIT |
-| RoboCasa | [robocasa/robocasa](https://github.com/robocasa/robocasa) | MIT |
-| robosuite | [ARISE-Initiative/robosuite](https://github.com/ARISE-Initiative/robosuite) | MIT |
+| RealtimeSTT | [KoljaB/RealtimeSTT](https://github.com/KoljaB/RealtimeSTT) | MIT |
+
+## NVIDIA-authored components under `third_party/`
+
+The following component is authored by NVIDIA and vendored locally for packaging convenience. It is distributed under the same Apache-2.0 license as this repository.
+
+| Component | License |
+|-----------|---------|
+| overlay_viz | Apache-2.0 (NVIDIA CORPORATION) |
 
 ## Source-derived code
 
@@ -33,8 +40,6 @@ The following Forge feature branches and the yam-calibration repository are the 
 | Component | Branch / Commit | License Status |
 |-----------|----------------|---------------|
 | Forge – GPU insertion | `haotian/gpu-insertion @ 682f7937` | Pending source-owner review |
-| Forge – Zip-tie AutoRL | `tonghe/ziptie-autorl @ 1abbfeae` | Pending source-owner review |
-| Forge – PushT | `wenlix/pusht_env @ 3cc5e899` | Pending source-owner review |
 | Forge – Pin / AutoRL | `wenlix/autorl @ 4c37817d` | Pending source-owner review |
 | yam-calibration | `main @ 37babca` | Pending source-owner review |
 
@@ -130,8 +135,6 @@ This project installs Python packages from PyPI at build time.  Optional extras 
 
 ### Simulation
 
-- RoboCasa — vendored, see above
-- robosuite — vendored, see above
 - numba (BSD-2-Clause)
 - hidapi (BSD-3-Clause)
 - qpsolvers (LGPLv3)

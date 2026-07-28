@@ -40,7 +40,6 @@ uv sync --project enpire/policy/pld/runtime --extra dev
 | ZED SDK | Optional ZED top camera | `camera-zed`; host SDK required | [stereolabs/zed-sdk](https://github.com/stereolabs/zed-sdk) |
 | SERL / HIL-SERL / AgentLace | PLD actor, learner, replay, SAC/RLPD, and distributed transport | Vendored in the isolated PLD runtime | [HIL-SERL](https://github.com/rail-berkeley/hil-serl), [AgentLace](https://github.com/youliangtan/agentlace) |
 | JAX / Flax / Optax | PLD networks and optimization | Isolated PLD environment | [jax-ml/jax](https://github.com/jax-ml/jax) |
-| RoboCasa / robosuite | MuJoCo manipulation simulation | `robocasa`; source in `third_party/robocasa` | [robocasa/robocasa](https://github.com/robocasa/robocasa) |
 | OpenAI / Google GenAI | Optional hosted VLM backends | `vlm`; credentials external | [openai/openai-python](https://github.com/openai/openai-python), [googleapis/python-genai](https://github.com/googleapis/python-genai) |
 
 Routine Python libraries are intentionally omitted here; see the manifests for

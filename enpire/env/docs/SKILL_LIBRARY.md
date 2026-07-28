@@ -1,6 +1,6 @@
 # Skill Library — Overview
 
-> **Cross-references**: [SKILL_LIBRARY_ROBOCASA](SKILL_LIBRARY_ROBOCASA.md) | [SKILL_LIBRARY_YAM](SKILL_LIBRARY_YAM.md) | [CAP_DESIGN](CAP_DESIGN.md) | [AGENT_PIPELINE_DESIGN](AGENT_PIPELINE_DESIGN.md)
+> **Cross-references**: [SKILL_LIBRARY_YAM](SKILL_LIBRARY_YAM.md) | [CAP_DESIGN](CAP_DESIGN.md) | [AGENT_PIPELINE_DESIGN](AGENT_PIPELINE_DESIGN.md)
 
 ---
 
@@ -22,8 +22,8 @@ Path B: Direct mode (in-process)
   Agent code → Direct callable → Env methods (no RPC)
 ```
 
-- **Path A** (`cap/agent/tools/__init__.py`): `ToolRegistry` registers `Tool` subclasses that communicate via Portal RPC to `cap_server`. Used for YAM (real + sim) and RoboCasa via CapServer.
-- **Path B** (`cap/env/robocasa/skills.py` + `cap/agent/tools/direct.py`): Direct callables bypass RPC and call env/server methods in-process. Used for `run_agent.py --direct` mode in RoboCasa.
+- **Path A** (`cap/agent/tools/__init__.py`): `ToolRegistry` registers `Tool` subclasses that communicate via Portal RPC to `cap_server`. Used for YAM real and sim.
+- **Path B** (`cap/agent/tools/direct.py`): Direct callables bypass RPC and call env/server methods in-process. Used for `run_agent.py --direct` mode.
 
 Both paths return the same dataclass types (`RobotState`, `FreespaceResult`, `Detection3D`, etc.) so agent code is portable.
 
@@ -233,6 +233,5 @@ Lower-level multi-session tracking (alternative to `track_object`/`detect_object
 - `cap/agent/tools/__init__.py` — `ToolRegistry`, `create_default_registry()` factory
 - `cap/agent/tools/base.py` — `Tool` ABC, all result dataclasses
 - `cap/agent/tools/direct.py` — Direct callable wrappers (bypass Portal RPC)
-- `cap/env/robocasa/skills.py` — RoboCasa direct-mode namespace (cuRobo + env)
 - `cap/prompt/embodiment/` — Per-robot LLM prompt specs (tool subsets)
 - `cap/prompt/task/` — Per-task strategy guides

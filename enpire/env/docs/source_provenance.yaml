@@ -9,21 +9,7 @@ repositories:
     path_hint: gear-enpire
     branch: release
     commit: 2b34f9d
-    license_status: pending-root-license
-
-  forge_pusht:
-    path_hint: forge
-    branch: wenlix/pusht_env
-    commit: 3cc5e899
-    license_status: pending-source-owner-review
-    include:
-      - cap/saved_scripts/place_grasped_t_reset.py
-      - cap/saved_scripts/pusht/
-      - rl/pusht/
-      - rl/pusht_runner.py
-      - tmux/realworld_rl/pusht_supervisor.py
-      - tmux/realworld_rl/rl_pusht.sh
-      - tmux/realworld_rl/tasks_config/pusht/
+    license_status: Apache-2.0
 
   forge_autorl:
     path_hint: forge
@@ -40,19 +26,12 @@ repositories:
     commit: 682f7937
     license_status: pending-source-owner-review
     include:
-      - cap/saved_scripts/gpu/
       - cap/saved_scripts/skill_library/
       - experimental/motion_planner_curobo.py
       - launch.py
-      - rl/
       - robot/
       - run_script.py
-      - rl/gpu_slot_hover.py
-      - rl/gpu_success_full_cycle.py
-      - tmux/realworld_rl/gpu_insertion_dual_full_cycle.sh
-      - tmux/realworld_rl/gpu_insertion_full_cycle.sh
       - tmux/realworld_rl/rl_gear.sh
-      - tmux/realworld_rl/tasks_config/gpu_insertion/
       - tools/debug/yam_gravcomp_viewer.py
       - tools/vision/serve_anygrasp.py
     exclude:
@@ -61,24 +40,7 @@ repositories:
       - hardware/yam-research-2/
       - hardware/forge_rl_camera_aliases.json
       - hardware/forge_rl_station.rules
-      - cap/saved_scripts/gpu/test_img.png
-      - cap/saved_scripts/gpu/test_img_bbox.json
-      - cap/saved_scripts/gpu/test_img_masked.png
-      - cap/saved_scripts/gpu/test_img_native.png
-    exclusion_reason: station identifiers and generated debug artifacts are not public source
-
-  forge_ziptie:
-    path_hint: forge
-    branch: origin/tonghe/ziptie-autorl
-    commit: 1abbfeae
-    license_status: pending-source-owner-review
-    include:
-      - cap/saved_scripts/ziptie/
-      - rl/auto_reward.py
-    reward_sources:
-      - cap/saved_scripts/ziptie/reward/
-      - cap/saved_scripts/ziptie/get_rew_rgb.py
-      - cap/saved_scripts/ziptie/get_rew_rgb_trt.py
+    exclusion_reason: station identifiers are not public source
 
   yam_calibration:
     path_hint: yam-calibration

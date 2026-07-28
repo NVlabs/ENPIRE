@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 """FastAPI application factory for overlay visualization."""
 
 from __future__ import annotations
@@ -893,7 +895,7 @@ def create_app(
             "adv_mode": options.get("adv_mode") if options else None,
             "advantage_h": options.get("advantage_h") if options else None,
             "rtg_gamma": options.get("rtg_gamma") if options else None,
-            # Force current-ckpt recompute. lecar-tbd owns the authoritative local cache.
+            # Force current-ckpt recompute. enpire owns the authoritative local cache.
             "force": True,
         }
         result = fetch_value_predictions_from_server(

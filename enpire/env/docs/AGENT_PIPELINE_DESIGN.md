@@ -94,22 +94,21 @@ Each step reads/writes `AgentContext`. `AgentPipeline` iterates until `ctx.shoul
 
 `ObserverStep` resets the environment between iterations (iteration > 0) so each attempt starts from the same initial state. The reset strategy uses a two-level fallback:
 
-1. **`reset_to_initial`** (preferred) — Deterministic sim state restore. For RoboCasa, this restores a MuJoCo state snapshot captured after the first full reset, giving identical objects and positions every time.
+1. **`reset_to_initial`** (preferred) — Deterministic state restore. For sim, this restores a MuJoCo state snapshot captured after the first full reset. For real YAM, this returns the arm to its recorded home pose.
 2. **`reset_env`** (fallback) — Used when `reset_to_initial` is not in the namespace.
-
-For RoboCasa direct mode, `reset_env` IS in the namespace and calls `reset_to_initial()` internally (NOT `env.reset()`), because `env.reset()` advances RoboCasa's internal RNG and produces different scenes. See [ROBOCASA_RANDOMNESS](ROBOCASA_RANDOMNESS.md#reset-non-determinism-and-_post_reset_state) for details.
 
 ### Reward evaluator (runs *before* reflection)
 
-`cap/reward/` provides a pluggable task-success evaluator that reconstructs each sub-predicate of the task's `_check_success` method from `result.json.details` alone (no sim access). The default `OracleRewardEvaluator` has hardcoded recipes per task — for `robocasa:PickPlaceSinkToCounter` it emits three predicates:
+`cap/reward/` provides a pluggable task-success evaluator. For real-world tasks, the evaluator reads structured predicates from `result.json.details` (populated by the reward server) and reconstructs per-predicate pass/fail status for the reflection stage.
 
-| Predicate | Reconstruction | Threshold |
-|---|---|---|
-| `obj_in_recep` | `‖obj_pos[:2] − container_pos[:2]‖ < th_xy` | 0.08 m (= 0.7 × typical container horizontal_radius) |
-| `recep_on_counter` | `container_pos[2] > 0.85` (proxy — contact not in result.json) | 0.85 m |
-| `gripper_obj_far` | `‖obj_to_robot0_eef_pos‖ > 0.25` | 0.25 m (direct from robocasa source) |
+Example predicate output for a pick-and-place task:
 
-Plus a failure-cause label drawn from the (a)/(b)/(c)/(d) taxonomy used by cross-seed reflection.
+```
+**Ground-truth predicates** (seed 0, success=False):
+  - obj_lifted:     LIKELY_FAIL (metric=0.012 m above table, threshold >0.05 m)
+  - obj_in_target:  UNKNOWN (object not yet lifted)
+**Classified failure:** (a) not picked up
+```
 
 **Configured via Hydra group `reward=`:**
 
@@ -126,7 +125,7 @@ reward:
 1. **Phase A per-seed VLM prompt** (one call per seed) — "Use the ground-truth predicates above as authoritative; the images should confirm, not contradict."
 2. **Phase B cross-seed synthesis prompt** — rendered into the per-seed evidence block via `_build_per_seed_evidence()`, plus a `failure_histogram` line in the header (e.g. `(c) arm too close after placement × 18; (b) placed at wrong position × 4`).
 
-**Adding a new task recipe:** add an entry to `TASK_RECIPES` in `cap/reward/oracle_reward.py` that reads the relevant robocasa `_check_success` source and emits `PredicateOutcome` instances.
+**Adding a new task recipe:** add an entry to `TASK_SPECS` in `cap/reward/oracle_reward.py` with a list of `PredicateSpec` entries. See [`REWARD_MODULE.md`](REWARD_MODULE.md) for the full guide.
 
 ### Reflection — two-phase, cross-seed aware
 

@@ -2,7 +2,7 @@
 # Remote deployment: Yam bimanual robot via Portal socket (20-D delta-EE rot6d control)
 #
 # The RL actor runs as a Portal server on this machine. The Yam sim/real robot
-# (lecar-tbd yam_control_loop) connects as a client.
+# (enpire yam_control_loop) connects as a client.
 #
 # Quickstart:
 #   # Terminal 1 - Learner (no env needed):
@@ -13,7 +13,7 @@
 #   uv run scripts/pld_lite/train_delta_rlpd.py task=remote_yam \
 #     train.actor=True train.base_agent_type=zero
 #
-#   # Terminal 3 - YAM sim (lecar-tbd):
+#   # Terminal 3 - YAM sim (enpire):
 #   uv run python -m experimental.yam_control_loop \
 #     --action-horizon=20 --server-address="localhost:8964" \
 #     --control-mode=delta_ee_pose
