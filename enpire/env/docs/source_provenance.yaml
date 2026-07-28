@@ -56,31 +56,6 @@ repositories:
       - hardware/forge_rl_station.rules
     exclusion_reason: station identifiers are not public source
 
-  yam_calibration:
-    path_hint: yam-calibration
-    branch: main
-    commit: 37babca
-    license_status: missing
-    include:
-      - arm_server.py
-      - calibrator.py
-      - camera.py
-      - charuco.py
-      - config.py
-      - hand_eye.py
-      - launch.py
-      - mujoco_utils.py
-      - robot.py
-      - xml_writer.py
-      - yam_controller.py
-      - base_robot_description/
-    preserve_local_changes:
-      - base_robot_description/station_fello_gripper_with_top_camera.xml
-    exclude:
-      - output/
-      - gravity_comp_two_arms.py
-    exclusion_reason: generated calibration is station-local; gravity script is superseded by Forge viewer
-
   minimal_policy_pld:
     path_hint: minimal_policy
     branches:
