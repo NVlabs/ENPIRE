@@ -24,7 +24,6 @@ from enpire.policy.rl.auto_eval import AutoEvalController
 from enpire.policy.rl.config import DataCollectionConfig, load_yaml_defaults
 from enpire.policy.rl.context import RLContext, build_context
 from enpire.policy.rl.events import TERMINAL_EVENTS
-from enpire.policy.rl.gpu_success_full_cycle import maybe_request_gpu_success_full_cycle
 from enpire.policy.rl.handlers import (
     do_change_pose,
     do_home,
@@ -96,8 +95,6 @@ def run(ctx: RLContext) -> None:
                     if is_success:
                         ctx.demo_success_count += 1
                     ctx.demo_rolling_window.append(is_success)
-                    if maybe_request_gpu_success_full_cycle(ctx, event, payload):
-                        return
             if event == "restart":
                 handle_restart(ctx, payload)
             if event == "auto_eval_start":

@@ -15,7 +15,7 @@ repositories:
     path_hint: forge
     branch: internal-forge
     commit: 3cc5e899
-    license_status: pending-source-owner-review
+    license_status: Apache-2.0
     include:
       - cap/saved_scripts/place_grasped_t_reset.py
       - cap/saved_scripts/pusht/
@@ -24,37 +24,6 @@ repositories:
       - tmux/realworld_rl/pusht_supervisor.py
       - tmux/realworld_rl/rl_pusht.sh
       - tmux/realworld_rl/tasks_config/pusht/
-
-  forge_autorl:
-    path_hint: forge
-    branch: internal-forge
-    commit: 4c37817d
-    license_status: pending-source-owner-review
-    include:
-      - hardware/identify_forge_rl_devices.py
-      - tmux/realworld_rl/tasks_config/pin_insertion/
-
-  forge_gpu:
-    path_hint: forge
-    branch: internal-forge
-    commit: 682f7937
-    license_status: pending-source-owner-review
-    include:
-      - cap/saved_scripts/skill_library/
-      - experimental/motion_planner_curobo.py
-      - launch.py
-      - robot/
-      - run_script.py
-      - tmux/realworld_rl/rl_gear.sh
-      - tools/debug/yam_gravcomp_viewer.py
-      - tools/vision/serve_anygrasp.py
-    exclude:
-      - hardware/fello_config/
-      - hardware/fleet6/
-      - hardware/yam-research-2/
-      - hardware/forge_rl_camera_aliases.json
-      - hardware/forge_rl_station.rules
-    exclusion_reason: station identifiers are not public source
 
   minimal_policy_pld:
     path_hint: minimal_policy

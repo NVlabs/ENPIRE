@@ -113,19 +113,8 @@ class DataCollectionConfig:
     home_event_reset_target: Literal["home", "hover"] = "home"
     auto_reward_z_drop_m: float = 0.0
     episode_reset_lift_m: float = 0.0
-    episode_reset_strategy: Literal["target_pose", "gpu_slot_hover"] = "target_pose"
-    # When true, drive the right arm to the canonical GPU-insertion hover pose
-    # on every hover reset (i.e. when 's'/start is pressed). The pose is defined
-    # in cap/saved_scripts/gpu/right_arm_hover.py and shared by data collection
-    # and full-loop inference so the policy sees the same right-arm pose in both.
+    episode_reset_strategy: Literal["target_pose"] = "target_pose"
     enable_right_arm_hover: bool = False
-    gpu_slot_hover_camera: str = "top"
-    gpu_slot_hover_aux_camera: str = "left_third"
-    gpu_slot_hover_aux_prefer_world_pose: bool = True
-    gpu_slot_hover_aux_required: bool = False
-    gpu_slot_hover_save_artifacts: bool = True
-    gpu_success_full_cycle_enabled: bool = False
-    gpu_success_full_cycle_request_path: str | None = None
 
 
 def load_yaml_defaults(path: str) -> DataCollectionConfig:

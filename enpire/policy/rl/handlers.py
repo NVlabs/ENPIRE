@@ -12,10 +12,6 @@ from enpire.env.forge.paths import FORGE_ROOT
 from enpire.env.forge.robot.constants import DEFAULT_RESET_JOINT_STATE
 from enpire.policy.rl.context import RLContext
 from enpire.policy.rl.display import render_frame
-from enpire.policy.rl.gpu_slot_hover import (
-    check_gpu_slot_hover_dependencies,
-    move_to_gpu_slot_hover,
-)
 from enpire.policy.rl.reset_options import terminal_label_options
 
 HOME_POSITION_ATOL = 0.2
@@ -37,30 +33,22 @@ def do_home(ctx: RLContext) -> None:
     if getattr(cfg, "home_event_reset_target", "home") == "hover":
         ctx.speech_announcer.speak("hover")
         ctx.policy_router.rl_policy.reset()
-        if _uses_gpu_slot_hover_reset(ctx):
-            check_gpu_slot_hover_dependencies(ctx.cfg)
         lifted = _maybe_lift_before_reset(
             ctx,
             reason="home-to-hover",
             first_reset_options={"discard_episode": True},
         )
-        if _uses_gpu_slot_hover_reset(ctx):
-            if not lifted:
-                ctx.obs, _ = ctx.env.reset(
-                    options={"alias": "current", "discard_episode": True}
-                )
-            move_to_gpu_slot_hover(ctx)
+        if not lifted:
             ctx.obs, _ = ctx.env.reset(
                 options={"alias": "current", "discard_episode": True}
             )
-            _maybe_rebase_current_observation(ctx)
-        else:
-            ctx.obs, _ = ctx.env.reset(
-                options={
-                    "target_ee_pose": ctx.initial_pose_manager.build_center_pose(),
-                    "discard_episode": True,
-                }
-            )
+        _maybe_rebase_current_observation(ctx)
+        ctx.obs, _ = ctx.env.reset(
+            options={
+                "target_ee_pose": ctx.initial_pose_manager.build_center_pose(),
+                "discard_episode": True,
+            }
+        )
         ctx.event_router.reset_timer()
         ctx.terminal_event = None
         ctx.timing_log.log("hover_home_done")
@@ -228,50 +216,12 @@ def do_hover(ctx: RLContext) -> None:
     _maybe_move_right_to_hover(ctx)
     ctx.policy_router.rl_policy.reset()
     terminal_options = terminal_label_options(ctx.terminal_event)
-    if _uses_gpu_slot_hover_reset(ctx):
-        check_gpu_slot_hover_dependencies(ctx.cfg)
     if ctx.terminal_event is not None and _maybe_lift_before_reset(
         ctx,
         reason=f"terminal-{ctx.terminal_event}",
         first_reset_options=terminal_options,
     ):
         terminal_options = {}
-    if _uses_gpu_slot_hover_reset(ctx):
-        if ctx.terminal_event is not None and terminal_options:
-            ctx.obs, _ = ctx.env.reset(options={"alias": "current", **terminal_options})
-            terminal_options = {}
-        move_to_gpu_slot_hover(ctx)
-        if ctx.cfg.randomize_initial_pose:
-            ctx.obs, _ = ctx.env.reset(options={"alias": "current"})
-            _maybe_rebase_current_observation(ctx)
-            start_pose = ctx.initial_pose_manager.build_episode_start_pose()
-            opts = {
-                "target_ee_pose": start_pose,
-                "task_name": ctx.cfg.task_name,
-                "start_new_episode": True,
-            }
-            print(
-                f"[INFO] GPU hover randomized start from "
-                f"{ctx.initial_pose_manager.describe_current()} "
-                f"offset={np.round(ctx.initial_pose_manager.last_offset, 4)}",
-                flush=True,
-            )
-        else:
-            opts = {
-                "alias": "current",
-                "task_name": ctx.cfg.task_name,
-                "start_new_episode": True,
-            }
-        opts.update(terminal_options)
-        ctx.obs, _ = ctx.env.reset(options=opts)
-        _maybe_rebase_current_observation(ctx)
-        _flush_pending_keyboard_terminal_labels(ctx)
-        ctx.event_router.reset_timer()
-        ctx.terminal_event = None
-        ctx.speech_announcer.speak("learn")
-        ctx.timing_log.log("learn_start")
-        ctx.state_machine.state = "learn"
-        return
 
     opts = {
         "target_ee_pose": ctx.initial_pose_manager.build_episode_start_pose(),
@@ -292,10 +242,6 @@ def do_hover(ctx: RLContext) -> None:
     ctx.speech_announcer.speak("learn")
     ctx.timing_log.log("learn_start")
     ctx.state_machine.state = "learn"
-
-
-def _uses_gpu_slot_hover_reset(ctx: RLContext) -> bool:
-    return getattr(ctx.cfg, "episode_reset_strategy", "target_pose") == "gpu_slot_hover"
 
 
 def _maybe_rebase_current_observation(ctx: RLContext) -> None:

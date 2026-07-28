@@ -251,9 +251,9 @@ git -C "$PROJECT_DIR" lfs pull
 
 ### Required LFS dependencies
 
-Checked at S1 startup (`launch_remote_gpu.sh:113-119`):
-- `checkpoint_detection.tar` (AnyGrasp checkpoint)
-- `license_JalenLu.zip` (AnyGrasp license)
+Checked at remote GPU host startup (`launch_remote_gpu.sh:113-119`):
+- `checkpoint_detection.tar` (AnyGrasp checkpoint — obtain from [graspnet/anygrasp_sdk](https://github.com/graspnet/anygrasp_sdk))
+- Your AnyGrasp license zip (set `ANYGRASP_LICENSE_ZIP` env var — obtain a personal license from the AnyGrasp authors)
 - `third_party/anygrasp_sdk/pointnet2/build/.../pointnet2/_ext.cpython-311-x86_64-linux-gnu.so`
 - `third_party/anygrasp_sdk/dependencies/MinkowskiEngine/build/.../_C.cpython-311-x86_64-linux-gnu.so`
 - `third_party/bundlesdf/libs/libBundleTrack.so`

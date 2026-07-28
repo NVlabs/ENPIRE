@@ -421,7 +421,7 @@ The `cap/utils/anygrasp_runtime.py` module handles:
 ```python
 from cap.utils.anygrasp_runtime import prepare_anygrasp_runtime, configure_anygrasp_imports
 
-runtime = prepare_anygrasp_runtime(license_zip="license_JalenLu.zip")
+runtime = prepare_anygrasp_runtime(license_zip="license_<your_license>.zip")
 configure_anygrasp_imports(runtime)
 ```
 

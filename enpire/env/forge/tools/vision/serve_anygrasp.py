@@ -572,7 +572,7 @@ def main() -> None:
     parser.add_argument(
         '--license-zip',
         default=os.environ.get(
-            'ANYGRASP_LICENSE_ZIP', str(REPO_ROOT / 'license_JalenLu.zip')
+            'ANYGRASP_LICENSE_ZIP', ''
         ),
         help='Path to the AnyGrasp license zip',
     )
