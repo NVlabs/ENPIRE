@@ -3,7 +3,7 @@ description: >
   Combined Fello configuration. Common values live at the top level; side-specific
   values are applied from the sides block by robot.fello.fello_config.load_fello_config.
 model:
-  xml_path: robot/models/fello_right/fello.xml
+  xml_path: robot/models/fello/fello.xml
 hardware:
   can_interface: can0
   motor_ids: [1, 2, 3, 4, 5, 6, 7]
@@ -115,12 +115,12 @@ teleop:
 sides:
   left:
     model:
-      xml_path: robot/models/fello_left/fello.xml
+      xml_path: robot/models/fello/fello.xml
     teleop:
       side: left
   right:
     model:
-      xml_path: robot/models/fello_right/fello.xml
+      xml_path: robot/models/fello/fello.xml
     hardware:
       footswitch:
         serial_port: /dev/serial-right-buttons

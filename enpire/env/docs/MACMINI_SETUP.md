@@ -4,7 +4,6 @@ Run the CAP simulation stack on an Apple Silicon Mac Mini (no real hardware need
 
 > **Related docs:**
 > - [`docs/CAP_DESIGN.md`](CAP_DESIGN.md) — Full CAP system architecture and layer stack
-> - [`docs/TODO_DAMIAO_FOR_MAC.md`](TODO_DAMIAO_FOR_MAC.md) — CAN bus / Fello macOS porting work and known issues
 > - [`docs/remote_serving.md`](remote_serving.md) — Remote model server split (SAM3, BundleSDF, AnyGrasp, cuRobo on LeCAR-S1)
 > - [`docs/RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md) — RL training pipeline (`serve_rl_policy`, `learn_skill`, diagnostics)
 > - [`docs/TABLE_BUSSING_SKILLS.md`](TABLE_BUSSING_SKILLS.md) — Table bussing skill tools (tracking, freespace move, nudge, gripper)
@@ -159,7 +158,7 @@ _DEFAULT_BUSTYPE = "gs_usb" if sys.platform == "darwin" else "socketcan"
 
 **`controller.py:16-55`** — `_patch_gs_usb_for_macos()`: Patches `GsUsb.start` to handle macOS kernel driver detach gracefully. Auto-applied on import when `sys.platform == "darwin"` (`controller.py:54-55`).
 
-The damiao-motor package (>=1.0.7b1) includes the **echo frame filtering fix** that eliminates macOS-only jitter — see `docs/TODO_DAMIAO_FOR_MAC.md` for full details.
+The damiao-motor package (>=1.0.7b1) includes the **echo frame filtering fix** that eliminates macOS-only jitter.
 
 ### System ID Tools
 
@@ -188,7 +187,7 @@ On Linux, the fello server requires explicit `--can-interface` and `--port` args
 
 ### Known Fello/macOS Issues
 
-See `docs/TODO_DAMIAO_FOR_MAC.md` for the full list. Key items:
+Key items:
 - gs_usb replug sometimes needed after unclean shutdown (auto-reconnect tries USB reset first — `fello.py:33-66`)
 - Higher CAN arbitration IDs (motor 7 / gripper) may have lower priority — bandwidth still under investigation
 - Echo frame filtering (jitter fix) is in `damiao-motor>=1.0.7b1` (`pyproject.toml:208`)
@@ -277,7 +276,7 @@ macOS uses CGL natively. If you see `MUJOCO_GL` errors, ensure you are not manua
 The `_reset_gs_usb_device()` function (`robot/fello/fello.py:33`) attempts a USB device reset before each connection. If that fails, physically replug the USB-CAN adapter.
 
 ### Fello jitter
-Ensure `damiao-motor>=1.0.7b1` is installed (check with `uv pip show damiao-motor`). The echo frame filtering fix in this version eliminates macOS-specific jitter. See `docs/TODO_DAMIAO_FOR_MAC.md` for background.
+Ensure `damiao-motor>=1.0.7b1` is installed (check with `uv pip show damiao-motor`). The echo frame filtering fix in this version eliminates macOS-specific jitter.
 
 ### Missing left Fello / follower CAN interfaces
 The left leader, left follower, and right follower CAN interfaces are placeholder values in `robot/constants.py:18-24`. Set them to the actual USB serial numbers once the hardware is connected.

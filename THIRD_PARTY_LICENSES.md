@@ -12,7 +12,7 @@ This document lists all third-party software incorporated into or distributed wi
 | 4 | RealtimeSTT | vendored (voice) | MIT | [KoljaB/RealtimeSTT – LICENSE](https://github.com/KoljaB/RealtimeSTT/blob/master/LICENSE) |
 | 5 | numpy | core | BSD-3-Clause | [numpy/numpy – LICENSE](https://github.com/numpy/numpy/blob/main/LICENSE.txt) |
 | 6 | PyYAML | core | MIT | [yaml/pyyaml – LICENSE](https://github.com/yaml/pyyaml/blob/master/LICENSE) |
-| 8 | opencv-python / opencv-contrib-python | vision, calibration | Apache-2.0 | [opencv/opencv – LICENSE](https://github.com/opencv/opencv/blob/4.x/LICENSE) |
+| 7 | opencv-python / opencv-contrib-python | vision, calibration | Apache-2.0 | [opencv/opencv – LICENSE](https://github.com/opencv/opencv/blob/4.x/LICENSE) |
 | 9 | Pillow | vision, VLM | HPND | [python-pillow/Pillow – LICENSE](https://github.com/python-pillow/Pillow/blob/main/LICENSE) |
 | 10 | requests | vision, VLM | Apache-2.0 | [psf/requests – LICENSE](https://github.com/psf/requests/blob/main/LICENSE) |
 | 11 | PyTorch | vision-local, real-RL | BSD-3-Clause | [pytorch/pytorch – LICENSE](https://github.com/pytorch/pytorch/blob/main/LICENSE) |
@@ -51,9 +51,6 @@ This document lists all third-party software incorporated into or distributed wi
 | 44 | protobuf | pld-runtime | BSD-3-Clause | [protocolbuffers/protobuf – LICENSE](https://github.com/protocolbuffers/protobuf/blob/main/LICENSE) |
 | 45 | rich | pld-runtime | MIT | [Textualize/rich – LICENSE](https://github.com/Textualize/rich/blob/master/LICENSE) |
 | 46 | matplotlib | pld-runtime | PSF / BSD-compatible | [matplotlib/matplotlib – LICENSE](https://github.com/matplotlib/matplotlib/blob/main/LICENSE/LICENSE) |
-| 47 | numba | simulation | BSD-2-Clause | [numba/numba – LICENSE](https://github.com/numba/numba/blob/main/LICENSE) |
-| 48 | hidapi | simulation | BSD-3-Clause | [libusb/hidapi – LICENSE-bsd.txt](https://github.com/libusb/hidapi/blob/master/LICENSE-bsd.txt) |
-| 49 | qpsolvers | simulation | LGPLv3 | [qpsolvers/qpsolvers – LICENSE](https://github.com/qpsolvers/qpsolvers/blob/main/LICENSE) |
 
 ---
 
@@ -201,73 +198,13 @@ THE SOFTWARE.
 
 ---
 
-### 4. RoboCasa — MIT License
-
-RoboCasa is vendored under `third_party/robocasa/`.
-
-```
-MIT License
-
-Copyright (c) 2026 the RoboCasa Team
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
-
----
-
-### 5. robosuite — MIT License
-
-robosuite is installed from `https://github.com/ARISE-Initiative/robosuite.git` at tag `v1.5.1`.
-
-```
-MIT License
-
-Copyright (c) 2018 Stanford Vision and Learning Lab, ARISE Initiative
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
-
----
-
 ## Notes on specific packages
 
 **cuRobo (NVIDIA Research License):** The NVIDIA Research License restricts use to NVIDIA Platforms and is **not** a permissive open-source license.  cuRobo must not be used for commercial applications outside of NVIDIA services without a separate agreement.  The `planning-local` extra that installs cuRobo is opt-in and is not required for any other ENPIRE capability.
 
 **pyzed / Stereolabs ZED SDK:** The ZED Python API requires acceptance of the Stereolabs SDK License Agreement.  The `camera-zed` extra is opt-in.  The ZED host SDK must be installed separately from Stereolabs.
 
-**pynput / qpsolvers (LGPLv3):** These packages are installed as shared libraries linked at runtime and are not statically compiled into ENPIRE.  Their use under LGPLv3 does not impose copyleft obligations on ENPIRE application code provided the packages are not modified.
+**pynput (LGPLv3):** pynput is installed as a shared library linked at runtime and is not statically compiled into ENPIRE.  Its use under LGPLv3 does not impose copyleft obligations on ENPIRE application code provided the package is not modified.
 
 **AnyGrasp SDK:** The licensed AnyGrasp SDK, checkpoint, and license archive are **not** included in this repository and must be obtained directly from GraspNet.  Only the open-source GraspNetAPI is listed above.
 

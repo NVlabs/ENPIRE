@@ -16,13 +16,10 @@ _MODELS_DIR = Path(
     os.environ.get("ENPIRE_FELLO_MODEL_ROOT", Path(__file__).parents[1] / "models")
 ).expanduser()
 _LEGACY_FELLO_CONFIG_PATH = _MODELS_DIR / "fello" / "fello_config.yaml"
-_FELLO_CONFIG_PATHS = {
-    "left": _MODELS_DIR / "fello_left" / "fello_config.yaml",
-    "right": _MODELS_DIR / "fello_right" / "fello_config.yaml",
-}
+_FELLO_CONFIG_PATHS: dict[str, Path] = {}
 _FELLO_XML_PATHS = {
-    "left": _MODELS_DIR / "fello_left" / "fello.xml",
-    "right": _MODELS_DIR / "fello_right" / "fello.xml",
+    "left": _MODELS_DIR / "fello" / "fello.xml",
+    "right": _MODELS_DIR / "fello" / "fello.xml",
 }
 
 

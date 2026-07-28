@@ -141,14 +141,9 @@ which reads the base **`robot/models/fello/fello_config.yaml`** and then deep-me
 per-station overrides from `robot/device/{station}.yaml` under `fello.{side}` (the
 station key is resolved via `robot/station_profiles.py::resolve_station_key()`).
 
-The legacy per-handle configs in `robot/models/fello_left/` and `robot/models/fello_right/`
-are reference/legacy copies and are NOT the source of truth on stations with device
-overrides. On the `tony` station, for example, `robot/device/tony.yaml` sets
-`fello.left.button_map = [2, 0, 1]` and `fello.right.button_map = [2, 1, 0]  # [home, pause, start]`.
-
 ### Config schema
 
-In `robot/models/fello_{left,right}/fello_config.yaml`:
+In `robot/fello/fello_config.yaml` under `sides.left` / `sides.right`:
 
 ```yaml
 hardware:
@@ -162,9 +157,9 @@ hardware:
     # ui_button_map: [0, 1, 2]        # aspirational: logical slots → [start, pause, home]
 ```
 
-### Current per-handle configs
+### Per-side config
 
-**Left handle** (`robot/models/fello_left/fello_config.yaml:11-16`):
+**Left side** (`robot/fello/fello_config.yaml` under `sides.left`):
 ```yaml
 footswitch:
   type: serial
@@ -172,7 +167,7 @@ footswitch:
   serial_port: /dev/serial-left-buttons
 ```
 
-**Right handle** (`robot/models/fello_right/fello_config.yaml:11-16`):
+**Right side** (`robot/fello/fello_config.yaml` under `sides.right`):
 ```yaml
 footswitch:
   type: serial
@@ -182,7 +177,7 @@ footswitch:
   ui_button_map: [0, 2, 1]
 ```
 
-**Legacy single-handle** (`robot/models/fello/fello_config.yaml:11-15`):
+**Single-handle fallback** (`robot/models/fello/fello_config.yaml:11-15`):
 ```yaml
 footswitch:
   device_0: /dev/input/footswitch_0  # evdev save
@@ -357,9 +352,8 @@ Press each button -- you should see `[1, 0, 0]`, `[0, 1, 0]`, `[0, 0, 1]`.
 
 | File | Purpose |
 |------|---------|
-| `robot/models/fello/fello_config.yaml` | **Active config** loaded by Python runtime (legacy single-handle, evdev/keyboard) |
-| `robot/models/fello_left/fello_config.yaml` | Left handle serial config (reference; not auto-loaded) |
-| `robot/models/fello_right/fello_config.yaml` | Right handle serial config with `button_mode: ui_control` (reference; not auto-loaded) |
+| `robot/fello/fello_config.yaml` | **Active config** with per-side overrides under `sides.left` / `sides.right` |
+| `robot/models/fello/fello_config.yaml` | Legacy single-handle config (evdev/keyboard fallback) |
 
 ### Setup and debug scripts
 

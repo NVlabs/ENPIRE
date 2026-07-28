@@ -55,7 +55,6 @@
     <material name="white" rgba="0.9 0.9 0.9 1"/>
     <mesh name="base_visual_gate" file="base_visual_gate.stl"/>
     <mesh name="camera_d405" file="d405.stl"/>
-    <mesh name="camera_zed2i" file="zed2i.stl"/>
     <mesh name="model2" file="model2.stl"/>
     <mesh name="model2__2" file="model2__2.stl"/>
     <mesh name="model2__3" file="model2__3.stl"/>
@@ -91,8 +90,8 @@
              Camera in station frame:        (0.101166, 0.039843, 1.732867)
              Camera relative to top_bar_center (0, 0, 1.665): (0.101166, 0.039843, 0.067867): (0.097582, 0.048694, 0.063005) -->
         <body name="top_camera_zed2i" pos="0.101166 0.039843 0.067867" quat="0.164433 -0.682918 0.688064 -0.18208">
-          <geom class="camera_visual" mass="0" rgba="0.792157 0.819608 0.933333 1" mesh="camera_zed2i"/>
-          <geom class="camera_collision" mesh="camera_zed2i"/>
+          <geom class="camera_visual" mass="0" rgba="0.2 0.2 0.2 1" type="box" size="0.0875 0.0165 0.015"/>
+          <geom class="camera_collision" type="box" size="0.0875 0.0165 0.015"/>
           <site name="top_camera_zed2i_site" pos="0 0 0" size="0.01" rgba="0 1 1 1"/>
           <camera name="top_camera_zed2i" pos="0 0 0" quat="1 0 0 0" resolution="1280 720"/>
         </body>

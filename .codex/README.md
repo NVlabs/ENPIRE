@@ -95,7 +95,7 @@ ENPIRE/
 │       └── pld/            PLD actor/learner; isolated runtime in pld/runtime/
 ├── cap/                    source-faithful Forge CaP implementations
 ├── tmux/realworld_rl/      robot-side RL launchers and reset loops
-├── third_party/            vendored: curobo, pyroki, i2rt, robocasa
+├── third_party/            vendored: curobo, pyroki, i2rt
 ├── AGENTS.md               implementation rules for coding agents
 ├── THIRD_PARTY_NOTICES.md  third-party attributions
 ├── THIRD_PARTY_LICENSES.md full license texts for vendored components

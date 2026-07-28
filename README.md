@@ -158,7 +158,7 @@ ENPIRE/
 │       ├── pld/              JAX PLD actor/learner (isolated runtime)
 │       └── autoresearch_instruction.md
 ├── tmux/realworld_rl/        supervisors and RL launchers
-├── third_party/              vendored: cuRobo, PyRoki, i2rt, robocasa
+├── third_party/              vendored: cuRobo, PyRoki, i2rt
 ├── .codex/README.md          agent onboarding (full setup + auto-research)
 └── AGENTS.md                 coding-agent implementation rules
 ```

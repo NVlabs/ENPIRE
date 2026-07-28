@@ -157,16 +157,6 @@ pld = [
     "omegaconf>=2.3",
 ]
 
-robocasa = [
-    "gymnasium>=1.2",
-    "hidapi",
-    "numba>=0.61.2",
-    "pynput",
-    "qpsolvers[quadprog]>=4.3.1",
-    "robocasa",
-    "robosuite",
-]
-
 dev = [
     "coverage[toml]>=7.6",
     "fastapi>=0.115",
@@ -197,9 +187,7 @@ enpire = ["**/*.md", "**/*.yaml", "**/*.yml", "**/*.json", "**/*.xml", "**/*.stl
 [tool.uv.sources]
 pyroki = { path = "third_party/pyroki", editable = true }
 nvidia-curobo = { path = "third_party/curobo", editable = true }
-robocasa = { path = "third_party/robocasa", editable = true }
 i2rt = { path = "third_party/i2rt", editable = true }
-robosuite = { git = "https://github.com/ARISE-Initiative/robosuite.git", rev = "v1.5.1" }
 torch = [
     { index = "pytorch-cu128", marker = "sys_platform == 'linux'" },
 ]

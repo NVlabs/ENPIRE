@@ -1037,8 +1037,7 @@ class SubprocessExecutorStep(AgentStep):
                 cmd.append(f"skill_reflection.cameras=[{','.join(cameras)}]")
             # Pass skill library path so run_script.py can add it to sys.path.
             # Priority: session skill_library (seeded+agent-authored) >
-            #           bundled skill_library/ sibling of oracle script >
-            #           robocasa_skill_library/ sibling (human seed dir)
+            #           bundled skill_library/ sibling of oracle script
             if session is not None:
                 skill_lib_dir = session.run_dir / "skill_library"
                 if not any(skill_lib_dir.glob("*.py")):
@@ -1051,12 +1050,9 @@ class SubprocessExecutorStep(AgentStep):
                             candidate = _ROOT_PATH / ssd / oracle_cfg
                             if candidate.exists():
                                 oracle_path = candidate
-                        # Check skill_library/ sibling first, then robocasa_skill_library/
-                        for sibling_name in ("skill_library", "robocasa_skill_library"):
-                            sibling = (oracle_path.parent / sibling_name).resolve()
-                            if sibling.exists() and any(sibling.glob("*.py")):
-                                skill_lib_dir = sibling
-                                break
+                        sibling = (oracle_path.parent / "skill_library").resolve()
+                        if sibling.exists() and any(sibling.glob("*.py")):
+                            skill_lib_dir = sibling
                 cmd.append(f"skill_library_path={skill_lib_dir}")
             return cmd, exec_dir, seed_env
 
