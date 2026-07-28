@@ -4,7 +4,7 @@ Run the CAP simulation stack on an Apple Silicon Mac Mini (no real hardware need
 
 > **Related docs:**
 > - [`docs/CAP_DESIGN.md`](CAP_DESIGN.md) — Full CAP system architecture and layer stack
-> - [`docs/remote_serving.md`](remote_serving.md) — Remote model server split (SAM3, BundleSDF, AnyGrasp, cuRobo on LeCAR-S1)
+> - [`docs/remote_serving.md`](remote_serving.md) — Remote model server split (SAM3, BundleSDF, AnyGrasp, cuRobo on remote GPU host)
 > - [`docs/RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md) — RL training pipeline (`serve_rl_policy`, `learn_skill`, diagnostics)
 > - [`docs/TABLE_BUSSING_SKILLS.md`](TABLE_BUSSING_SKILLS.md) — Table bussing skill tools (tracking, freespace move, nudge, gripper)
 > - [`docs/launch_sim_diagram.svg`](launch_sim_diagram.svg) — Visual diagram of sim launch pane layout and Mac Mini legend
@@ -60,7 +60,7 @@ The `--mac-mini` flag is **auto-detected** on macOS (`launch_sim.sh:78`: `if [[ 
 
 - **Skips `MUJOCO_GL=egl`** — macOS uses CGL natively (`launch_sim.sh:102-104`)
 - **Omits BundleSDF host args** from `cap_agent.py` — oracle detection is used instead (`launch_sim.sh:111-113`)
-- **Defaults `--rl-host` to `192.0.2.2`** (direct Ethernet to GPU box) (`launch_sim.sh:83-84`)
+- **Defaults `--rl-host` to `<gpu-server-ip>`** (direct Ethernet to GPU box) (`launch_sim.sh:83-84`)
 - **Launches only the right Fello server** when `--use-fello` is passed (`launch_sim.sh:146-150`)
 
 ### Flags
@@ -130,7 +130,7 @@ for i,d in enumerate(GsUsb.scan()): print(i, d.serial_number)"
 - `station_profiles.py:95-97` — `_default_darwin()` returns macOS CAN serial numbers
 - `station_profiles.py:177-178` — `active_station_can()` selects profile by `sys.platform`
 - Resolution order (`station_profiles.py:7-11`):
-  1. Env var `LECAR_STATION`
+  1. Env var `ENPIRE_STATION`
   2. Gitignored `robot/local_station.toml` with `station = "<name>"`
   3. `STATION_BY_HOSTNAME` table
   4. `"default"` profile
@@ -198,8 +198,8 @@ The Mac Mini connects to the GPU machine running `rl_policy_server` via direct E
 
 | Connection | IP | Latency |
 |---|---|---|
-| Direct Ethernet (current) | `192.0.2.2` | ~2ms RTT |
-| Lab LAN (old) | `192.0.2.216` | ~5-10ms RTT |
+| Direct Ethernet (current) | `<gpu-server-ip>` | ~2ms RTT |
+| Lab LAN (old) | `<gpu-server-ip>16` | ~5-10ms RTT |
 
 The RL host is set in `launch_sim.sh:83-84` as the Mac Mini default. Override with:
 ```bash
@@ -210,7 +210,7 @@ See `docs/RL_PIPELINE_DESIGN.md` for the full RL server architecture.
 
 ---
 
-## Network — Remote Model Serving (LeCAR-S1)
+## Network — Remote Model Serving (remote GPU host)
 
 GPU-heavy perception services (SAM3, BundleSDF, AnyGrasp, cuRobo) run on a remote GPU server. The sim launch script creates SSH tunnels for:
 

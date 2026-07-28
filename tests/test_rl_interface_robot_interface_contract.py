@@ -18,7 +18,7 @@ from enpire.env.forge.experimental.rl_interface import PolicyAdapters, RLInterfa
 from enpire.env.forge.experimental.robot_interface import RobotInterface
 
 
-SERVER_ADDRESS = "192.0.2.88:8965"
+SERVER_ADDRESS = "<robot-server-ip>:8965"
 TASK_NAME = "Plug the pin into the socket"
 RESOLUTION = 256
 EMBODIMENT = EmbodimentTag.XDOF_WRISTONLY

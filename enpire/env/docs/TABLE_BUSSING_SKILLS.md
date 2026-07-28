@@ -429,7 +429,7 @@ result = vlm_query("Check alignment", backend="gpt")          # OpenAI GPT
 | Backend | Model | URL/Config | API Key |
 |---------|-------|------------|---------|
 | `qwen` (default) | Qwen3-VL-8B-Instruct | localhost:8402 | None (vLLM) |
-| `smol_vlm` | SmolVLM-256M-Instruct | 192.0.2.251:8401 | None (vLLM) |
+| `smol_vlm` | SmolVLM-256M-Instruct | <gpu-server-ip>:8401 | None (vLLM) |
 | `gemini` | gemini-2.5-flash | Google API | `GEMINI_API_KEY` |
 | `gemini_pro` | gemini-3.1-pro-preview | Google API | `GEMINI_API_KEY` |
 | `gpt` | gpt-5.4 | OpenAI API | `OPENAI_API_KEY` |

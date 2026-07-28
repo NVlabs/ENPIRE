@@ -13,7 +13,7 @@ topology, tmux session management, and launch-profile control.
 > - `docs/BUNDLESDF_OBJECT_DETECTION.md` -- BundleSDF multi-object 6-DOF pose tracking
 > - `docs/grasp_orientation.md` -- Grasp orientation and AnyGrasp debug UI
 > - `docs/VOICE_INPUT.md` -- voice input service
-> - `docs/remote_serving.md` -- remote GPU serving (LeCAR-S1)
+> - `docs/remote_serving.md` -- remote GPU serving (remote GPU host)
 
 ---
 
@@ -195,7 +195,7 @@ Defined in `bringup/system_catalog.py:89-243` as `SERVICES`:
 |------------|------|-------|-------|-------------|
 | `cap_ui_dev` | 5173 | tcp | HTTP `/` | Vite dev server for CAP UI |
 | `system_ui_dev` | 5174 | tcp | HTTP `/` | Vite dev server for system dashboard |
-| `serve_sam3` | 6767 | tcp | HTTP `/health` | SAM3 text-prompted segmentation (remote GPU / LeCAR-S1) |
+| `serve_sam3` | 6767 | tcp | HTTP `/health` | SAM3 text-prompted segmentation (remote GPU / remote GPU host) |
 | `viser` | 8080 | tcp | TCP connect | 3D viewer hosted by cap_agent |
 | `serve_pose` | 8118 | tcp | HTTP `/health` | OWLv2 detection server |
 | `serve_bundlesdf` | 8119 | tcp | HTTP `/health` | BundleSDF multi-object 6-DOF pose tracking |
@@ -446,11 +446,11 @@ Quick reference of every port the platform uses, sorted numerically.
 |------|-------|---------|-------|-------|
 | 5173 | tcp | CAP UI dev (Vite) | HTTP `/` | |
 | 5174 | tcp | System dashboard UI dev (Vite) | HTTP `/` | |
-| 6767 | tcp | serve_sam3 (SAM3 segmentation) | HTTP `/health` | Remote GPU / LeCAR-S1 |
+| 6767 | tcp | serve_sam3 (SAM3 segmentation) | HTTP `/health` | Remote GPU / remote GPU host |
 | 8080 | tcp | Viser 3D viewer | TCP connect | Embedded in cap_agent |
 | 8118 | tcp | serve_pose (OWLv2) | HTTP `/health` | |
 | 8119 | tcp | serve_bundlesdf (6-DOF tracking) | HTTP `/health` | |
-| 8120 | tcp | serve_graspnet (grasp planning) | HTTP `/health` | Remote GPU / LeCAR-S1 |
+| 8120 | tcp | serve_graspnet (grasp planning) | HTTP `/health` | Remote GPU / remote GPU host |
 | 8200 | tcp | cap_agent | HTTP `/api/state` | FastAPI orchestrator |
 | 8201 | tcp | agent_bridge | HTTP `/api/chat/status` | Claude Code / OpenAI Codex |
 | 8202 | tcp | voice_server | -- | **Not in catalog yet** (`CAP_VOICE_PORT` env) |

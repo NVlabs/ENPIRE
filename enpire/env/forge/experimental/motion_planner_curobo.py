@@ -343,7 +343,7 @@ class YamMotionPlannerCurobo:
             }
         except Exception as exc:  # pragma: no cover - depends on local env
             raise RuntimeError(
-                "Failed to import cuRobo. Install it into the same Python env used to run lecar "
+                "Failed to import cuRobo. Install it into the same Python env "
                 "or keep third_party/curobo available in this repo before selecting the cuRobo planner."
             ) from exc
 

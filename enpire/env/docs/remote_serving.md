@@ -2,7 +2,7 @@
 
 This repo uses a lightweight client / remote GPU model server split. GPU-heavy
 perception and motion-planning services run on a dedicated remote host
-(LeCAR-S1, currently `LeCAR_4xRTX6000BlackWell_97GB` in SSH config). The local
+(remote GPU host, currently `<your-gpu-ssh-host>` in SSH config). The local
 client host (4070) runs the control loop, agent, UI, bridge, and voice. SSH
 port-forwarding tunnels bridge the two so every local consumer sees
 `localhost:<port>` transparently.
@@ -39,7 +39,7 @@ Deprecated backends removed from the active path:
 
 ## Port map
 
-### Remote model host (LeCAR-S1)
+### Remote model host (remote GPU host)
 
 | Port | Service | Protocol | Binding | Source |
 |------|---------|----------|---------|--------|
@@ -71,7 +71,7 @@ Port `8611` can be overridden with `CAP_CUROBO_PORT` or `CAP_CUROBO_REMOTE_PORT`
 
 | Port | Service | Access method | Details |
 |------|---------|---------------|---------|
-| `8401` | SmolVLM (vLLM) | Direct LAN to `192.0.2.251:8401` | `cap/config.py:242` |
+| `8401` | SmolVLM (vLLM) | Direct LAN to `<gpu-server-ip>:8401` | `cap/config.py:242` |
 | `8402` | Qwen3-VL (vLLM) | SSH tunnel `localhost:8402 -> gpu-node:8000` | `cap/config.py:251`, see `docs/VLM_QUERY.md` |
 
 VLM backend selection is controlled by `DEFAULT_VLM_BACKEND` env var (default: `"qwen"`).
@@ -102,7 +102,7 @@ Started by `launch_table_bussing_remote.sh`:
 | Evaluation (launch.py) | `nohup` background process | `launch_table_bussing_remote.sh:332` |
 | SSH tunnel | tmux pane | `launch_table_bussing_remote.sh:382` |
 
-### Moves to LeCAR-S1
+### Moves to remote GPU host
 
 Started by `tmux/remote_serving/launch_remote_gpu.sh`:
 
@@ -133,7 +133,7 @@ ssh -N -o ExitOnForwardFailure=yes \
   -L 8119:127.0.0.1:8119 \
   -L 8611:127.0.0.1:8611 \
   -R 18300:127.0.0.1:8300 \
-  LeCAR_4xRTX6000BlackWell_97GB
+  <your-gpu-ssh-host>
 ```
 
 ### Forwarded local listeners (-L)
@@ -163,7 +163,7 @@ local CAP server on `:8300` is ready, or the local client may probe a forwarded
 model port before the remote model process has finished starting.
 This is transient and resolves once the target service starts.
 
-The SSH target defaults to `LeCAR_4xRTX6000BlackWell_97GB` and can be overridden:
+The SSH target defaults to `<your-gpu-ssh-host>` and can be overridden:
 - env var: `SSH_TARGET`
 - flag: `--ssh-target <alias>`
 - definition: `launch_table_bussing_remote.sh:57`
@@ -269,11 +269,11 @@ Checked at remote GPU host startup (`launch_remote_gpu.sh:113-119`):
 | Script | Purpose | Ref |
 |--------|---------|-----|
 | `launch_remote_gpu.sh` | Starts SAM3 + BundleSDF + AnyGrasp + cuRobo on S1 in a tmux session | `tmux/remote_serving/launch_remote_gpu.sh` |
-| `stop_lecar_s1.sh` | Kills the remote tmux serving session | `tmux/remote_serving/stop_lecar_s1.sh` |
+| `stop_remote_gpu.sh` | Kills the remote tmux serving session | `tmux/remote_serving/stop_remote_gpu.sh` |
 | `configure_runtime_env.sh` | Interactive/scripted writer for `~/.config/enpire/runtime_env.sh` | `tmux/remote_serving/configure_runtime_env.sh` |
-| `sync_lecar_s1_assets.sh` | Runs `git lfs pull` on both local and remote clones, verifies dependencies | `tmux/remote_serving/sync_lecar_s1_assets.sh` |
+| `sync_remote_assets.sh` | Runs `git lfs pull` on both local and remote clones, verifies dependencies | `tmux/remote_serving/sync_remote_assets.sh` |
 | `sync_remote_model_cache.sh` | Rsyncs SAM3 + SAM2 HF model caches to S1 | `tmux/remote_serving/sync_remote_model_cache.sh` |
-| `install_curobo_s1.sh` | Verifies or installs cuRobo into the S1 repo `.venv` | `tmux/remote_serving/install_curobo_s1.sh` |
+| `install_curobo_remote.sh` | Verifies or installs cuRobo into the remote repo `.venv` | `tmux/remote_serving/install_curobo_remote.sh` |
 
 ### Table-bussing launchers (`tmux/table_bussing/`)
 
@@ -485,7 +485,7 @@ bash tmux/remote_serving/launch_remote_gpu.sh sam3 bundlesdf  # only these two
 
 ## Persistent warm remote server behavior
 
-The remote client launcher treats LeCAR-S1 as a persistent warm model host
+The remote client launcher treats remote GPU host as a persistent warm model host
 (`launch_table_bussing_remote.sh:250-256`).
 
 ### Default behavior
@@ -555,7 +555,7 @@ The AnyGrasp launch script also:
 ### 1. Configure runtime env on S1
 
 ```bash
-ssh LeCAR_4xRTX6000BlackWell_97GB
+ssh <your-gpu-ssh-host>
 cd /path/to/enpire
 bash tmux/remote_serving/configure_runtime_env.sh \
   --tmp-root /usr0/<user>/tmp \
@@ -570,7 +570,7 @@ This writes `~/.config/enpire/runtime_env.sh` and adds a source line to `~/.bash
 
 ```bash
 # From the client (4070):
-bash tmux/remote_serving/sync_lecar_s1_assets.sh
+bash tmux/remote_serving/sync_remote_assets.sh
 ```
 
 ### 3. Sync HF model caches to S1
@@ -584,9 +584,9 @@ bash tmux/remote_serving/sync_remote_model_cache.sh
 
 ```bash
 # Done automatically by launchers, or manually:
-ssh LeCAR_4xRTX6000BlackWell_97GB
+ssh <your-gpu-ssh-host>
 cd /path/to/enpire
-bash tmux/remote_serving/install_curobo_s1.sh
+bash tmux/remote_serving/install_curobo_remote.sh
 ```
 
 ### 5. Launch

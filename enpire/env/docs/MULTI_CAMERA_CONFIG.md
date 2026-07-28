@@ -77,7 +77,7 @@ robot/camera_factory.py            (single entry point for camera creation)
 
 Resolution order (first hit wins, cached for process lifetime):
 
-1. Environment variable `LECAR_STATION` (profile key).
+1. Environment variable `ENPIRE_STATION` (profile key).
 2. Gitignored `robot/local_station.toml` with `station = "thor"`.
 3. `STATION_BY_HOSTNAME`: `socket.gethostname().lower()` to profile key.
 4. Falls back to `"default"`.
@@ -85,8 +85,8 @@ Resolution order (first hit wins, cached for process lifetime):
 ```python
 # robot/station_profiles.py:116-119
 STATION_BY_HOSTNAME: dict[str, str] = {
-    "lecarlab-legion-t7-34irz8": "thanos",
-    "lecar-legion-t5-26ara8": "thor",
+    "<your-workstation-1-hostname>": "thanos",
+    "<your-workstation-2-hostname>": "thor",
 }
 ```
 
@@ -459,7 +459,7 @@ ChArUco board detection and camera calibration engine. Used for extrinsic calibr
 ## Adding a new station
 
 1. Add an Avengers-slug entry to `PROFILES` (CAN) and `CAMERA_PROFILES` (cameras) in `robot/station_profiles.py:100-113`.
-2. Add hostname-to-slug mapping in `STATION_BY_HOSTNAME` (`robot/station_profiles.py:116-119`), or set `LECAR_STATION` on the machine, or create `robot/local_station.toml`.
+2. Add hostname-to-slug mapping in `STATION_BY_HOSTNAME` (`robot/station_profiles.py:116-119`), or set `ENPIRE_STATION` on the machine, or create `robot/local_station.toml`.
 3. Add camera serial numbers to `hardware/99-realsense.rules` and/or `hardware/99-zed.rules`.
 4. Install udev rules:
    ```bash

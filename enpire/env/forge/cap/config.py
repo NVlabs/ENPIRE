@@ -39,7 +39,7 @@ BUNDLESDF_SERVER_HOST = os.environ.get("BUNDLESDF_SERVER_HOST", "localhost")
 BUNDLESDF_SERVER_PORT = int(os.environ.get("BUNDLESDF_SERVER_PORT", "8119"))
 
 # SAM3 segmentation server (tools/vision/serve_sam3.py) — HTTP
-# Runs on the same machine as cap_server/cap_agent (lecar box).
+# May run locally or on a remote GPU host (see docs/remote_serving.md).
 SAM3_SERVER_HOST = os.environ.get("SAM3_SERVER_HOST", "localhost")
 SAM3_SERVER_PORT = int(os.environ.get("SAM3_SERVER_PORT", "9500"))
 

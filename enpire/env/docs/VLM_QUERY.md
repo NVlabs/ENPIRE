@@ -133,7 +133,7 @@ Qwen3-VL runs on a remote GPU node via vLLM, accessed through an SSH tunnel.
 
 The launch script is at `tmux/table_bussing/table_bussing_history/launch_qwen_tunnel.sh`.
 It tunnels from local port 8402 to the remote vLLM server on port 8000 at
-`LeCAR_4xRTX6000BlackWell_97GB`.
+`<your-gpu-ssh-host>`.
 
 ```bash
 # On remote GPU node — start vLLM (see third_party/vllm_serving/README.md):
@@ -142,7 +142,7 @@ It tunnels from local port 8402 to the remote vLLM server on port 8000 at
 ./third_party/vllm_serving/server/run_qwen3_vl_server_lean.sh
 
 # On robot / dev machine — SSH tunnel (local 8402 → remote 8000):
-ssh -N -L 8402:localhost:8000 LeCAR_4xRTX6000BlackWell_97GB
+ssh -N -L 8402:localhost:8000 <your-gpu-ssh-host>
 
 # Or use the provided tmux launch script:
 bash tmux/table_bussing/table_bussing_history/launch_qwen_tunnel.sh
@@ -159,8 +159,8 @@ export QWEN_VL_MODEL="Qwen3-VL-8B-Instruct"      # default
 
 ### SmolVLM (local)
 
-SmolVLM is served by a vLLM instance on the lab GPU node (LeCAR-S1). The default URL is
-`http://192.0.2.251:8401/v1`.
+SmolVLM is served by a vLLM instance on the lab GPU node (remote GPU host). The default URL is
+`http://<gpu-server-ip>:8401/v1`.
 
 ```bash
 # Override URL if the server has moved
@@ -397,7 +397,7 @@ All defaults live in `cap/config.py:237-258` and can be overridden with environm
 | `DEFAULT_VLM_BACKEND` | `DEFAULT_VLM_BACKEND` | `"qwen"` | 248 |
 | `QWEN_VL_URL` | `QWEN_VL_URL` | `http://localhost:8402/v1` | 251 |
 | `QWEN_VL_MODEL` | `QWEN_VL_MODEL` | `Qwen3-VL-8B-Instruct` | 252 |
-| `SMOL_VLM_URL` | `SMOL_VLM_URL` | `http://192.0.2.251:8401/v1` | 240 |
+| `SMOL_VLM_URL` | `SMOL_VLM_URL` | `http://<gpu-server-ip>:8401/v1` | 240 |
 | `SMOL_VLM_MODEL` | -- | `HuggingFaceTB/SmolVLM-256M-Instruct` | 241 |
 | `GEMINI_VL_MODEL` | `GEMINI_VL_MODEL` | `gemini-2.5-flash` | 245 |
 | `GEMINI_PRO_VL_MODEL` | `GEMINI_PRO_VL_MODEL` | `gemini-3.1-pro-preview` | 255 |

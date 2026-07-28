@@ -7,7 +7,7 @@
 Accepts a base64-encoded RGB image + text prompt, runs SAM3 segmentation,
 returns the binary mask. No BundleSdf, no tracking, no Portal RPC dependency.
 
-Deployed on lecar server (GPU) — clients send images over HTTP.
+Deployed on GPU server — clients send images over HTTP.
 
 Usage
 -----

@@ -39,7 +39,6 @@ def test_external_profile_drives_legacy_camera_contract(tmp_path, monkeypatch) -
 
 def test_default_profile_contains_no_station_serials(monkeypatch) -> None:
     monkeypatch.delenv("ENPIRE_STATION", raising=False)
-    monkeypatch.delenv("LECAR_STATION", raising=False)
 
     cameras = _reload_profiles().active_station_cameras()
 

@@ -60,7 +60,7 @@ _profile_cache_key: str | None = None
 def resolve_station_key() -> str:
     """Resolve the active public station ID without hostname inference."""
 
-    return os.environ.get("ENPIRE_STATION", os.environ.get("LECAR_STATION", "default")).strip()
+    return os.environ.get("ENPIRE_STATION", "default").strip()
 
 
 def _active_profile() -> StationProfile | None:
