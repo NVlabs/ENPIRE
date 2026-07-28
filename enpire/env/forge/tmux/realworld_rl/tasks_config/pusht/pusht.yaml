@@ -1,0 +1,67 @@
+server_address: localhost:8965
+task_name: pusht
+control_mode: delta_ee_pose_translation
+delta_ee_translation_xyz_max: [0.03, 0.03, 0.0]
+enabled_sides: left
+resolution: 256
+enabled_camera_names: [top, left, right]
+crop_camera_names: []
+crop_region: []
+mode: learn
+handshake_bind_address: tcp://*:1986
+initial_positions_file: null  # set ENPIRE_RL_INITIAL_POSITIONS to a taught pose file
+randomize_initial_pose: true
+x_init_lim: [-0.015, 0.015]
+y_init_lim: [-0.015, 0.015]
+z_init_lim: [0.0, 0.0]
+enable_oor_check: false
+x_oor_lim: [-0.080, 0.080]
+y_oor_lim: [-0.080, 0.080]
+z_oor_lim: [-0.040, 0.040]
+enable_auto_reward: false
+fastapi_server_host: 127.0.0.1
+fastapi_server_port: 8204
+enable_fastapi_server: true
+restart_key: KEY_F5
+episode_timeout_s: 600.0
+reset_max_joint_velocity: 1.2
+pusht_lock_rotation: true
+pusht_locked_rpy_deg: [0.0, -180.0, 0.0]
+pusht_lock_gripper: true
+pusht_locked_gripper_pos: 0.0
+pusht_lock_z: true
+pusht_locked_z: 0.7769
+pusht_bbox_x_lim: [0.3085, 0.78]
+pusht_bbox_y_lim: [-0.3, 0.3]
+pusht_bbox_z_lim: [0.7769, 0.8169]
+pusht_bbox_release_orientation: true
+pusht_bbox_orientation_cost: 0.1
+pusht_bbox_point_down_after_position_only: true
+pusht_delta_action_scale_m: 0.01
+pusht_teleop_position_only_planning: false
+pusht_teleop_orientation_cost: 0.1
+pusht_teleop_point_down_after_position_only: false
+pusht_teleop_point_down_orientation_cost: 0.02
+pusht_teleop_point_down_max_pos_err_m: 0.01
+pusht_teleop_replan_deadband_m: 0.001
+pusht_avoid_hover_z: 0.93
+pusht_avoid_hover_clearance_m: 0.08
+pusht_avoid_home_reset_max_joint_velocity: 4.8
+pusht_back_hover_z: 0.93
+pusht_back_hover_clearance_m: 0.08
+pusht_back_hover_reset_max_joint_velocity: 4.8
+pusht_bbox_yaw_candidates_deg: [0.0, -90.0, 90.0, 180.0]
+pusht_reward_goal_image: ""  # set PUSHT_GOAL_IMAGE to station-local image + metadata
+pusht_match_reward_camera_image_shape: true
+pusht_camera_image_shape: [1280, 720]
+pusht_viewer_camera_tile_height: 720
+pusht_viewer_reward_tile_height: 180
+pusht_auto_reset_on_reward: true
+pusht_auto_reset_threshold: 0.5
+pusht_auto_reset_exit_after: false
+pusht_auto_reset_script_file: cap/saved_scripts/place_grasped_t_reset.py
+pusht_auto_reset_skill_library_path: cap/saved_scripts/pusht
+pusht_auto_reset_ok_exit_codes: [0, 139]
+pusht_auto_reset_timeout_s: 240.0
+pusht_auto_reset_cleanup_stale_processes: true
+pusht_auto_reset_stale_process_age_s: 120.0

@@ -11,6 +11,20 @@ repositories:
     commit: 2b34f9d
     license_status: Apache-2.0
 
+  forge_pusht:
+    path_hint: forge
+    branch: wenlix/pusht_env
+    commit: 3cc5e899
+    license_status: pending-source-owner-review
+    include:
+      - cap/saved_scripts/place_grasped_t_reset.py
+      - cap/saved_scripts/pusht/
+      - rl/pusht/
+      - rl/pusht_runner.py
+      - tmux/realworld_rl/pusht_supervisor.py
+      - tmux/realworld_rl/rl_pusht.sh
+      - tmux/realworld_rl/tasks_config/pusht/
+
   forge_autorl:
     path_hint: forge
     branch: origin/wenlix/autorl

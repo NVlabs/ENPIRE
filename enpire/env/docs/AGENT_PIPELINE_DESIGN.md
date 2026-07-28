@@ -247,8 +247,8 @@ All prompts live as markdown files on disk in `cap/prompt/`, organized into sema
 cap/prompt/
 ├── system/        # system prompts (identity, workflow, rules, reflection, review, retry, etc.)
 ├── tools/         # one markdown per tool (detect_object, bundlesdf_track, yam_coordinate_system)
-├── embodiment/    # per-robot specs (robocasa_panda.md, robocasa_gr1.md)
-├── task/          # task-specific strategies (robocasa_pick_place.md, etc.)
+├── embodiment/    # per-robot specs (yam.md, etc.)
+├── task/          # task-specific strategies (pick_place.md, etc.)
 ├── heuristics/    # agent-learned heuristics (cross-run persistent, initially empty)
 └── loader.py      # PromptMemory class
 ```
@@ -260,9 +260,9 @@ pm = PromptMemory()                    # defaults to cap/prompt/
 pm.scan()                              # build keyword → file path index
 pm.load("system", "code_review", task="...", code="...")  # load + substitute
 pm.load_section("system", "vision_reflection", "Scene Query", task="...")
-pm.resolve(["robocasa", "pick"])       # keyword search → list[Path]
+pm.resolve(["yam", "pick"])            # keyword search → list[Path]
 pm.inject(paths, mode="full")          # render full content or index-only
-pm.load_embodiment("robocasa")         # → {"tool_docs": ..., "env_notes": ...}
+pm.load_embodiment("yam")              # → {"tool_docs": ..., "env_notes": ...}
 ```
 
 ## Execution Memory
@@ -380,14 +380,14 @@ uv run python run_agent.py experiment=pick_place_sink_to_counter wandb.enabled=t
 #   enabled: true
 #   project: cap-agent
 #   entity: null
-#   tags: [robocasa, pick_place]
+#   tags: [yam, pick_place]
 ```
 
 ### What gets logged
 
 | Scope | Metrics |
 |-------|---------|
-| **Config** (wandb.config) | experiment name, task, env, LLM backend/model, pipeline steps, reflection strategy, RoboCasa env vars (LAYOUT_ID, STYLE_ID, SEED, PYTHONHASHSEED) |
+| **Config** (wandb.config) | experiment name, task, env, LLM backend/model, pipeline steps, reflection strategy, station name, seed |
 | **Per-iteration** (wandb.log) | `iter/total_ms`, `iter/score`, `iter/success`, `iter/code_length`, `iter/tool_calls`, `iter/has_error`, `step/<name>_ms` for each pipeline step |
 | **Run summary** (wandb.summary) | `success`, `iterations`, `duration_s`, `final_score`, `stop_reason` |
 
@@ -402,7 +402,7 @@ uv run python run_agent.py experiment=pick_place_sink_to_counter wandb.enabled=t
 
 ### Dependencies
 
-`wandb` is in the `robocasa` optional deps group. Install with `uv sync --extra robocasa` or `uv pip install wandb`.
+`wandb` is in the `cap` optional deps group. Install with `uv sync --extra cap` or `uv pip install wandb`.
 
 ## Custom Pipeline Example
 
@@ -437,11 +437,6 @@ cap/env/
     profile.py       — RobotProfile, ArmProfile
     skill_library.py — shared skill library (VLM backends, grasp helpers)
   profile.py         — (compat shim, re-exports base/profile)
-  robocasa.py        — (compat shim, re-exports robocasa/)
-  robocasa/
-    env.py           — RoboCasaEnv (MuJoCo, joint-position control)
-    server.py        — RoboCasa CapServer integration
-    skills.py        — make_namespace() — tool closures for direct mode
   setup.py           — create_runtime() factory for direct mode
   yam.py             — YAM pinocchio IK
   yam_mujoco.py      — YAM MuJoCo (re-exports SimBackend)

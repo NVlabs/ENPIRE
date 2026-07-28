@@ -1,10 +1,10 @@
 # CAP Physical Tools — Guide (perception · planning · contact)
 
-> Companion to [`CAP_DESIGN.md`](CAP_DESIGN.md) (full tool API + ports) and
-> [`CAP_ROBOCASA.md`](CAP_ROBOCASA.md) (sim). This doc focuses on three things
-> that bite people: which tools secretly use **ground-truth** (sim-only), the
-> **camera/visual-input path + formats** (incl. BundleSDF I/O), and the
-> **compliant gripper close** — plus a real, end-to-end example.
+> Companion to [`CAP_DESIGN.md`](CAP_DESIGN.md) (full tool API + ports).
+> This doc focuses on three things that bite people: which tools secretly use
+> **ground-truth** (sim-only), the **camera/visual-input path + formats**
+> (incl. BundleSDF I/O), and the **compliant gripper close** — plus a
+> real, end-to-end example.
 
 The tool layer (`cap/agent/tools/`) is the bridge in **Agent → Tools → Server →
 Env**. A tool call fetches RGB-D + state from **cap_server** (Portal RPC, `8300`)
@@ -23,14 +23,9 @@ run on real hardware** — they must be clearly separated from sensor-based tool
 | Tool / call | Where | Why it's GT |
 |---|---|---|
 | `detect_object(..., backend="oracle")` | `detection.py:322` `_execute_oracle` | reads `client.get_object_positions()` — simulator body poses, then fuzzy-matches the query name |
-| `get_task_info()` (RoboCasa namespace) | `cap/env/robocasa/skills.py:2118` | GT reward/success + object/container poses from the task oracle |
-| `detect_object` **default in RoboCasa** | `cap/env/robocasa/skills.py:2298` | the sim namespace defaults `backend="oracle"` (real defaults to `bundlesdf`) |
 | `get_object_positions()` / `get_oracle_targets()` | cap_server / sim | raw GT scene state |
 
-> The RoboCasa **autoresearch** eval deliberately *strips* `get_task_info` from
-> generated scripts (`runtime_role="script"`, `CAP_DISABLE_TASK_INFO_IN_SCRIPT=1`)
-> so vision-only policies can't cheat. An **oracle** script must run with
-> `runtime_role="agent"`. See [`CAP_ROBOCASA.md`](CAP_ROBOCASA.md) §5.
+> Autoresearch evals deliberately strip oracle tools from generated scripts (`runtime_role="script"`, `CAP_DISABLE_TASK_INFO_IN_SCRIPT=1`) so vision-only policies can't cheat. An oracle script must run with `runtime_role="agent"`.
 
 ### ✅ Sensor-based — real-transferable
 `detect_object(backend="bundlesdf")`, `detect_objects_oneshot`,
@@ -52,7 +47,6 @@ meant to transfer to real.
 | `cap/agent/tools/detection.py` | `_capture_snapshot` (`:130`) — the fetch + encode point |
 | `cap/server/cap_server.py` | Portal RPC surface: `get_camera_image` (`:3019`), `get_camera_depth` (`:3024`), `get_camera_intrinsics` (`:3030`), `get_camera_extrinsics` (`:3036`) |
 | `cap/env/adapters/sim.py` | `SimCameraAdapter`/`SimCameraClient` — sim frames to cap_server |
-| `cap/env/robocasa/env.py` | `render_rgb`/`render_depth` + `camera_obs_key_map` (CAP name → robosuite obs key) |
 | `robot/camera_factory.py`, `robot/station_profiles.py` | real RealSense/ZED backends + per-station camera config |
 | `cap/utils/image.py` | shared image helpers |
 
@@ -150,5 +144,4 @@ trajectories + compliant gripper → state read back. Swap step 1 for
 bundlesdf, `_capture_snapshot`) · `object_tracking.py` (cam→world) ·
 `segmentation.py` · `freespace_move.py` (cuRobo, RPY convention `:710`, batch
 `:1154`) · `grasp_anygrasp.py` · `native.py` + `cap_server.py:2876` (compliant
-close) · `cap/skills/serve_bundlesdf.py` / `serve_sam3.py` (server I/O) ·
-`cap/env/robocasa/skills.py` (sim parity + oracle).
+close) · `cap/skills/serve_bundlesdf.py` / `serve_sam3.py` (server I/O).

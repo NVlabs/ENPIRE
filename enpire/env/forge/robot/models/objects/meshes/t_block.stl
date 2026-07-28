@@ -1,0 +1,170 @@
+solid t_block
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 0.0000 0.0000 15.0000
+      vertex 160.0000 0.0000 15.0000
+      vertex 160.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 0.0000 0.0000 15.0000
+      vertex 160.0000 40.0000 15.0000
+      vertex 0.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 60.0000 40.0000 15.0000
+      vertex 100.0000 40.0000 15.0000
+      vertex 100.0000 160.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 1.000000
+    outer loop
+      vertex 60.0000 40.0000 15.0000
+      vertex 100.0000 160.0000 15.0000
+      vertex 60.0000 160.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 0.0000 0.0000 0.0000
+      vertex 160.0000 40.0000 0.0000
+      vertex 160.0000 0.0000 0.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 0.0000 0.0000 0.0000
+      vertex 0.0000 40.0000 0.0000
+      vertex 160.0000 40.0000 0.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 60.0000 40.0000 0.0000
+      vertex 100.0000 160.0000 0.0000
+      vertex 100.0000 40.0000 0.0000
+    endloop
+  endfacet
+  facet normal 0.000000 0.000000 -1.000000
+    outer loop
+      vertex 60.0000 40.0000 0.0000
+      vertex 60.0000 160.0000 0.0000
+      vertex 100.0000 160.0000 0.0000
+    endloop
+  endfacet
+  facet normal 0.000000 -1.000000 0.000000
+    outer loop
+      vertex 0.0000 0.0000 0.0000
+      vertex 160.0000 0.0000 0.0000
+      vertex 160.0000 0.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 -1.000000 0.000000
+    outer loop
+      vertex 0.0000 0.0000 0.0000
+      vertex 160.0000 0.0000 15.0000
+      vertex 0.0000 0.0000 15.0000
+    endloop
+  endfacet
+  facet normal 1.000000 0.000000 0.000000
+    outer loop
+      vertex 160.0000 0.0000 0.0000
+      vertex 160.0000 40.0000 0.0000
+      vertex 160.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 1.000000 0.000000 0.000000
+    outer loop
+      vertex 160.0000 0.0000 0.0000
+      vertex 160.0000 40.0000 15.0000
+      vertex 160.0000 0.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 1.000000 0.000000
+    outer loop
+      vertex 160.0000 40.0000 0.0000
+      vertex 100.0000 40.0000 0.0000
+      vertex 100.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 1.000000 -0.000000
+    outer loop
+      vertex 160.0000 40.0000 0.0000
+      vertex 100.0000 40.0000 15.0000
+      vertex 160.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 1.000000 0.000000 0.000000
+    outer loop
+      vertex 100.0000 40.0000 0.0000
+      vertex 100.0000 160.0000 0.0000
+      vertex 100.0000 160.0000 15.0000
+    endloop
+  endfacet
+  facet normal 1.000000 0.000000 0.000000
+    outer loop
+      vertex 100.0000 40.0000 0.0000
+      vertex 100.0000 160.0000 15.0000
+      vertex 100.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 1.000000 0.000000
+    outer loop
+      vertex 100.0000 160.0000 0.0000
+      vertex 60.0000 160.0000 0.0000
+      vertex 60.0000 160.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 1.000000 -0.000000
+    outer loop
+      vertex 100.0000 160.0000 0.0000
+      vertex 60.0000 160.0000 15.0000
+      vertex 100.0000 160.0000 15.0000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 60.0000 160.0000 0.0000
+      vertex 60.0000 40.0000 0.0000
+      vertex 60.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 60.0000 160.0000 0.0000
+      vertex 60.0000 40.0000 15.0000
+      vertex 60.0000 160.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 1.000000 0.000000
+    outer loop
+      vertex 60.0000 40.0000 0.0000
+      vertex 0.0000 40.0000 0.0000
+      vertex 0.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal 0.000000 1.000000 -0.000000
+    outer loop
+      vertex 60.0000 40.0000 0.0000
+      vertex 0.0000 40.0000 15.0000
+      vertex 60.0000 40.0000 15.0000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.0000 40.0000 0.0000
+      vertex 0.0000 0.0000 0.0000
+      vertex 0.0000 0.0000 15.0000
+    endloop
+  endfacet
+  facet normal -1.000000 0.000000 0.000000
+    outer loop
+      vertex 0.0000 40.0000 0.0000
+      vertex 0.0000 0.0000 15.0000
+      vertex 0.0000 40.0000 15.0000
+    endloop
+  endfacet
+endsolid t_block
