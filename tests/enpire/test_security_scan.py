@@ -34,8 +34,6 @@ PRIVATE_WORKSTATION_MARKERS = (
     "/home/gear/",
     "/home/lecar/",
     "/home/yiyang/",
-    "/usr0/tonghez/",
-    "/mnt/amlfs-02/shared/wenli_vla_ft/",
 )
 
 

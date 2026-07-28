@@ -127,7 +127,7 @@ def station_calibrate_all(args: argparse.Namespace) -> int:
     if args.model_root is not None:
         os.environ["ENPIRE_YAM_MODEL_ROOT"] = args.model_root
     else:
-        # Always pin to gear-enpire's bundled models so stale env vars
+        # Always pin to ENPIRE's bundled models so stale env vars
         # from old forge/yam-calibration installs don't redirect the path.
         from enpire.env.forge.paths import forge_path
         os.environ["ENPIRE_YAM_MODEL_ROOT"] = str(forge_path("robot", "models", "station"))

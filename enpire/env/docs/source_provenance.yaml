@@ -13,7 +13,7 @@ repositories:
 
   forge_pusht:
     path_hint: forge
-    branch: wenlix/pusht_env
+    branch: internal-forge
     commit: 3cc5e899
     license_status: pending-source-owner-review
     include:
@@ -27,7 +27,7 @@ repositories:
 
   forge_autorl:
     path_hint: forge
-    branch: origin/wenlix/autorl
+    branch: internal-forge
     commit: 4c37817d
     license_status: pending-source-owner-review
     include:
@@ -36,7 +36,7 @@ repositories:
 
   forge_gpu:
     path_hint: forge
-    branch: origin/haotian/gpu-insertion
+    branch: internal-forge
     commit: 682f7937
     license_status: pending-source-owner-review
     include:
@@ -86,11 +86,11 @@ repositories:
     branches:
       - name: origin/main
         commit: abae3de
-      - name: origin/wenlix/autorl
+      - name: internal-forge
         commit: 1f7378d
-      - name: origin/haotian/gpu-insertion
+      - name: internal-forge
         commit: cba0c0a
-      - name: autoresearch/offline/gear-yam-desktop-37/20260606-213620
+      - name: internal-forge
         commit: 81988f0
     license_status: source-mit-license-copied-root-review-still-required
     include:

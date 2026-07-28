@@ -29,13 +29,12 @@ The loop is: **reset → execute → verify → record → refine.**
 
 ### Demonstrated tasks
 
-| Task | Mode | Policy |
-|------|------|--------|
-| GPU insertion | CaP | `cap/saved_scripts/gpu/` |
-| Pin insertion | PLD (online RL) | `enpire/policy/pld/` |
-| Push-T | CaP | `cap/saved_scripts/pusht/` |
-| Zip-tie cutting | CaP | `cap/saved_scripts/ziptie/` |
-| Cube pick | CaP | `cap/saved_scripts/examples/pick_cube.py` |
+| Task | Mode | Policy | Notes |
+|------|------|--------|-------|
+| Cube pick | CaP | `cap/saved_scripts/examples/pick_cube.py` | Hardware-free quickstart |
+| **Push-T** | **CaP + PLD** | `cap/saved_scripts/pusht/` · `enpire/policy/rl/pusht/` | **Fully reproducible end-to-end autoresearch example** — includes CaP reset loop, vision reward, RL training, and 3D-printable T-block (`robot/models/objects/meshes/t_block.stl`) |
+| GPU insertion | CaP | `cap/saved_scripts/skill_library/` | — |
+| Pin insertion | PLD (online RL) | `enpire/policy/pld/` | — |
 
 ---
 

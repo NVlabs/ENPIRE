@@ -35,6 +35,6 @@ Never put credentials in source, commands, prompts, fixtures, or artifacts.
 
 Before moving task code, consult
 `enpire/env/docs/source_provenance.yaml`. Preserve the original algorithms and
-write characterization tests before refactoring. GPU insertion comes from
-`haotian/gpu-insertion`; zip-tie scripts and reward come from
-`tonghe/ziptie-autorl`.
+write characterization tests before refactoring. GPU insertion and zip-tie
+scripts originate from internal Forge feature branches; see
+`enpire/env/docs/source_provenance.yaml` for commit provenance.

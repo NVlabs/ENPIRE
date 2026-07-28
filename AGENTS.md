@@ -88,10 +88,10 @@ Default tests use deterministic mocks. Credentialed network tests are opt-in.
 
 ## Source branches
 
-- GPU insertion: Forge `origin/haotian/gpu-insertion@682f7937`
-- Zip-tie scripts/reward: Forge `origin/tonghe/ziptie-autorl@1abbfeae`
-- PushT: Forge `wenlix/pusht_env@3cc5e899`
-- Pin/AutoRL: Forge `origin/wenlix/autorl@4c37817d`
+- GPU insertion: Forge internal branch `@682f7937`
+- Zip-tie scripts/reward: Forge internal branch `@1abbfeae`
+- PushT: Forge internal branch `@3cc5e899`
+- Pin/AutoRL: Forge internal branch `@4c37817d`
 - Calibration: yam-calibration `main@37babca`
 - PLD: minimal_policy sources listed in the provenance manifest
 

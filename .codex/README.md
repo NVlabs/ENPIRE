@@ -4,7 +4,7 @@ This file is the single entry point for a coding or research agent working in
 this repository.  Read it top to bottom before touching any file, then follow
 the section that matches your assigned task.
 
-Repository: `https://github.com/DarthUtopian/gear-enpire`  
+Repository: `https://github.com/NVlabs/ENPIRE`  
 Version: `0.1.0`  
 Branch convention: feature work branches from `release`.
 
@@ -40,8 +40,8 @@ Key capabilities:
 Requires: **Python 3.11**, **uv**, **Linux x86-64**, **tmux**, Git + Git LFS.
 
 ```bash
-git clone https://github.com/DarthUtopian/gear-enpire.git
-cd gear-enpire
+git clone https://github.com/NVlabs/ENPIRE.git
+cd ENPIRE
 
 # Minimal — hardware-free tests and simulation only
 uv sync --extra dev
