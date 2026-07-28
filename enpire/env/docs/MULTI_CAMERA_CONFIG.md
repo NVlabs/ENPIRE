@@ -309,7 +309,6 @@ Constructor also accepts:
 
 - **Real mode** (`cap/server/cap_server.py:724-733`): creates `_CameraClient(name)` for each name in `CAMERA_NAMES`. Failures are caught and logged (camera becomes unavailable, not fatal).
 - **Sim mode** (`cap/server/cap_server.py:697-707`): creates `SimCameraClient(backend, name)` for each name in `CAMERA_NAMES`.
-- **Warp-sim mode** (`cap/server/cap_server.py:691-693`): same as sim but with `WarpSimBackend`.
 
 `_CameraClient.__init__()` (`cap/server/cap_server.py:188-219`):
 1. Calls `get_camera_backend(camera_name)` to determine type.

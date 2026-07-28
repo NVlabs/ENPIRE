@@ -938,7 +938,7 @@ class DetectObjectTool(Tool):
 
         Fuzzy-matches *query* against MuJoCo scene body names (case-insensitive
         substring match).  Only works when the cap_server is backed by a
-        simulation (SimBackend / WarpSimBackend).
+        simulation (SimBackend).
         """
         query: str = kwargs["query"]
         try:

@@ -12,10 +12,9 @@ cross-seed synthesis prompt (Phase B).
 Not to be confused with ``cap.reward.gemini_reward`` et al., which are
 **RL policy reward servers** (VLM-judged per-step scalar rewards for a
 training loop). The module here is purely an analysis layer over the
-agent loop's existing binary `success` flag — it reconstructs the
-sub-predicates that the robocasa `_check_success` method would have
-computed so that the reflection LLM sees ground-truth reasons instead of
-guessing from pixels.
+agent loop's existing binary `success` flag — it reconstructs
+sub-predicates so that the reflection LLM sees ground-truth reasons
+instead of guessing from pixels.
 
 Public entry points::
 

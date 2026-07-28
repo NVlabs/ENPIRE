@@ -40,9 +40,8 @@ def create_env(env_name: str, viewer: bool = False, **kwargs):
     """Create an env by name. This is the single entry point for all envs.
 
     Env names:
-        "yam"                          — YAM MuJoCo sim
-        "yam-warp"                     — YAM GPU sim
-        "yam-real"                     — real YAM bimanual hardware
+        "yam"      — YAM MuJoCo sim
+        "yam-real" — real YAM bimanual hardware
 
     Returns an env implementing EnvProtocol (and optionally others).
     """
@@ -54,11 +53,6 @@ def create_env(env_name: str, viewer: bool = False, **kwargs):
 
         return YamMuJoCoEnv(viewer=viewer)
 
-    elif env_type == "yam-warp":
-        from enpire.env.forge.cap.env.yam_warp import YamWarpEnv
-
-        return YamWarpEnv()
-
     elif env_type == "yam-real":
         from enpire.env.forge.cap.env.real_bimanual_yam.env import RealYamEnv
 
@@ -68,5 +62,5 @@ def create_env(env_name: str, viewer: bool = False, **kwargs):
     else:
         raise ValueError(
             f"Unknown env: {env_name!r}. "
-            f"Available: yam, yam-warp, yam-real"
+            f"Available: yam, yam-real"
         )

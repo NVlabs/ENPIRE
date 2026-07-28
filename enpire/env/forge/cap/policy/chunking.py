@@ -219,7 +219,7 @@ class ChunkingPolicy:
 
         ``predict_ms``  — durations of ``backend.predict`` calls (one per
                           chunk refill; these include ZMQ round-trip for
-                          remote backends like grootpool).
+                          remote backends like ZMQ policy servers).
         ``chunk_hit_ms`` — duration of ``get_action`` calls that popped from
                           the queue without calling the backend.
         """

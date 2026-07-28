@@ -494,7 +494,7 @@ GRIPPER_MAX = 1.0
 | `--arm-host` | `127.0.0.1` | Arm server host |
 | `--port` | `8300` | Portal RPC port |
 | `--rl-host` | `config.RL_POLICY_HOST` | RL policy server host |
-| `--env` | `None` | Environment: `yam`, `yam-warp`, `robocasa`, `robocasa:TaskName[:Robot]` |
+| `--env` | `None` | Environment: `yam` (MuJoCo sim) or `yam-real` (hardware) |
 | `--viewer` | `False` | Launch viewer window (sim envs only) |
 | `--use-fello` | `False` (sim only) | Enable Fello HIL in sim |
 | `--always-takeoverable` | `False` | Fello takeover for ALL commands |

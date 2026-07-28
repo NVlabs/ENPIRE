@@ -216,7 +216,7 @@ def yam_profile() -> RobotProfile:
     )
 
 
-def robocasa_panda_omron_profile() -> RobotProfile:
+def _robocasa_panda_omron_profile() -> RobotProfile:
     """PandaOmron single-arm mobile manipulator for RoboCasa365.
 
     7-DOF Panda arm + gripper + mobile base + torso.
@@ -275,7 +275,7 @@ def robocasa_panda_omron_profile() -> RobotProfile:
     )
 
 
-def robocasa_gr1_arms_profile() -> RobotProfile:
+def _robocasa_gr1_arms_profile() -> RobotProfile:
     """GR1ArmsOnly bimanual (7+7 DOF) for RoboCasa365.
 
     Fixed-base humanoid with right and left 7-DOF arms.

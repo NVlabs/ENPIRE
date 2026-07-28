@@ -1975,7 +1975,7 @@ class CapServer:
         model = sim.model._model
         data = sim.data._data
 
-        # Find EE site — try robosuite robot attribute first, fallback to grip_site
+        # Find EE site — try robot attribute first, fallback to grip_site
         site_id = -1
         robots = getattr(env, "robots", None)
         if robots and len(robots) > 0:
@@ -4631,9 +4631,9 @@ class CapServer:
     def _rpc_reset_to_initial(self) -> dict:
         """Deterministic reset — same scene, same objects, same positions.
 
-        Uses robosuite's ``deterministic_reset`` path to restore the initial
-        MuJoCo state without re-randomizing layout/objects.  Suitable for
-        agent retry loops where each iteration attempts the same task.
+        Deterministic reset — restores the initial MuJoCo state without
+        re-randomizing layout/objects.  Suitable for agent retry loops
+        where each iteration attempts the same task.
         """
         if self._sim_backend is not None and hasattr(
             self._sim_backend, "reset_to_initial"
@@ -4762,9 +4762,7 @@ def main() -> None:
         "--env",
         default=None,
         help=(
-            "Environment to use (replaces --sim/--robocasa). Examples: "
-            "'yam', 'yam-warp', 'robocasa', 'robocasa:PickPlaceCounterToCabinet', "
-            "'robocasa:PickPlaceCounterToCabinet:GR1ArmsOnly'"
+            "Environment to use. Examples: 'yam' (MuJoCo sim), 'yam-real' (hardware)"
         ),
     )
     parser.add_argument(
@@ -4783,11 +4781,6 @@ def main() -> None:
         help="Enable Fello takeover for ALL commands, not just learn_skill. Implies --use-fello.",
     )
     args = parser.parse_args()
-
-    if args.env == "yam-warp" and args.viewer:
-        parser.error(
-            "--viewer is not supported with --env yam-warp (no passive viewer)"
-        )
 
     if args.env is not None:
         import enpire.env.forge.cap.config as _cfg

@@ -2167,22 +2167,7 @@ def create_app(
         else:
 
             def _do_home():
-                # RoboCasa exposes reset_env (full episode reset). YAM hardware
-                # / non-task envs don't bind it on cap_server, so calling it
-                # would surface 'Unknown method reset_env' in server logs even
-                # though our except catches it. Gate by robot type instead.
-                robot_type = os.environ.get("CAP_ROBOT_TYPE", "yam").strip().lower()
-                if robot_type == "robocasa":
-                    try:
-                        _client = portal.Client(f"{cap_server_host}:{cap_server_port}")
-                        result = _client.reset_env().result(timeout=10)
-                        if result.get("ok"):
-                            logger.info("[Home] Environment reset (new episode)")
-                            from enpire.env.forge.cap.agent.tools.base import ToolResult
-                            return ToolResult(success=True, data=None)
-                    except Exception:
-                        pass
-                # Hardware / non-task env: open grippers, then go home.
+                # Open grippers, then go home.
                 registry.call("open_gripper", side="left")
                 registry.call("open_gripper", side="right")
                 return registry.call("go_home")

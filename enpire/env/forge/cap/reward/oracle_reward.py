@@ -9,11 +9,11 @@ Design principles (see docs/REWARD_MODULE.md):
    The oracle never emits a verdict that contradicts the simulator; when
    ``success=True`` every sub-predicate is :class:`PredicateStatus.CONFIRMED_PASS`
    by definition, regardless of what our approximate thresholds would say.
-2. **Thresholds are ranges.** Many sub-predicates in robocasa use
-   per-instance thresholds (e.g. ``container.horizontal_radius × 0.7``) that
-   vary ±2 cm across the object pool. We express each predicate's threshold
-   as ``[low, high]`` and classify metrics inside that range as
-   :class:`PredicateStatus.BOUNDARY` rather than forcing a PASS/FAIL verdict.
+2. **Thresholds are ranges.** Many sub-predicates use per-instance thresholds
+   (e.g. ``container.horizontal_radius × 0.7``) that vary ±2 cm across the
+   object pool. We express each predicate's threshold as ``[low, high]`` and
+   classify metrics inside that range as :class:`PredicateStatus.BOUNDARY`
+   rather than forcing a PASS/FAIL verdict.
 3. **Three phases, not one step.** Measurement → threshold classification →
    failure attribution. Adding a new task only requires a list of
    :class:`PredicateSpec` entries; the attribution logic is task-agnostic.
@@ -279,11 +279,11 @@ def _attribute_failure(
 #: container (plate, bowl, tray). Simulator uses
 #: ``container.horizontal_radius × 0.7`` which varies with the sampled
 #: instance — the range below covers the full ``obj_groups="container"``
-#: pool for robocasa kitchen tasks.
+#: pool for pick-and-place kitchen tasks.
 _OBJ_IN_CONTAINER_TH_LOW = 0.07
 _OBJ_IN_CONTAINER_TH_HIGH = 0.12
 _OBJ_IN_CONTAINER_RATIONALE = (
-    "robocasa uses container.horizontal_radius × 0.7 — per instance, this "
+    "simulator uses container.horizontal_radius × 0.7 — per instance, this "
     "spans ~0.07 m (small bowl) to ~0.12 m (large plate/tray) across the "
     "obj_groups='container' pool."
 )
@@ -296,8 +296,8 @@ _RECEP_ON_COUNTER_TH_LOW = 0.80
 _RECEP_ON_COUNTER_TH_HIGH = 0.88
 _RECEP_ON_COUNTER_RATIONALE = (
     "no contact check in result.json — use container_pos[2] as proxy. Counter "
-    "heights span ~0.90–0.95 m across robocasa layouts; below ~0.80 m almost "
-    "certainly means the container dropped to the floor."
+    "heights span ~0.90–0.95 m; below ~0.80 m almost certainly means the "
+    "container dropped to the floor."
 )
 
 #: ``gripper_obj_far`` uses an exact threshold of 0.25 m — not an
@@ -305,8 +305,7 @@ _RECEP_ON_COUNTER_RATIONALE = (
 #: zero-width zone here (effectively impossible).
 _GRIPPER_FAR_TH = 0.25
 _GRIPPER_FAR_RATIONALE = (
-    "robocasa.utils.object_utils.gripper_obj_far uses th=0.25 m verbatim; "
-    "no approximation needed."
+    "gripper_obj_far uses th=0.25 m verbatim; no approximation needed."
 )
 
 
@@ -391,8 +390,7 @@ COUNTER_TO_MICROWAVE_SPECS: list[PredicateSpec] = [
 MICROWAVE_TO_COUNTER_SPECS: list[PredicateSpec] = SINK_TO_COUNTER_SPECS  # identical shape
 
 
-#: Task class name → spec list. Populate for each new task by reading the
-#: matching ``_check_success`` method in robocasa's source.
+#: Task class name → spec list. Populate for each new task.
 TASK_SPECS: dict[str, list[PredicateSpec]] = {
     "PickPlaceSinkToCounter": SINK_TO_COUNTER_SPECS,
     "PickPlaceCounterToSink": COUNTER_TO_SINK_SPECS,
@@ -402,21 +400,18 @@ TASK_SPECS: dict[str, list[PredicateSpec]] = {
 
 
 def _normalize_task(env_name: str) -> str:
-    """Extract the robocasa task class name from an env_name string.
+    """Extract the task class name from an env_name string.
 
     Examples::
 
-        "robocasa:PickPlaceSinkToCounter"            -> "PickPlaceSinkToCounter"
-        "robocasa:PickPlaceSinkToCounter:PandaOmron" -> "PickPlaceSinkToCounter"
-        "PickPlaceSinkToCounter"                     -> "PickPlaceSinkToCounter"
+        "PickPlaceSinkToCounter"          -> "PickPlaceSinkToCounter"
+        "yam:PickPlaceSinkToCounter"      -> "PickPlaceSinkToCounter"
     """
     if not env_name:
         return ""
     parts = env_name.split(":")
     if len(parts) == 1:
         return parts[0]
-    if parts[0].lower() == "robocasa":
-        return parts[1] if len(parts) >= 2 else ""
     return parts[-1]
 
 

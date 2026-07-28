@@ -60,10 +60,9 @@ experiments/
 - `ExecutionConfig` — subprocess seeds, timeout
 - `RecordingConfig`, `WandbConfig`, `PromptsConfig`
 
-Env var fallbacks (in `experiments/config.yaml`) provide backward compatibility:
-`CAP_AGENT_NAME`, `ROBOCASA_LAYOUT_ID`, `ROBOCASA_STYLE_ID` still work when
-not set in the experiment YAML. Service ports live in `experiments/infra/ports.yaml`.
-Experiment configs override both env vars and port defaults.
+`CAP_AGENT_NAME` is read from the environment when not set in the experiment YAML.
+Service ports live in `experiments/infra/ports.yaml`. Experiment configs override
+env vars and port defaults.
 
 ## Architecture
 
@@ -193,7 +192,6 @@ SelfReflectionStep    → _reflect_cross_seed() if details.per_seed else single-
 | `cap/agent/tools/direct.py` | `make_direct_callables()`, `make_cancel_callables()` |
 | `cap/agent/llm/bridge_llm.py` | `BridgeLLMBackend` — adapts bridge providers |
 | `cap/env/yam_mujoco.py` | `YamMuJoCoEnv` (re-exports SimBackend) |
-| `cap/env/yam_warp.py` | `YamWarpEnv` (re-exports WarpSimBackend, lazy) |
 | `cap/env/adapters/sim.py` | `SimArmAdapter`, `SimCameraAdapter` |
 
 ## AgentContext
@@ -440,7 +438,6 @@ cap/env/
   setup.py           — create_runtime() factory for direct mode
   yam.py             — YAM pinocchio IK
   yam_mujoco.py      — YAM MuJoCo (re-exports SimBackend)
-  yam_warp.py        — YAM Warp (lazy re-export)
   adapters/
     sim.py           — SimArmAdapter, SimCameraAdapter
 ```

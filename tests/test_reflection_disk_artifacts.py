@@ -46,7 +46,7 @@ def test_load_run_artifacts_reads_subprocess_output(tmp_path: Path) -> None:
     session = AgentRunSession(
         run_dir=tmp_path / "run",
         task="pick up the apple",
-        env_name="robocasa:PickPlaceSinkToCounter",
+        env_name="yam",
     )
 
     iter_stdout = (
@@ -71,7 +71,7 @@ def test_load_run_artifacts_captures_error_section(tmp_path: Path) -> None:
     session = AgentRunSession(
         run_dir=tmp_path / "run",
         task="pick up the apple",
-        env_name="robocasa:PickPlaceSinkToCounter",
+        env_name="yam",
     )
     stdout = "hover: success=True\ngrasp: success=True\n"
     error = (

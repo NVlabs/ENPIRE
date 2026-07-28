@@ -16,13 +16,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-CAMERA_MAPS = {
-    "robocasa_panda_omron": {
-        "video.res256_image_side_0": "side_left",
-        "video.res256_image_side_1": "side_right",
-        "video.res256_image_wrist_0": "wrist",
-    },
-}
+CAMERA_MAPS: dict[str, dict[str, str]] = {}
 
 
 def _reencode_h264(src: Path, label: str | None = None, label_color: str = "white") -> None:

@@ -9,9 +9,8 @@ and returns them as formatted prompt text.
 
 Env name mapping::
 
-    robocasa                           → embodiment/robocasa_panda.md
-    robocasa:PickPlaceCounterToCabinet → embodiment/robocasa_panda.md
-    robocasa:PickPlace:GR1ArmsOnly     → embodiment/robocasa_gr1.md
+    yam                                → embodiment/yam.md
+    yam:PickPlace                      → embodiment/yam.md
 """
 
 from __future__ import annotations
@@ -25,25 +24,16 @@ logger = logging.getLogger(__name__)
 ENV_SPEC_DIR = Path(__file__).resolve().parent / "env"
 
 # Robot short-name mapping per platform
-_ROBOT_KEY: dict[str, dict[str, str]] = {
-    "robocasa": {
-        "PandaOmron": "panda",
-        "GR1ArmsOnly": "gr1",
-    },
-}
+_ROBOT_KEY: dict[str, dict[str, str]] = {}
 
-_ROBOT_DEFAULT: dict[str, str] = {
-    "robocasa": "panda",
-}
+_ROBOT_DEFAULT: dict[str, str] = {}
 
 
 def _resolve_spec_key(env_name: str) -> str:
     """Map an env name string to a YAML filename stem.
 
-    >>> _resolve_spec_key("robocasa")
-    'robocasa_panda'
-    >>> _resolve_spec_key("robocasa:PickPlace:GR1ArmsOnly")
-    'robocasa_gr1'
+    >>> _resolve_spec_key("yam")
+    'yam'
     """
     parts = env_name.split(":")
     platform = parts[0]

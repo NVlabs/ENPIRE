@@ -17,12 +17,6 @@ defaults:
   - _self_
   - optional experiment: null
 
-# Env var fallbacks (override structured config defaults).
-# Experiment configs override these when they set the same fields.
-env:
-  layout_id: ${oc.env:ROBOCASA_LAYOUT_ID,-3}
-  style_id: ${oc.env:ROBOCASA_STYLE_ID,-3}
-
 execution:
   n_gpus: ${oc.env:CAP_N_RENDER_GPUS,0}  # 0 = auto-detect via nvidia-smi
 

@@ -11,7 +11,6 @@ YAM is a custom bimanual robot platform with two 6-DOF arms. Three env backends 
 | Backend | Location | Physics | Rendering | IK | Use case |
 |---------|----------|---------|-----------|-----|----------|
 | **YAM MuJoCo** | `cap/env/yam_mujoco.py` | MuJoCo CPU | MuJoCo EGL | Pinocchio + pink | Default sim, development |
-| **YAM Warp** | `cap/env/yam_warp.py` | MuJoCo Warp (GPU) | NVIDIA Warp BVH | Pinocchio + pink | Headless GPU machines, batch sim |
 | **YAM Hardware** | `robot/yam/` | Real world | RealSense / ZED cameras | Pinocchio + pink | Physical robot |
 
 All three expose the same tool interface to agent code.
@@ -215,7 +214,6 @@ On physical YAM hardware (vs sim):
 
 - `cap/env/yam.py` — Base YAM env (delegates to SimBackend)
 - `cap/env/yam_mujoco.py` — MuJoCo CPU backend
-- `cap/env/yam_warp.py` — NVIDIA Warp GPU backend
 - `cap/env/adapters/sim.py` — SimArmAdapter, SimCameraAdapter (CapServer glue)
 - `cap/prompt/task/table_bussing.md` — Table bussing strategy guide
 - `cap/agent/tools/freespace_move.py` — cuRobo motion planning tool (~90KB)

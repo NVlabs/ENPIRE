@@ -10,13 +10,9 @@ Usage::
     # Standalone — uses experiments/config.yaml defaults
     uv run python run_script.py script_file=cap/saved_scripts/test.py
 
-    # With an experiment config (gets env, ports, seed, etc.)
-    uv run python run_script.py experiment=pick_place_sink_to_counter \\
-        script_file=cap/saved_scripts/robocasa_test_planning.py
-
     # Override fields
     uv run python run_script.py script_file=test.py \\
-        env.name=robocasa:PickPlaceSinkToCounter env.seed=42 \\
+        env.name=yam env.seed=42 \\
         runtime.curobo_port=9400 recording.enabled=true
 """
 
@@ -544,7 +540,6 @@ def main(cfg: DictConfig) -> None:
 
     # --- Seed ---
     if cfg.env.seed is not None:
-        os.environ["ROBOCASA_SEED"] = str(cfg.env.seed)
         print(f"[run_script] Seed   : {cfg.env.seed}")
 
     # --- Plumb remote-service config into env vars ---
@@ -615,7 +610,7 @@ def main(cfg: DictConfig) -> None:
     )
 
     # --- Create env + namespace ---
-    env_name = cfg.env.name or "robocasa:PickPlaceSinkToCounter"
+    env_name = cfg.env.name or "yam"
     from enpire.env.forge.cap.agent.robot_adapters import get_robot_adapter
 
     print(f"[run_script] Creating {env_name} env (direct mode)")

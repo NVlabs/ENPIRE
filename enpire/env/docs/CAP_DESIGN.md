@@ -210,8 +210,6 @@ and [`VISER_CUROBO_PLANNER.md`](VISER_CUROBO_PLANNER.md) for cuRobo server detai
 |-----|------|-------------------|
 | Real bimanual YAM | `cap/env/real_bimanual_yam/` | Fello arms + RealSense, direct in-process |
 | YAM MuJoCo sim | `cap/env/yam.py`, `cap/env/yam_mujoco.py` | pinocchio IK, MuJoCo physics |
-| YAM Warp sim (GPU) | `cap/env/yam_warp.py` | MuJoCo Warp, lazy GPU backend |
-
 All implement the env protocols, so the Agent/Tools layers are unchanged across
 them. Cameras and station profiles are configured per-station; see
 [`MULTI_CAMERA_CONFIG.md`](MULTI_CAMERA_CONFIG.md).

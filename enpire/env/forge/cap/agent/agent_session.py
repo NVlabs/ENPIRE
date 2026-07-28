@@ -137,7 +137,7 @@ class AgentRunSession:
 
         session = AgentRunSession.create(
             task="Pick up the red object",
-            env_name="robocasa:PickPlaceCounterToCabinet",
+            env_name="yam",
             log_dir=Path("logs"),
         )
         # ... run pipeline ...

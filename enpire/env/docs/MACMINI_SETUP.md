@@ -72,8 +72,6 @@ The `--mac-mini` flag is **auto-detected** on macOS (`launch_sim.sh:78`: `if [[ 
 ./tmux/table_bussing/table_bussing_history/launch_sim.sh --rl-host IP   # override RL policy server host
 ```
 
-Note: `--warp` requires `mujoco-warp` which needs CUDA — not available on macOS.
-
 ### Tmux session layout (`cap-sim`)
 
 ```

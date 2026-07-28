@@ -40,59 +40,9 @@ class EmbodimentTag(Enum):
     The DEXMG GR1 dataset with arms and waist and Fourier hand.
     """
 
-    ROBOCASA_SINGLE_ARM = "robocasa_single_arm"
-    """
-    The RoboCasa dataset with single arm.
-    """
-
     ONE_X_EVE_GRIPPER = "onex_eve_gripper"
     """
     The OneX Eve Robot with gripper.
-    """
-
-    ROBOCASA_GR1_ARMS_ONLY_INSPIRE_HANDS = "robocasa_gr1_arms_only_inspire_hands"
-    """
-    The RoboCasa GR1 dataset with arms only and inspire hands.
-    """
-
-    ROBOCASA_GR1_ARMS_ONLY_FOURIER_HANDS = "robocasa_gr1_arms_only_fourier_hands"
-    """
-    The RoboCasa GR1 dataset with arms only and Fourier hands.
-    """
-
-    ROBOCASA_GR1_FIXED_LOWER_BODY_INSPIRE_HANDS = "robocasa_gr1_fixed_lower_body_inspire_hands"
-    """
-    The RoboCasa GR1 dataset with fixed lower body and inspire hands.
-    """
-
-    ROBOCASA_GR1_FIXED_LOWER_BODY_FOURIER_HANDS = "robocasa_gr1_fixed_lower_body_fourier_hands"
-    """
-    The RoboCasa GR1 dataset with fixed lower body and Fourier hands.
-    """
-
-    ROBOCASA_GR1_ARMS_WAIST_FOURIER_HANDS = "robocasa_gr1_arms_waist_fourier_hands"
-    """
-    The RoboCasa GR1 dataset with arms and waist and Fourier hands.
-    """
-
-    ROBOCASA_PANDA_OMRON = "robocasa_panda_omron"
-    """
-    The RoboCasa dataset with panda omron.
-    """
-
-    ROBOCASA_SINGLE_ARM_PANDA_OMRON = "robocasa_single_arm_panda_omron"
-    """
-    The RoboCasa dataset with single arm panda omron.
-    """
-
-    ROBOCASA_BIMANUAL_PANDA_PARALLEL_GRIPPER = "robocasa_bimanual_panda_parallel_gripper"
-    """
-    The dexmg bimanual panda dataset with parallel grippers.
-    """
-
-    ROBOCASA_BIMANUAL_PANDA_INSPIRE_HAND = "robocasa_bimanual_panda_inspire_hand"
-    """
-    The DEXMG bimanual panda dataset with inspire hands.
     """
 
     OXE_DROID = "oxe_droid"

@@ -40,7 +40,6 @@ uv sync --extra vlm
 uv sync --extra cap
 uv sync --extra real-rl
 uv sync --extra pld
-uv sync --extra robocasa
 ```
 
 The JAX PLD learner has an isolated project under

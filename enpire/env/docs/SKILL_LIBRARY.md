@@ -221,7 +221,7 @@ Lower-level multi-session tracking (alternative to `track_object`/`detect_object
 | Cameras | top, wrist | top, wrist | top, left, right | top, left, right |
 | Control freq | 20 Hz | 20 Hz | 60 Hz | 60 Hz |
 | IK method | OSC_POSE (default) or joint_position (cuRobo) | OSC_POSE or joint_position | Pinocchio + pink IK | Pinocchio + pink IK |
-| Gripper encoding | 0–1 (remapped from robosuite -1 to +1) | 0–1 | 0–1 | 0–1 |
+| Gripper encoding | 0–1 | 0–1 | 0–1 | 0–1 |
 | `detect_object` oracle | Yes (ground-truth from task info) | Yes | Yes (scene object positions) | No (vision only) |
 | `freespace_move` | Available (cuRobo via remote cloud GPU) | Available | Available (cuRobo local or remote) | Available |
 | Scene management | `load_task`, `get_task_info` | `load_task`, `get_task_info` | `setup_scene`, `clear_table` | N/A |

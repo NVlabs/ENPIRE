@@ -33,7 +33,7 @@ from omegaconf import MISSING, DictConfig, OmegaConf
 
 @dataclass
 class EnvConfig:
-    """Environment configuration (absorbs ROBOCASA_* env vars)."""
+    """Environment configuration."""
 
     name: Optional[str] = None
     viewer: bool = False
@@ -59,8 +59,8 @@ class PolicyConfig:
     ``ScriptRecorder`` at the session level, not this config.
     """
 
-    backend: str = "grootpool"
-    model: str = "n15"
+    backend: str = "zmq"
+    model: str = ""
     endpoint: str = ""  # e.g. "tcp://127.0.0.1:7070" — empty = backend default
 
 
@@ -284,9 +284,8 @@ class RewardConfig:
     # evaluator entirely and use only the binary ``success`` flag.
     evaluator: str = "oracle"
 
-    # Override task name. Defaults to ``cfg.env.name`` (e.g.
-    # ``robocasa:PickPlaceSinkToCounter``). Only needed when the env_name
-    # can't be matched to a registered recipe directly.
+    # Override task name. Defaults to ``cfg.env.name``. Only needed when the
+    # env_name can't be matched to a registered recipe directly.
     task: Optional[str] = None
 
     # Inject oracle diagnostics into the per-seed VLM reflection prompt
@@ -316,7 +315,7 @@ class WandbConfig:
     """Weights & Biases logging configuration."""
 
     enabled: bool = False
-    project: str = "cap-robocasa"
+    project: str = "cap"
     entity: Optional[str] = None
     tags: List[str] = field(default_factory=list)
 
@@ -444,8 +443,8 @@ class AgentConfig:
     reflect: bool = False
     reflect_model: Optional[str] = None
 
-    # Robot adapter/backend — set via robot=robocasa or robot=real_yam config
-    # group.  Typed Any to accept arbitrary Hydra _target_ modules + kwargs
+    # Robot adapter/backend — set via robot=real_yam or similar config group.
+    # Typed Any to accept arbitrary Hydra _target_ modules + kwargs
     # from YAML without strict schema.  When absent (None), runtime code
     # auto-derives the adapter/backend from env.name.
     robot: Any = None

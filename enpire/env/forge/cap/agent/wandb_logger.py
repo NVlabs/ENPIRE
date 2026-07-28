@@ -68,8 +68,7 @@ class WandbLogger:
 
         if enabled and not _HAS_WANDB:
             logger.warning(
-                "wandb not installed — install with: uv sync --extra robocasa  "
-                "(or pip install wandb). Logging disabled."
+                "wandb not installed — install with: pip install wandb. Logging disabled."
             )
             return
 
@@ -452,9 +451,6 @@ class WandbLogger:
 def _collect_env_vars() -> dict[str, Any]:
     """Collect relevant environment variables for wandb config."""
     env_keys = [
-        "ROBOCASA_LAYOUT_ID",
-        "ROBOCASA_STYLE_ID",
-        "ROBOCASA_SEED",
         "PYTHONHASHSEED",
         "CAP_AGENT_NAME",
         "CAP_CUROBO_PORT",

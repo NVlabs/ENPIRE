@@ -283,19 +283,6 @@ class TestProfileEquivalence:
         assert profile.arms["left"].ee_frame_name == "left_grasp"
         assert profile.arms["right"].ee_frame_name == "right_grasp"
 
-    def test_robocasa_panda_omron_profile(self):
-        from enpire.env.forge.cap.env.profile import robocasa_panda_omron_profile
-
-        profile = robocasa_panda_omron_profile()
-        assert profile.name == "panda_omron"
-        assert profile.is_bimanual is False
-        assert profile.arm_names == ("right",)
-        assert profile.arms["right"].dof == 7
-        assert profile.control_freq_hz == 20.0
-        # urdf_path may be set if robosuite is available on disk
-        assert profile.camera_obs_key_map is not None
-        assert "top" in profile.camera_obs_key_map
-
     def test_protocol_conformance_sim_backend(self):
         from enpire.env.forge.cap.env.base import SceneProtocol, EnvProtocol
         from enpire.env.forge.cap.server.sim_backend import SimBackend

@@ -21,11 +21,11 @@ Usage::
     text = pm.load("system", "code_review", task="pick object", code="...")
 
     # Keyword search
-    paths = pm.resolve(["robocasa", "pick"])
+    paths = pm.resolve(["yam", "pick"])
     prompt_fragment = pm.inject(paths, mode="full")
 
     # Embodiment spec (replaces YAML env_spec path)
-    spec = pm.load_embodiment("robocasa")
+    spec = pm.load_embodiment("yam")
     # -> {"tool_docs": "...", "env_notes": "..."}
 """
 
@@ -42,31 +42,18 @@ _DEFAULT_ROOT = Path(__file__).resolve().parent
 CATEGORIES = ("system", "tools", "embodiment", "task", "heuristics")
 
 # Env name -> embodiment file stem mapping
-_EMBODIMENT_MAP: dict[str, str] = {
-    "robocasa": "robocasa_panda",
-    "robocasa_panda": "robocasa_panda",
-    "robocasa_gr1": "robocasa_gr1",
-}
+_EMBODIMENT_MAP: dict[str, str] = {}
 
 # Robot short-name mapping (mirrors env_spec.py logic)
-_ROBOT_KEY: dict[str, dict[str, str]] = {
-    "robocasa": {
-        "PandaOmron": "panda",
-        "GR1ArmsOnly": "gr1",
-    },
-}
-_ROBOT_DEFAULT: dict[str, str] = {
-    "robocasa": "panda",
-}
+_ROBOT_KEY: dict[str, dict[str, str]] = {}
+_ROBOT_DEFAULT: dict[str, str] = {}
 
 
 def _resolve_embodiment_stem(env_name: str) -> str:
     """Map an env name string to an embodiment markdown file stem.
 
-    >>> _resolve_embodiment_stem("robocasa")
-    'robocasa_panda'
-    >>> _resolve_embodiment_stem("robocasa:PickPlace:GR1ArmsOnly")
-    'robocasa_gr1'
+    >>> _resolve_embodiment_stem("yam")
+    'yam'
     """
     # Check direct mapping first
     if env_name in _EMBODIMENT_MAP:
@@ -364,8 +351,8 @@ class PromptMemory:
 
             pm.build_prompt([
                 "system/robotics_engineer",
-                "embodiment/robocasa_panda",
-                "task/robocasa_pick_place",
+                "embodiment/yam",
+                "task/pick_place",
             ])
 
         Returns the concatenated contents separated by double newlines.

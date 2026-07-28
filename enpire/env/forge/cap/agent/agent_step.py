@@ -709,9 +709,9 @@ class SubprocessExecutorStep(AgentStep):
         # config.env is an EnvConfig object (Hydra); read .name for the env string
         env_obj = getattr(config, "env", None) if config else None
         if env_obj is not None and hasattr(env_obj, "name"):
-            env_name = env_obj.name or "robocasa:PickPlaceSinkToCounter"
+            env_name = env_obj.name or "yam"
         else:
-            env_name = str(env_obj) if env_obj else "robocasa:PickPlaceSinkToCounter"
+            env_name = str(env_obj) if env_obj else "yam"
         robot_adapter = None
         if config is not None:
             from enpire.env.forge.cap.agent.robot_adapters import get_robot_adapter
@@ -826,18 +826,6 @@ class SubprocessExecutorStep(AgentStep):
             else True
         )
 
-        # Load fixed evaluation seeds from cap/assets/robocasa_40_seeds.txt.
-        # Each line: "<seed> <layout_id> <style_id>"
-        # Job i uses row i (mod file length) so the same seeds are used
-        # regardless of n_seeds.
-        _eval_seeds: list[tuple[int, int, int]] = []
-        _seeds_file = _ROOT_PATH / "cap" / "assets" / "robocasa_40_seeds.txt"
-        if _seeds_file.exists():
-            for line in _seeds_file.read_text().splitlines():
-                parts = line.split()
-                if len(parts) == 3:
-                    _eval_seeds.append((int(parts[0]), int(parts[1]), int(parts[2])))
-
         _n_gpus: int = 0
         if n_seeds > 1 and os.environ.get("MUJOCO_GL", "egl") == "egl":
             _cfg_gpus = exec_cfg.n_gpus if exec_cfg else 0
@@ -884,15 +872,10 @@ class SubprocessExecutorStep(AgentStep):
             # Invoke the parent's interpreter directly instead of nesting
             # `uv run`. `uv run` consumes UV_PROJECT_ENVIRONMENT during
             # activation, so a child `uv run --no-sync` can't see the outer
-            # venv and would fall back to `.venv/` (missing robocasa etc.).
-            # sys.executable points at the already-activated venv's Python,
-            # so the child reuses the exact same environment.
-            # Use fixed evaluation seed row for this job index.
-            if _eval_seeds:
-                row = _eval_seeds[i % len(_eval_seeds)]
-                job_seed, job_layout, job_style = row
-            else:
-                job_seed, job_layout, job_style = seed, None, None
+            # venv and would fall back to `.venv/`. sys.executable points at
+            # the already-activated venv's Python, so the child reuses the
+            # exact same environment.
+            job_seed, job_layout, job_style = seed, None, None
 
             cmd = [
                 sys.executable,
