@@ -6,7 +6,7 @@ This document lists all third-party software incorporated into or distributed wi
 
 | No. | Package | Category | License | Source / License Link |
 |-----|---------|----------|---------|----------------------|
-| 1 | cuRobo | vendored (planning) | NVIDIA Research License | [NVlabs/curobo – LICENSE](https://github.com/NVlabs/curobo/blob/main/LICENSE) |
+| 1 | cuRobo | git submodule @ v0.7.7 (planning) | NVIDIA Research License | [NVlabs/curobo – LICENSE](https://github.com/NVlabs/curobo/blob/main/LICENSE) |
 | 2 | PyRoki | vendored (planning) | MIT | [chungmin99/pyroki – LICENSE](https://github.com/chungmin99/pyroki/blob/main/LICENSE) |
 | 3 | i2rt | vendored (control) | MIT | [i2rt-robotics/i2rt – LICENSE](https://github.com/i2rt-robotics/i2rt/blob/main/LICENSE) |
 | 4 | RealtimeSTT | vendored (voice) | MIT | [KoljaB/RealtimeSTT – LICENSE](https://github.com/KoljaB/RealtimeSTT/blob/master/LICENSE) |
@@ -58,7 +58,7 @@ This document lists all third-party software incorporated into or distributed wi
 
 ### 1. cuRobo — NVIDIA Research License
 
-cuRobo is vendored under `third_party/curobo/`.
+cuRobo is included as a git submodule at `third_party/curobo/` (tag v0.7.7, commit `0a50de1`).
 
 ```
 Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
