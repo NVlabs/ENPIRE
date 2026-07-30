@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { cameraVideoUrl, cameraPosterUrl, liveStreamUrl, overlayUrl } from "@/api/client"
 import type { EpisodeInfo } from "@/api/types"
 

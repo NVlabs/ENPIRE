@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright (c) Meta Platforms, Inc. and affiliates.
+# SPDX-License-Identifier: MIT
 
 
 from typing import Optional

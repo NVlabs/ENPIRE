@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright (c) Meta Platforms, Inc. and affiliates.
+# SPDX-License-Identifier: MIT
 
 """Convert PyTorch DINOv3 state_dict to Flax params pytree."""
 

@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to ENPIRE.
 
-**This project will only accept contributions under Apache-2.0.**
+This project will only accept contributions under the Apache-2.0 license.
 
 ---
 

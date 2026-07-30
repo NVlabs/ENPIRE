@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { useCallback, useRef, useState, useEffect, useMemo } from "react"
 import { Plus, ChevronLeft, ChevronRight, Trash2, Save, Circle } from "lucide-react"
 import { Button } from "@/components/ui/button"

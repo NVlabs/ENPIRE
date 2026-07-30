@@ -1,4 +1,7 @@
 #!/bin/sh
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Git LFS post-merge hook
 command -v git-lfs >/dev/null 2>&1 || { echo >&2 "This repository is configured for Git LFS but 'git-lfs' was not found on your path."; exit 2; }
 git lfs post-merge "$@"

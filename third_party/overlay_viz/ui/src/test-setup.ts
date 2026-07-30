@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import "@testing-library/jest-dom/vitest"
 
 // Stub canvas getContext for jsdom (no real Canvas in jsdom)

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { useState, useCallback, useRef, useEffect, useMemo, type ReactNode } from "react"
 import type { ChartData, EpisodeEntry } from "@/api/types"
 import { ChevronLeft, ChevronRight, X, Loader2, Trash2, RotateCcw, RotateCw, Eye, EyeOff } from "lucide-react"

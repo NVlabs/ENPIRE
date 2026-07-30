@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright (c) 2023 You Liang Tan
+# SPDX-License-Identifier: MIT
 
 """
 Pipe method is a simple way to send data from one process to another.

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { useState, useEffect, useRef } from "react"
 import { Play, Pause, RotateCcw, SkipForward, Save, Maximize, Plus, X, CheckCircle2, XCircle, Circle, Scissors, Loader2, Repeat } from "lucide-react"
 import { Button } from "@/components/ui/button"

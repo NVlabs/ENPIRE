@@ -7,42 +7,28 @@ This file provides third-party notices required by components used in ENPIRE.
 Each third-party component retains its original license; see
 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for full license texts and links.
 
-> **Note on source-derived components:** Code migrated from internal Forge branches
-> and the yam-calibration repository is listed in the source-derived table below.
-> License review for those components is tracked in
-> `enpire/env/docs/source_provenance.yaml`.
-
 ---
 
 ## Vendored source code (`third_party/`)
 
 The following projects are vendored as editable local packages under `third_party/` and are not uploaded to PyPI by this repository.
 
-| Component | Origin | License |
-|-----------|--------|---------|
-| cuRobo | [NVlabs/curobo](https://github.com/NVlabs/curobo) | NVIDIA Research License |
-| PyRoki | [chungmin99/pyroki](https://github.com/chungmin99/pyroki) | MIT |
-| i2rt | [i2rt-robotics/i2rt](https://github.com/i2rt-robotics/i2rt) | MIT |
-| RealtimeSTT | [KoljaB/RealtimeSTT](https://github.com/KoljaB/RealtimeSTT) | MIT |
+| Component | Path | Origin | License |
+|-----------|------|--------|---------|
+| cuRobo | `third_party/curobo/` | [NVlabs/curobo](https://github.com/NVlabs/curobo) | NVIDIA Research License |
+| PyRoki | `third_party/pyroki/` | [chungmin99/pyroki](https://github.com/chungmin99/pyroki) | MIT — Copyright (c) 2025 Chung Min Kim |
+| i2rt | `third_party/i2rt/` | [i2rt-robotics/i2rt](https://github.com/i2rt-robotics/i2rt) | MIT — Copyright (c) I2RT Robotics |
+| RealtimeSTT | `third_party/ui/RealtimeSTT/` | [KoljaB/RealtimeSTT](https://github.com/KoljaB/RealtimeSTT) | MIT — Copyright (c) 2023 Kolja Beigel |
+| AgentLace | `enpire/policy/pld/runtime/vendor/agentlace/` | [youliangtan/agentlace](https://github.com/youliangtan/agentlace) | MIT — Copyright (c) 2023 You Liang Tan |
+| SERL-launcher | `enpire/policy/pld/runtime/vendor/serl_launcher/` | [rail-berkeley/serl](https://github.com/rail-berkeley/serl) | MIT — Copyright (c) Meta Platforms, Inc. and affiliates. |
 
 ## NVIDIA-authored components under `third_party/`
 
 The following component is authored by NVIDIA and vendored locally for packaging convenience. It is distributed under the same Apache-2.0 license as this repository.
 
-| Component | License |
-|-----------|---------|
-| overlay_viz | Apache-2.0 (NVIDIA CORPORATION) |
-
-## Source-derived code
-
-The following Forge feature branches and the yam-calibration repository are the upstream source of code incorporated into `enpire/env/forge/` and `cap/`.  Their license status is tracked in `enpire/env/docs/source_provenance.yaml`.
-
-| Component | Branch / Commit | License Status |
-|-----------|----------------|---------------|
-| Forge – GPU insertion | internal branch `@ 682f7937` | Pending source-owner review |
-| Forge – Push-T | internal branch `@ 3cc5e899` | Pending source-owner review |
-| Forge – Pin / AutoRL | internal branch `@ 4c37817d` | Pending source-owner review |
-| yam-calibration | `main @ 37babca` | Pending source-owner review |
+| Component | Path | License |
+|-----------|------|---------|
+| overlay_viz | `third_party/overlay_viz/` | Apache-2.0 (NVIDIA CORPORATION) |
 
 ## Python package dependencies
 
@@ -128,8 +114,8 @@ This project installs Python packages from PyPI at build time.  Optional extras 
 ### PLD actor / learner (isolated runtime under `enpire/policy/pld/runtime/`)
 
 - JAX (Apache-2.0)
-- AgentLace (MIT)
-- SERL-launcher (MIT)
+- AgentLace — vendored, see above
+- SERL-launcher — vendored, see above
 - protobuf (BSD-3-Clause)
 - rich (MIT)
 - matplotlib (PSF / BSD-compatible)

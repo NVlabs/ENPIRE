@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { RefreshCw, PanelLeft, ScanSearch, Eraser } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { Task } from "@/api/types"

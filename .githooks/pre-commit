@@ -1,4 +1,7 @@
 #!/bin/sh
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # Git pre-commit hook: lint Python files and verify cap/ui builds.
 
 # --- Python: ruff lint + format ---

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 import { useState, useCallback, useRef } from "react"
 
 const STORAGE_KEY = "overlay-viz-panel-order-v4"
