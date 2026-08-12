@@ -273,7 +273,6 @@ Checked at remote GPU host startup (`launch_remote_gpu.sh:113-119`):
 | `configure_runtime_env.sh` | Interactive/scripted writer for `~/.config/enpire/runtime_env.sh` | `tmux/remote_serving/configure_runtime_env.sh` |
 | `sync_remote_assets.sh` | Runs `git lfs pull` on both local and remote clones, verifies dependencies | `tmux/remote_serving/sync_remote_assets.sh` |
 | `sync_remote_model_cache.sh` | Rsyncs SAM3 + SAM2 HF model caches to S1 | `tmux/remote_serving/sync_remote_model_cache.sh` |
-| `install_curobo_remote.sh` | Verifies or installs cuRobo into the remote repo `.venv` | `tmux/remote_serving/install_curobo_remote.sh` |
 
 ### Table-bussing launchers (`tmux/table_bussing/`)
 
@@ -324,13 +323,14 @@ The remote launcher sets these explicitly (`launch_table_bussing_remote.sh:380`)
 CAP_CUROBO_HOST=127.0.0.1 CAP_CUROBO_PORT=8611 CAP_CUROBO_START_SERVER=0
 ```
 
-### cuRobo S1 installation
+### cuRobo v0.8 installation
 
-`tmux/remote_serving/install_curobo_s1.sh` is run automatically before launching
-(`launch_remote_gpu.sh:189`, `launch_table_bussing_remote.sh:272`). It:
-1. Checks if cuRobo is already importable with CUDA support
-2. If not, installs it via `uv pip install -e third_party/curobo --no-build-isolation`
-3. Verifies `curobo.geom` is importable
+Install the planner environment from the repository lock with
+`uv sync --extra planning --extra planning-local`. The `planning-local` extra
+uses the vendored cuRobo v0.8.0 submodule plus its CUDA 12 `cuda.core` runtime.
+Software-only verification can import `curobo.motion_planner`, `curobo.scene`,
+and `curobo.types`; CUDA planner construction must wait for a host with a
+working NVIDIA driver and toolkit.
 
 ### cuRobo reset between sessions
 
@@ -580,13 +580,13 @@ bash tmux/remote_serving/sync_remote_assets.sh
 bash tmux/remote_serving/sync_remote_model_cache.sh
 ```
 
-### 4. Install cuRobo on S1
+### 4. Install cuRobo v0.8.0 on S1
 
 ```bash
-# Done automatically by launchers, or manually:
 ssh <your-gpu-ssh-host>
 cd /path/to/enpire
-bash tmux/remote_serving/install_curobo_remote.sh
+git submodule update --init --recursive third_party/curobo
+uv sync --extra planning --extra planning-local
 ```
 
 ### 5. Launch

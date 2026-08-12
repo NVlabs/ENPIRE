@@ -82,35 +82,40 @@ def _get_robot_segmenter(
     collision_sphere_buffer: float,
 ):
     import torch
-    from curobo.types.base import TensorDeviceType
-    from curobo.types.robot import RobotConfig
-    from curobo.wrap.model.robot_segmenter import RobotSegmenter
-    from curobo.wrap.model.robot_world import RobotWorld, RobotWorldConfig
+    from curobo.perception import RobotSegmenter
+    from curobo.types import DeviceCfg
 
     cfg_path = Path(robot_cfg_path)
     urdf = Path(urdf_path)
     robot_cfg = yaml.safe_load(cfg_path.read_text())["robot_cfg"]
     kin = robot_cfg["kinematics"]
-    kin["use_usd_kinematics"] = False
-    kin["usd_path"] = ""
-    kin["isaac_usd_path"] = ""
+    for legacy_key in (
+        "use_usd_kinematics",
+        "usd_path",
+        "usd_robot_root",
+        "isaac_usd_path",
+        "usd_flip_joints",
+        "usd_flip_joint_limits",
+    ):
+        kin.pop(legacy_key, None)
+    legacy_links = kin.pop("link_names", None)
+    legacy_ee = kin.pop("ee_link", None)
+    kin.setdefault("tool_frames", legacy_links or [legacy_ee])
+    kin["tool_frames"] = [name for name in kin["tool_frames"] if name]
+    kin.setdefault("format_version", 2.0)
     kin["urdf_path"] = str(urdf)
     kin["asset_root_path"] = str(urdf.parent)
     kin["collision_sphere_buffer"] = float(collision_sphere_buffer)
-    tensor_args = TensorDeviceType(device=torch.device(device))
-    robot = RobotConfig.from_dict(robot_cfg, tensor_args=tensor_args)
-    rw_cfg = RobotWorldConfig.load_from_config(
-        robot,
-        None,
-        tensor_args=tensor_args,
-        collision_activation_distance=0.0,
-    )
-    segmenter = RobotSegmenter(
-        RobotWorld(rw_cfg),
+    cspace = kin["cspace"]
+    if "retract_config" in cspace:
+        cspace.setdefault("default_joint_position", cspace.pop("retract_config"))
+    tensor_args = DeviceCfg(device=torch.device(device))
+    segmenter = RobotSegmenter.from_robot_file(
+        robot_cfg,
+        collision_sphere_buffer=float(collision_sphere_buffer),
         distance_threshold=float(distance_threshold),
         use_cuda_graph=True,
-        ops_dtype=torch.float16,
-        depth_to_meter=0.001,
+        device_cfg=tensor_args,
     )
     joint_names = tuple(kin["cspace"]["joint_names"])
     return segmenter, joint_names, tensor_args
@@ -130,9 +135,7 @@ def filter_depth_with_robot_mask(
     mask_dilation_pixels: int = 2,
 ) -> tuple[np.ndarray, np.ndarray]:
     import torch
-    from curobo.types.camera import CameraObservation
-    from curobo.types.math import Pose
-    from curobo.types.state import JointState
+    from curobo.types import CameraObservation, JointState, Pose
 
     segmenter, joint_names, tensor_args = _get_robot_segmenter(
         robot_cfg_path,
@@ -162,10 +165,7 @@ def filter_depth_with_robot_mask(
     )
     if not segmenter.ready:
         segmenter.update_camera_projection(cam_obs)
-    mask_t, filtered_t = segmenter.get_robot_mask_from_active_js(
-        cam_obs,
-        segmenter.robot_world.get_active_js(q_js),
-    )
+    mask_t, filtered_t = segmenter.get_robot_mask(cam_obs, q_js)
     mask = mask_t[0].detach().cpu().numpy()
     if int(mask_dilation_pixels) > 0:
         import cv2
@@ -191,7 +191,7 @@ def get_robot_spheres_world(
     collision_sphere_buffer: float = 0.015,
 ) -> np.ndarray:
     import torch
-    from curobo.types.state import JointState
+    from curobo.types import JointState
 
     segmenter, joint_names, tensor_args = _get_robot_segmenter(
         robot_cfg_path,
@@ -202,13 +202,13 @@ def get_robot_spheres_world(
     )
     q = np.asarray(joint_position, dtype=np.float32).reshape(1, -1)
     q_t = tensor_args.to_device(torch.from_numpy(q))
-    js = segmenter.robot_world.get_active_js(
+    js = segmenter.kinematics.get_active_js(
         JointState(
             position=q_t,
             joint_names=list(joint_names),
         )
     )
-    spheres = segmenter.robot_world.get_kinematics(js.position).link_spheres_tensor
+    spheres = segmenter.kinematics.compute_kinematics(js).robot_spheres
     return spheres.view(-1, 4).detach().cpu().numpy().astype(np.float32)
 
 
@@ -246,7 +246,7 @@ def create_world_config_from_points(
     marching_cubes_pitch: float = 0.04,
     scene_name: str = "zed_depth_scene",
 ):
-    from curobo.geom.types import Mesh, WorldConfig
+    from curobo.scene import Mesh, Scene
 
     points = np.asarray(points_world, dtype=np.float64).reshape(-1, 3)
     meshes = []
@@ -258,7 +258,7 @@ def create_world_config_from_points(
                 name=scene_name,
             )
         )
-    return WorldConfig(mesh=meshes)
+    return Scene(mesh=meshes)
 
 
 def create_world_config_from_depth(
@@ -271,7 +271,7 @@ def create_world_config_from_depth(
     marching_cubes_pitch: float = 0.04,
     scene_name: str = "zed_depth_scene",
 ):
-    from curobo.geom.types import Mesh, WorldConfig
+    from curobo.scene import Mesh, Scene
 
     points_cam = point_cloud_from_depth(
         depth_image,
@@ -289,4 +289,4 @@ def create_world_config_from_depth(
                 name=scene_name,
             )
         )
-    return WorldConfig(mesh=meshes)
+    return Scene(mesh=meshes)

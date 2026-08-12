@@ -34,6 +34,7 @@ import hydra
 from omegaconf import DictConfig
 
 _ROOT_PATH = Path(__file__).resolve().parent
+_REPOSITORY_ROOT = _ROOT_PATH.parents[2]
 _ROOT = str(_ROOT_PATH)
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
@@ -56,15 +57,15 @@ def _resolve_file(path_str: str, saved_scripts_dir: Path) -> Path:
         attempts.append(p)
         return p.resolve() if p.exists() else None
 
-    # 1. Direct / absolute / ~/
+    # 1. Direct / absolute / ~/ — only files inside this checkout are allowed.
     result = _try(Path(raw).expanduser())
-    if result:
+    if result and result.is_relative_to(_REPOSITORY_ROOT):
         return result
 
     # 2. Repo-relative
     if not Path(raw).is_absolute():
         result = _try(_ROOT_PATH / raw)
-        if result:
+        if result and result.is_relative_to(_REPOSITORY_ROOT):
             return result
 
     # 3. Paths copied with a repo prefix, e.g. enpire/cap/saved_scripts/foo.py.
@@ -931,6 +932,15 @@ def main(cfg: DictConfig) -> None:
         debug_writer.emit("run_end", output=str(log_dir), error=exec_error)
         debug_writer.close()
     _terminate_debug_ui(debug_ui_proc, debug_cfg)
+    # Explicitly stop hardware camera threads before interpreter teardown.
+    # Leaving RealSense-owned threads alive until Python finalization can make
+    # an otherwise successful run exit via SIGSEGV after artifacts are saved.
+    close_env = getattr(_env, "close", None)
+    if callable(close_env):
+        try:
+            close_env()
+        except Exception as exc:
+            print(f"[run_script] Environment close failed: {exc}")
     if exec_error and bool(getattr(cfg.runtime, "exit_on_error", False)):
         sys.exit(1)
 

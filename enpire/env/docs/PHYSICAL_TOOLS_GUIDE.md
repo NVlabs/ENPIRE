@@ -96,14 +96,10 @@ target. That is the *compliant close* — grip firmly without crushing; `vel_lim
 also slows the close for gentleness. (`open_gripper`/`close_gripper` are thin
 wrappers, `native.py`.)
 
-**Yes — `cap/saved_scripts/gpu/gpu_handover.py` uses it.** It defines
-(`:857-862`) `PICK_GRIPPER_CLOSE_VEL_LIMIT = 2.0` and
-`PICK_GRIPPER_CLOSE_TORQUE_LIMIT = 0.4` (Nm), stores them in `RUN_CONFIG`
-(`:909-911`), and passes them through `close_kwargs` into
-`close_gripper(side, **close_kwargs)` (e.g. `:5343`). So the GPU pick closes the
-gripper with a **0.4 Nm force-limited, 2.0 rad/s** compliant grasp — essential
-for grabbing a GPU/PCB edge without over-squeezing. Both limits are overridable
-via `GPU_PICK_GRIPPER_CLOSE_{VEL,TORQUE}_LIMIT` env vars.
+The internal GPU handover script previously used this interface, but that
+script is not distributed in the open-source release. Released tasks can use
+the same `vel_limit` and `torque_limit` arguments without relying on that
+internal example.
 
 ---
 

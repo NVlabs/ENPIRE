@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+
 import numpy as np
 import pytest
 
@@ -46,7 +47,6 @@ def test_setup_motion_gen_can_disable_collision_checking() -> None:
     planner._rotation_threshold = 0.05
     planner._cspace_threshold = 0.05
     planner._tensor_args = object()
-    planner._CollisionCheckerType = SimpleNamespace(PRIMITIVE="primitive")
     planner._batch_planner_capacity = None
     planner._solver_preset = {
         "motion_gen": {
@@ -87,41 +87,30 @@ def test_setup_motion_gen_can_disable_collision_checking() -> None:
         def numpy(self):
             return self._arr
 
-    class _FakeMotionGen:
+    class _FakeMotionPlanner:
         def __init__(self, _cfg) -> None:
             self.kinematics = SimpleNamespace(
-                kinematics_config=SimpleNamespace(
-                    joint_limits=SimpleNamespace(
+                get_joint_limits=lambda: SimpleNamespace(
                         position=_FakeTensor(np.zeros((2, 12), dtype=np.float64))
-                    )
                 )
             )
 
-        def warmup(
-            self, enable_graph: bool = False, warmup_js_trajopt: bool = False
-        ) -> None:
-            captured["warmup"] = (enable_graph, warmup_js_trajopt)
+        def warmup(self, enable_graph: bool = False) -> None:
+            captured["warmup"] = enable_graph
 
-    def _fake_load_from_robot_config(robot_cfg, world_cfg, tensor_args, **kwargs):
-        captured["robot_cfg"] = robot_cfg
-        captured["world_cfg"] = world_cfg
-        captured["tensor_args"] = tensor_args
+    def _fake_create(**kwargs):
         captured["kwargs"] = kwargs
-        return "motion-gen-cfg"
+        return "motion-planner-cfg"
 
-    planner._MotionGenConfig = SimpleNamespace(
-        load_from_robot_config=_fake_load_from_robot_config
-    )
-    planner._MotionGen = _FakeMotionGen
-    planner._MotionGenPlanConfig = lambda **kwargs: SimpleNamespace(**kwargs)
+    planner._MotionPlannerCfg = SimpleNamespace(create=_fake_create)
+    planner._BatchMotionPlanner = _FakeMotionPlanner
 
     YamMotionPlannerCurobo._setup_motion_gen(planner)
 
-    assert captured["world_cfg"] is None
-    assert captured["kwargs"]["collision_checker_type"] is None
+    assert captured["kwargs"]["scene_model"] is None
+    assert captured["kwargs"]["collision_cache"] is None
     assert captured["kwargs"]["self_collision_check"] is False
-    assert captured["kwargs"]["self_collision_opt"] is False
-    assert captured["kwargs"]["collision_activation_distance"] is None
+    assert captured["kwargs"]["optimizer_collision_activation_distance"] == 0.0
 
 
 def test_portal_motion_planner_server_passes_collision_checking_to_yam_planner(

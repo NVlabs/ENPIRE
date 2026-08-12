@@ -49,7 +49,6 @@ class ServiceSuite:
         for index, service in enumerate(self.services):
             inner = (
                 f"cd {shlex.quote(str(self.root))}; "
-                "if [ -f .enpire_env ]; then set -a; source .enpire_env; set +a; fi; "
                 f"exec {service.display_command}"
             )
             if index == 0:

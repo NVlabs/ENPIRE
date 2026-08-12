@@ -6,6 +6,7 @@ try:
 except AttributeError:
     pass
 import collections
+import os as _os
 
 import numpy as np
 
@@ -30,7 +31,7 @@ except Exception:
     IK_RPY_WEIGHT = 0.3
     BATCH_TOP_K = 16
     BATCH_SOLVER_SPEED = "fast"
-    BATCH_VALIDATE_TRAJECTORY = False
+    BATCH_VALIDATE_TRAJECTORY = True
     MOTION_PLANNER_BACKEND = "curobo"
 
 try:
@@ -92,8 +93,7 @@ try:
 except Exception:
     MAX_GRASP_ATTEMPTS = 5
 
-import os as _os
-GRASP_SUCCESS_MIN_WIDTH_M = float(_os.environ.get("GRASP_SUCCESS_MIN_WIDTH_M", "0.003"))
+GRASP_SUCCESS_MIN_WIDTH_M = float(_os.environ.get("GRASP_SUCCESS_MIN_WIDTH_M", "0.001"))
 
 TARGET_DROP_Z_OFFSETS = dict(TABLE_TARGET_DROP_Z_OFFSETS)
 
@@ -282,7 +282,7 @@ def _select_best_grasp(grasps, side, label="grasp", **config):
             "batch_top_k": int(config.get("batch_top_k", BATCH_TOP_K)),
             "solver_speed": config.get("solver_speed", BATCH_SOLVER_SPEED),
             "batch_validate_trajectory": config.get(
-                "batch_validate_trajectory", BATCH_VALIDATE_TRAJECTORY
+                "batch_validate_trajectory", True
             ),
         }
     )
@@ -574,6 +574,27 @@ def _move_holding_to_birdeye(side, **kwargs):
     )
     _safe_move(side, birdseye_pos, transport_rpy, **kwargs)
     return transport_rpy
+
+
+def lift_grasped_object(side, **kwargs):
+    """Lift a grasped object to the arm's collision-checked BirdEyeView pose.
+
+    A pickup is only successful when the lift motion completes and the gripper
+    still reports a non-zero retained width afterward.
+    """
+    birdseye_pos, transport_rpy = birdseye_pose(side, **_birdseye_config(kwargs))
+    print(
+        f"  Lifting {side} arm to BirdEyeView while preserving the grasp: "
+        f"xyz={[round(float(x), 4) for x in birdseye_pos]}, "
+        f"rpy={[round(float(x), 1) for x in transport_rpy]}"
+    )
+    if not _safe_move(side, birdseye_pos, transport_rpy, **kwargs):
+        return False
+
+    gripper_pos = _gripper_pos_for_side(get_robot_state(), side)
+    min_w = float(kwargs.get("grasp_success_min_width_m", GRASP_SUCCESS_MIN_WIDTH_M))
+    print(f"  Gripper pos after lift: {gripper_pos:.4f} (threshold={min_w:.4f})")
+    return gripper_pos >= min_w
 
 
 def _move_holding_to_home(side, transport_rpy, **kwargs):

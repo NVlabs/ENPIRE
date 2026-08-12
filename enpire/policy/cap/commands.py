@@ -20,6 +20,7 @@ def _run(args: argparse.Namespace) -> int:
     launch = build_cap_launch(
         args.task,
         station=args.station,
+        prompt=args.prompt,
         output=args.output,
         record=not args.no_record,
         debug_ui=args.debug_ui,
@@ -41,6 +42,11 @@ def add_cap_parser(commands: argparse._SubParsersAction) -> None:
     run = sub.add_parser("run", help="Run a task against a configured real YAM station")
     run.add_argument("task", choices=tuple(task.name for task in list_tasks()))
     run.add_argument("--station", required=True)
+    run.add_argument(
+        "--prompt",
+        required=True,
+        help='Visible object description, for example "blue cube".',
+    )
     run.add_argument("--output", type=Path)
     run.add_argument("--no-record", action="store_true")
     run.add_argument("--debug-ui", action="store_true")
@@ -48,4 +54,3 @@ def add_cap_parser(commands: argparse._SubParsersAction) -> None:
     run.add_argument("--confirm-motion", action="store_true")
     run.add_argument("--dry-run", action="store_true")
     run.set_defaults(handler=_run)
-

@@ -3,19 +3,13 @@
 # The collision spheres are a conservative starter model, not a final Lula fit.
 robot_cfg:
   kinematics:
-    use_usd_kinematics: false
-    usd_path: "robot/models/station/curobo/station_dual.usd"
-    usd_robot_root: "/robot"
-    isaac_usd_path: ""
-    usd_flip_joints: {}
-    usd_flip_joint_limits: []
+    format_version: 2.0
 
     urdf_path: "robot/models/station/station_physics.urdf"
     asset_root_path: "robot/models/station"
 
     base_link: "base_link"
-    ee_link: "left_grasp"
-    link_names: ["left_grasp", "right_grasp"]
+    tool_frames: ["left_grasp", "right_grasp"]
     lock_joints:
       left_left_finger_joint: 0.0
       left_right_finger_joint: 0.0
@@ -105,7 +99,7 @@ robot_cfg:
         - right_joint4
         - right_joint5
         - right_joint6
-      retract_config:
+      default_joint_position:
         - -0.3
         - 1.35
         - 1.6

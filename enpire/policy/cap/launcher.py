@@ -26,15 +26,11 @@ class TaskDefinition:
 _TASKS = {
     item.name: item
     for item in (
-        TaskDefinition("cube-pick", "cap/saved_scripts/examples/pick_cube.py", "Pick a visible cube."),
-        TaskDefinition("gpu-handover", "cap/saved_scripts/gpu/gpu_handover.py", "Pick and hand over a GPU, then hover above its socket."),
-        TaskDefinition("gpu-reset", "cap/saved_scripts/gpu/gpu_reset.py", "Unplug and reset one GPU."),
-        TaskDefinition("gpu-reset-dual", "cap/saved_scripts/gpu/gpu_reset_dual.py", "Reset both GPU slots."),
-        TaskDefinition("gpu-nudge", "cap/saved_scripts/gpu/gpu_nudge_motherboard_parallel.py", "Reorient the motherboard fixture."),
-        TaskDefinition("gpu-unplug", "cap/saved_scripts/gpu/gpu_press_then_unplug.py", "Press and unplug the active GPU."),
-        TaskDefinition("ziptie-reset", "cap/saved_scripts/ziptie/reset_ziptie_v2.py", "Run the canonical zip-tie reset."),
-        TaskDefinition("ziptie-reward", "cap/saved_scripts/ziptie/get_rew_rgb.py", "Stream the RGB zip-tie reward."),
-        TaskDefinition("ziptie-reward-trt", "cap/saved_scripts/ziptie/get_rew_rgb_trt.py", "Stream the TensorRT zip-tie reward."),
+        TaskDefinition(
+            "pickup",
+            "cap/saved_scripts/examples/pick_object.py",
+            "Pick the visible object described by a text prompt.",
+        ),
     )
 }
 
@@ -59,7 +55,12 @@ class CapLaunch:
     @property
     def display_command(self) -> str:
         station = self.env.get("ENPIRE_YAM_STATION")
-        prefix = [f"ENPIRE_YAM_STATION={shlex.quote(station)}"] if station else []
+        prompt = self.env.get("ENPIRE_PICK_PROMPT")
+        prefix = []
+        if station:
+            prefix.append(f"ENPIRE_YAM_STATION={shlex.quote(station)}")
+        if prompt:
+            prefix.append(f"ENPIRE_PICK_PROMPT={shlex.quote(prompt)}")
         return " ".join([*prefix, *(shlex.quote(part) for part in self.command)])
 
     def run(self) -> int:
@@ -70,6 +71,7 @@ def build_cap_launch(
     task: str,
     *,
     station: str,
+    prompt: str,
     output: Path | None = None,
     record: bool = True,
     debug_ui: bool = False,
@@ -101,4 +103,10 @@ def build_cap_launch(
     env = os.environ.copy()
     env["ENPIRE_YAM_STATION"] = station
     env["ENPIRE_STATION"] = station
+    object_prompt = prompt.strip()
+    if not object_prompt:
+        raise ValueError("Pickup prompt must not be empty")
+    if len(object_prompt) > 256 or any(ord(char) < 32 for char in object_prompt):
+        raise ValueError("Pickup prompt must be a single printable line of at most 256 characters")
+    env["ENPIRE_PICK_PROMPT"] = object_prompt
     return CapLaunch(definition, tuple(command), env, root)

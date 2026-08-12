@@ -14,16 +14,8 @@ uv run pytest -q tests/enpire
 
 ## Real YAM practitioner install
 
-`planning-local` compiles the vendored cuRobo CUDA extensions with
-`no-build-isolation`. On a completely fresh Python 3.11 environment `setuptools`
-may not yet be present. Run this one-time bootstrap first if `uv sync` fails
-during the cuRobo build step:
-
-```bash
-uv pip install "setuptools>=75"
-```
-
-Then install the full stack:
+`planning-local` installs the vendored Apache-2.0 cuRobo v0.8.0 package with
+its CUDA 12 `cuda.core` runtime. Install the full stack with:
 
 ```bash
 uv sync \

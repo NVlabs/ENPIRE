@@ -17,7 +17,7 @@ policy improvement.  Two research modes are fully supported:
 
 | Mode | Policy | Edit surface | Example tasks |
 |------|--------|-------------|---------------|
-| **CaP (heuristic)** | Python script calling robot tools | `cap/saved_scripts/<task>/` + `skill_library/` | cube-pick, push-T, GPU insertion, zip-tie |
+| **CaP (heuristic)** | Python script calling robot tools | `cap/saved_scripts/` + `skill_library/` | prompted pickup, push-T |
 | **PLD (neural)** | JAX actor trained by SERL/HIL-SERL | `enpire/policy/pld/` + reward config | pin-insertion |
 
 > **New task setup and auto-research pipeline:** `enpire/env/docs/NEW_TASK.md`
@@ -64,8 +64,9 @@ uv sync \
 uv sync --project enpire/policy/pld/runtime --extra dev
 ```
 
-`planning-local` compiles the vendored cuRobo CUDA extensions; a CUDA toolkit
-and NVIDIA driver must already be present.
+`planning-local` installs the vendored Apache-2.0 cuRobo v0.8.0 package and its
+CUDA 12 `cuda.core` runtime. A CUDA toolkit and compatible NVIDIA driver must
+already be present when the planner is run.
 
 Verify the install:
 
@@ -86,7 +87,7 @@ ENPIRE/
 ├── enpire/
 │   ├── env/
 │   │   ├── forge/          runtime, tool registry, YAM station support, CaP runner
-│   │   ├── examples/       ordered learning path (00_hello_environment, 10_real_cube_pick)
+│   │   ├── examples/       ordered learning path (00_hello_environment, 10_real_object_pick)
 │   │   └── docs/           INSTALL.md, REAL_WORLD_WORKFLOWS.md, DEPENDENCIES.md,
 │   │                       source_provenance.yaml
 │   └── policy/
@@ -168,7 +169,8 @@ CaP tasks are Python scripts that drive the robot through tools from
 `skill_library_path` correctly; do not invoke scripts directly.
 
 ```bash
-uv run enpire cap run cube-pick          --station my-yam --confirm-motion
+uv run enpire cap run pickup --prompt "blue cube" \
+  --station my-yam --confirm-motion
 uv run enpire cap run gpu-handover       --station my-yam --confirm-motion
 uv run enpire cap run gpu-reset          --station my-yam --confirm-motion
 uv run enpire cap run ziptie-reset       --station my-yam --confirm-motion
@@ -199,7 +201,7 @@ bash tmux/realworld_rl/rl_gear.sh \
 **Read `enpire/env/docs/NEW_TASK.md` before starting.**  It covers both modes,
 the allowed edit surface, and the per-iteration record format.
 
-### Mode A — CaP / heuristic (push-T, GPU insertion, zip-tie, cube-pick)
+### Mode A — CaP / heuristic (prompted pickup and push-T)
 
 The "policy" is code.  Auto-research = LLM edits scripts, re-runs, measures.
 

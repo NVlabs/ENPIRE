@@ -458,6 +458,34 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/3a/8a/1251e1794b69865aacd5629936006b18ea0816a495de4ecea9a825556eb3/cuda_bindings-12.9.7-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c6496a88d84b1209d6651b0370c19c26319e157c22f6d018bf9a358cd8049041", size = 7647147, upload-time = "2026-05-27T18:44:09.4Z" },
 ]
 
+[package.optional-dependencies]
+all = [
+    { name = "nvidia-cuda-nvcc-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cuda-nvrtc-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cufile-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-nvfatbin-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-nvjitlink-cu12", marker = "sys_platform == 'linux'" },
+]
+
+[[package]]
+name = "cuda-core"
+version = "1.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cuda-pathfinder", marker = "sys_platform == 'linux'" },
+    { name = "numpy", marker = "sys_platform == 'linux'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/b9/99e461e485ffa94631b996338a8bc726425914a4aa4b7e4c22899d0f68e6/cuda_core-1.1.1-cp311-cp311-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:43361914aa9d337555a6ec1f7eaf8580a95689255b074dc0e6d0769b4d737d17", size = 5803221, upload-time = "2026-07-29T23:05:25Z" },
+    { url = "https://files.pythonhosted.org/packages/96/f6/e8a5d1242ee7ed146e56c7c31179383443f6fa576cb94f06cec5810dbd38/cuda_core-1.1.1-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:169dded199c76e85ab3d7d474454ab784215d856a233ec8cf21adcfa906b499c", size = 6109115, upload-time = "2026-07-29T23:05:26.878Z" },
+]
+
+[package.optional-dependencies]
+cu12 = [
+    { name = "cuda-bindings", extra = ["all"], marker = "sys_platform == 'linux'" },
+    { name = "cuda-toolkit", marker = "sys_platform == 'linux'" },
+]
+
 [[package]]
 name = "cuda-pathfinder"
 version = "1.5.6"
@@ -727,9 +755,11 @@ control-yam = [
 ]
 dev = [
     { name = "coverage", extra = ["toml"], marker = "sys_platform == 'linux'" },
+    { name = "evdev", marker = "sys_platform == 'linux'" },
     { name = "fastapi", marker = "sys_platform == 'linux'" },
     { name = "httpx", marker = "sys_platform == 'linux'" },
     { name = "msgpack", marker = "sys_platform == 'linux'" },
+    { name = "pandas", marker = "sys_platform == 'linux'" },
     { name = "pillow", marker = "sys_platform == 'linux'" },
     { name = "pytest", marker = "sys_platform == 'linux'" },
     { name = "pytest-cov", marker = "sys_platform == 'linux'" },
@@ -757,7 +787,7 @@ planning = [
 ]
 planning-local = [
     { name = "ninja", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-curobo", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-curobo", extra = ["cu12"], marker = "sys_platform == 'linux'" },
     { name = "portal", marker = "sys_platform == 'linux'" },
     { name = "torch", marker = "sys_platform == 'linux'" },
     { name = "warp-lang", marker = "sys_platform == 'linux'" },
@@ -782,15 +812,6 @@ real-rl = [
     { name = "torch", marker = "sys_platform == 'linux'" },
     { name = "tyro", marker = "sys_platform == 'linux'" },
     { name = "uvicorn", marker = "sys_platform == 'linux'" },
-]
-robocasa = [
-    { name = "gymnasium", marker = "sys_platform == 'linux'" },
-    { name = "hidapi", marker = "sys_platform == 'linux'" },
-    { name = "numba", marker = "sys_platform == 'linux'" },
-    { name = "pynput", marker = "sys_platform == 'linux'" },
-    { name = "qpsolvers", extra = ["quadprog"], marker = "sys_platform == 'linux'" },
-    { name = "robocasa", marker = "sys_platform == 'linux'" },
-    { name = "robosuite", marker = "sys_platform == 'linux'" },
 ]
 vision = [
     { name = "opencv-python", marker = "sys_platform == 'linux'" },
@@ -819,6 +840,7 @@ requires-dist = [
     { name = "coverage", extras = ["toml"], marker = "extra == 'dev'", specifier = ">=7.6" },
     { name = "damiao-motor", marker = "extra == 'calibration'", specifier = ">=1.0.7b1" },
     { name = "damiao-motor", marker = "extra == 'control-yam'", specifier = ">=1.0.7b1" },
+    { name = "evdev", marker = "sys_platform == 'linux' and extra == 'dev'", specifier = ">=1.9" },
     { name = "evdev", marker = "sys_platform == 'linux' and extra == 'real-rl'", specifier = ">=1.9" },
     { name = "fastapi", marker = "extra == 'dev'", specifier = ">=0.115" },
     { name = "fastapi", marker = "extra == 'grasping-local'", specifier = ">=0.115" },
@@ -828,8 +850,6 @@ requires-dist = [
     { name = "graspnetapi", marker = "extra == 'grasping-local'" },
     { name = "gymnasium", marker = "extra == 'control-yam'", specifier = ">=1.2" },
     { name = "gymnasium", marker = "extra == 'real-rl'", specifier = ">=1.2" },
-    { name = "gymnasium", marker = "extra == 'robocasa'", specifier = ">=1.2" },
-    { name = "hidapi", marker = "extra == 'robocasa'" },
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.27" },
     { name = "hydra-core", marker = "extra == 'cap'", specifier = ">=1.3" },
     { name = "hydra-core", marker = "extra == 'pld'", specifier = ">=1.3" },
@@ -843,9 +863,8 @@ requires-dist = [
     { name = "mujoco", marker = "extra == 'control-yam'", specifier = ">=3.5" },
     { name = "mujoco", marker = "extra == 'planning'", specifier = ">=3.5" },
     { name = "ninja", marker = "extra == 'planning-local'" },
-    { name = "numba", marker = "extra == 'robocasa'", specifier = ">=0.61.2" },
     { name = "numpy", specifier = ">=1.26" },
-    { name = "nvidia-curobo", marker = "extra == 'planning-local'", editable = "third_party/curobo" },
+    { name = "nvidia-curobo", extras = ["cu12"], marker = "extra == 'planning-local'", editable = "third_party/curobo" },
     { name = "omegaconf", marker = "extra == 'cap'", specifier = ">=2.3" },
     { name = "omegaconf", marker = "extra == 'pld'", specifier = ">=2.3" },
     { name = "open3d", marker = "extra == 'grasping-local'", specifier = ">=0.19" },
@@ -858,6 +877,7 @@ requires-dist = [
     { name = "opencv-python", marker = "extra == 'real-rl'", specifier = ">=4.10,<5" },
     { name = "opencv-python", marker = "extra == 'vision'", specifier = ">=4.10,<5" },
     { name = "opencv-python", marker = "extra == 'vision-local'", specifier = ">=4.10,<5" },
+    { name = "pandas", marker = "extra == 'dev'", specifier = ">=2.2" },
     { name = "pillow", marker = "extra == 'cap'", specifier = ">=10" },
     { name = "pillow", marker = "extra == 'dev'", specifier = ">=10" },
     { name = "pillow", marker = "extra == 'real-rl'", specifier = ">=10" },
@@ -871,7 +891,6 @@ requires-dist = [
     { name = "portal", marker = "extra == 'planning-local'", specifier = ">=3.7.3" },
     { name = "portal", marker = "extra == 'real-rl'", specifier = ">=3.7.3" },
     { name = "pynput", marker = "extra == 'real-rl'", specifier = ">=1.7" },
-    { name = "pynput", marker = "extra == 'robocasa'" },
     { name = "pyrealsense2", marker = "sys_platform == 'linux' and extra == 'calibration'", specifier = "==2.56.5.9235" },
     { name = "pyrealsense2", marker = "sys_platform == 'linux' and extra == 'camera-realsense'", specifier = "==2.56.5.9235" },
     { name = "pyroki", marker = "extra == 'planning'", editable = "third_party/pyroki" },
@@ -882,15 +901,12 @@ requires-dist = [
     { name = "pyzed", marker = "python_full_version < '3.12' and sys_platform == 'linux' and extra == 'camera-zed'", url = "https://download.stereolabs.com/zedsdk/5.2/whl/linux_x86_64/pyzed-5.2-cp311-cp311-linux_x86_64.whl" },
     { name = "pyzmq", marker = "extra == 'control-yam'", specifier = ">=27" },
     { name = "pyzmq", marker = "extra == 'real-rl'", specifier = ">=27" },
-    { name = "qpsolvers", extras = ["quadprog"], marker = "extra == 'robocasa'", specifier = ">=4.3.1" },
     { name = "requests", marker = "extra == 'cap'", specifier = ">=2.32" },
     { name = "requests", marker = "extra == 'dev'", specifier = ">=2.32" },
     { name = "requests", marker = "extra == 'real-rl'", specifier = ">=2.32" },
     { name = "requests", marker = "extra == 'vision'", specifier = ">=2.32" },
     { name = "requests", marker = "extra == 'vision-local'", specifier = ">=2.32" },
     { name = "requests", marker = "extra == 'vlm'", specifier = ">=2.32" },
-    { name = "robocasa", marker = "extra == 'robocasa'", editable = "third_party/robocasa" },
-    { name = "robosuite", marker = "extra == 'robocasa'", git = "https://github.com/ARISE-Initiative/robosuite.git?rev=v1.5.1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9" },
     { name = "scipy", marker = "extra == 'calibration'", specifier = ">=1.15" },
     { name = "scipy", marker = "extra == 'cap'", specifier = ">=1.15" },
@@ -919,7 +935,7 @@ requires-dist = [
     { name = "yourdfpy", marker = "extra == 'planning'", specifier = "==0.0.59" },
     { name = "yourdfpy", marker = "extra == 'planning-local'", specifier = "==0.0.59" },
 ]
-provides-extras = ["vision", "vision-local", "grasping-local", "planning", "planning-local", "control-yam", "control-i2rt", "camera-realsense", "camera-zed", "calibration", "vlm", "cap", "real-rl", "pld", "robocasa", "dev"]
+provides-extras = ["vision", "vision-local", "grasping-local", "planning", "planning-local", "control-yam", "control-i2rt", "camera-realsense", "camera-zed", "calibration", "vlm", "cap", "real-rl", "pld", "dev"]
 
 [[package]]
 name = "etils"
@@ -1227,20 +1243,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/cd/6e/21f7e5a2381278bd3b7b7a5a4d90038518bb6308a0c1daf5d9f8268bb178/hf_xet-1.5.1-cp37-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:a93df2039190502835b1db8cd7e178b0b7b889fe9ab51299d5ced26e0dd879a4", size = 4303784, upload-time = "2026-06-08T23:02:46.203Z" },
     { url = "https://files.pythonhosted.org/packages/35/0e/f992bb6927ac1cb30ef74e62268f551f338bc32b2191f7c96a44c6f7283e/hf_xet-1.5.1-cp37-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:0c97106032ef70467b4f6bc2d0ccc266d7613ee076afc56516c502f87ce1c4a6", size = 4500703, upload-time = "2026-06-08T23:02:47.628Z" },
     { url = "https://files.pythonhosted.org/packages/fb/d1/90a498d05447980b977b1669246eeeeae4cfb0ea3e7a286eaba627f91bf9/hf_xet-1.5.1-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:6208adb15d192b90e4c2ad2a27ed864359b2cb0f2494eb6d7c7f3699ac02e2bf", size = 4719498, upload-time = "2026-06-08T23:02:49.268Z" },
-]
-
-[[package]]
-name = "hidapi"
-version = "0.15.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/74/f6/caad9ed701fbb9223eb9e0b41a5514390769b4cb3084a2704ab69e9df0fe/hidapi-0.15.0.tar.gz", hash = "sha256:ecbc265cbe8b7b88755f421e0ba25f084091ec550c2b90ff9e8ddd4fcd540311", size = 184995, upload-time = "2025-12-09T09:48:54.129Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6c/30/d8551d99528e0b7b2962cc76fb9a2b5990ea16aeb1457d1c3c61015d020f/hidapi-0.15.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:e47d4fe13ddfc63fd1961974e10f3c7d50a57ae0bb73974e465cfe95dad5da18", size = 1070472, upload-time = "2025-12-09T09:45:16.322Z" },
-    { url = "https://files.pythonhosted.org/packages/7c/26/433fc4e9efdfb9d1beb52e39ccdec265ae02003b1d2f8395aba3022b665b/hidapi-0.15.0-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:f39917c9e9bea895384b1a8869159d808b4a53561af9b4f7c3148bdf6bfd97a0", size = 1602092, upload-time = "2025-12-09T09:45:08.274Z" },
-    { url = "https://files.pythonhosted.org/packages/7e/13/911b757f6847a197ab5c978fe8dd55181035096a5659cf7183e013ed1ea2/hidapi-0.15.0-cp311-cp311-manylinux_2_28_i686.whl", hash = "sha256:f4d294fcd2551fb5b41d5f478a08e8945382e1d86d7d40320d02594922d6b667", size = 1677973, upload-time = "2025-12-09T09:45:10.357Z" },
-    { url = "https://files.pythonhosted.org/packages/53/3f/cd92833886a15b34225bbd765ed1eb0270bc78b4cf6385e302c0e4bae494/hidapi-0.15.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:68cb85467151a3d4aa6ab4e11ca89a87c2404a778dbccb8fb5ae51e998133bb3", size = 699789, upload-time = "2025-12-09T09:45:18.506Z" },
-    { url = "https://files.pythonhosted.org/packages/e6/0e/9cdad5783bf1b2aea6667da37f2435b286750d650071dcc50b42834c8810/hidapi-0.15.0-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:06fbcd7696ad768d7e9500b64e2ae742b5d90a2531b5aa8d355c0f049516a09d", size = 695983, upload-time = "2025-12-09T09:45:20.192Z" },
-    { url = "https://files.pythonhosted.org/packages/86/ac/a57bc6e28d0dc1a0aed3dcc24302262ecbf2b723f9c4ba1af4ea51add5b4/hidapi-0.15.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:221e3a0c181503061bfc4a672eccd9f86b1da1167b31914be00d919edfd6e1bf", size = 697710, upload-time = "2025-12-09T09:45:21.807Z" },
 ]
 
 [[package]]
@@ -1646,16 +1648,6 @@ wheels = [
 ]
 
 [[package]]
-name = "llvmlite"
-version = "0.48.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/dc/a0/acc8ffcd5bdc63df0097e22c719bfcd61b604358343089313a8aebbb24ab/llvmlite-0.48.0.tar.gz", hash = "sha256:543b19f9ef8f3c7c60d1468191e4ee1b1537bf9f8a3d56f64c0ddd98de92edd2", size = 184016, upload-time = "2026-07-02T20:20:05.308Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/08/0109d1b9cb3f4603f3890e30bc66c65332b79185f12a045343b2ae431f67/llvmlite-0.48.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:6fa532d6bb3fd3f0803567c736401c54aecfe1a396d3ad25d2440d220e09f0e7", size = 59890118, upload-time = "2026-07-01T18:41:28.184Z" },
-    { url = "https://files.pythonhosted.org/packages/02/eb/c5281be180c789cdffbf45b671884c57d7e61345ef3b0f643a4965e108e8/llvmlite-0.48.0-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:979a66a3f28a02565383ff463527dce78e9b856298872a361283132488e83591", size = 58343458, upload-time = "2026-07-01T18:41:23.397Z" },
-]
-
-[[package]]
 name = "loguru"
 version = "0.7.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1951,20 +1943,6 @@ wheels = [
 ]
 
 [[package]]
-name = "numba"
-version = "0.66.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "llvmlite", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ae/a0/570e3dc53e5602b49108f62a13e529f1eec8bfc7ef37d49c825924dcf546/numba-0.66.0.tar.gz", hash = "sha256:b900e63a0e26c05ea9a6d5a3a5a0a177cb64c5011887bf43edb8c3ed2c38d363", size = 2806181, upload-time = "2026-07-01T23:12:46.36Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8c/99/33a6ed9c1a0b5e42efa98eb0edf617d61dca576c82625947377b1d4540c9/numba-0.66.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:fc6629becb21a867d85401ec89f426dd24c484a4193ade8a38309debfd1529ca", size = 3808870, upload-time = "2026-07-01T23:12:12.944Z" },
-    { url = "https://files.pythonhosted.org/packages/04/20/8c51126025211659235b8de2866dfa226984ae0c8273461a3cf374716741/numba-0.66.0-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:aac69f3ccb8af100f5913c1241edc9692bad1cdd2508721713f426eb06c9a659", size = 3514498, upload-time = "2026-07-01T23:12:15.307Z" },
-]
-
-[[package]]
 name = "numpy"
 version = "2.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -2008,6 +1986,15 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d5/1f/b3bd73445e5cb342727fd24fe1f7b748f690b460acadc27ea22f904502c8/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:4412396548808ddfed3f17a467b104ba7751e6b58678a4b840675c56d21cf7ed", size = 9533318, upload-time = "2025-03-07T01:40:10.421Z" },
     { url = "https://files.pythonhosted.org/packages/f8/02/2adcaa145158bf1a8295d83591d22e4103dbfd821bcaf6f3f53151ca4ffa/nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:ea0cb07ebda26bb9b29ba82cda34849e73c166c18162d3913575b0c9db9a6182", size = 10248621, upload-time = "2025-03-07T01:40:21.213Z" },
+]
+
+[[package]]
+name = "nvidia-cuda-nvcc-cu12"
+version = "12.9.86"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/25/48/b54a06168a2190572a312bfe4ce443687773eb61367ced31e064953dd2f7/nvidia_cuda_nvcc_cu12-12.9.86-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:5d6a0d32fdc7ea39917c20065614ae93add6f577d840233237ff08e9a38f58f0", size = 40546229, upload-time = "2025-06-05T20:01:53.357Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/5c/8cc072436787104bbbcbde1f76ab4a0d89e68f7cebc758dd2ad7913a43d0/nvidia_cuda_nvcc_cu12-12.9.86-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:44e1eca4d08926193a558d2434b1bf83d57b4d5743e0c431c0c83d51da1df62b", size = 39411138, upload-time = "2025-06-05T20:01:43.182Z" },
 ]
 
 [[package]]
@@ -2072,77 +2059,80 @@ wheels = [
 
 [[package]]
 name = "nvidia-curobo"
-version = "0.0.0"
 source = { editable = "third_party/curobo" }
 dependencies = [
     { name = "importlib-resources", marker = "sys_platform == 'linux'" },
+    { name = "matplotlib", marker = "sys_platform == 'linux'" },
     { name = "networkx", marker = "sys_platform == 'linux'" },
     { name = "numpy", marker = "sys_platform == 'linux'" },
     { name = "numpy-quaternion", marker = "sys_platform == 'linux'" },
-    { name = "pybind11", marker = "sys_platform == 'linux'" },
     { name = "pyyaml", marker = "sys_platform == 'linux'" },
-    { name = "scikit-image", marker = "sys_platform == 'linux'" },
     { name = "scipy", marker = "sys_platform == 'linux'" },
     { name = "setuptools-scm", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
     { name = "tqdm", marker = "sys_platform == 'linux'" },
     { name = "trimesh", marker = "sys_platform == 'linux'" },
+    { name = "viser", marker = "sys_platform == 'linux'" },
     { name = "warp-lang", marker = "sys_platform == 'linux'" },
     { name = "wheel", marker = "sys_platform == 'linux'" },
     { name = "yourdfpy", marker = "sys_platform == 'linux'" },
 ]
 
+[package.optional-dependencies]
+cu12 = [
+    { name = "cuda-core", extra = ["cu12"], marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cuda-runtime-cu12", marker = "sys_platform == 'linux'" },
+]
+
 [package.metadata]
 requires-dist = [
-    { name = "anybadge", marker = "extra == 'ci'" },
-    { name = "black", marker = "extra == 'ci'" },
-    { name = "black", marker = "extra == 'dev'" },
-    { name = "build", marker = "extra == 'ci'" },
-    { name = "flake8", marker = "extra == 'ci'" },
-    { name = "flake8", marker = "extra == 'dev'" },
-    { name = "flake8-docstrings", marker = "extra == 'ci'" },
-    { name = "flake8-docstrings", marker = "extra == 'dev'" },
-    { name = "flake8-isort", marker = "extra == 'ci'" },
-    { name = "flake8-isort", marker = "extra == 'dev'" },
-    { name = "furo", marker = "extra == 'ci'" },
+    { name = "anybadge", marker = "extra == 'doc'" },
+    { name = "build", marker = "extra == 'dev'" },
+    { name = "cuda-core", extras = ["cu12"], marker = "extra == 'cu12'", specifier = ">=0.7" },
+    { name = "cuda-core", extras = ["cu12"], marker = "extra == 'cu12-torch'", specifier = ">=0.6" },
+    { name = "cuda-core", extras = ["cu13"], marker = "extra == 'cu13'", specifier = ">=0.7" },
+    { name = "cuda-core", extras = ["cu13"], marker = "extra == 'cu13-torch'", specifier = ">=0.6" },
     { name = "furo", marker = "extra == 'doc'" },
-    { name = "graphviz", marker = "extra == 'ci'", specifier = ">=0.20.1" },
     { name = "graphviz", marker = "extra == 'doc'", specifier = ">=0.20.1" },
     { name = "importlib-resources" },
-    { name = "ipdb", marker = "extra == 'dev'" },
-    { name = "ipython", marker = "extra == 'dev'" },
+    { name = "matplotlib" },
+    { name = "myst-parser", marker = "extra == 'doc'" },
     { name = "networkx" },
-    { name = "ninja", marker = "extra == 'isaacsim'" },
     { name = "numpy" },
     { name = "numpy-quaternion" },
-    { name = "pybind11" },
-    { name = "pytest", marker = "extra == 'ci'", specifier = ">6.2.5" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">6.2.5" },
-    { name = "pytest-cov", marker = "extra == 'ci'" },
+    { name = "nvidia-cuda-runtime", marker = "extra == 'cu13'", specifier = ">=13" },
+    { name = "nvidia-cuda-runtime", marker = "extra == 'cu13-torch'", specifier = ">=13" },
+    { name = "nvidia-cuda-runtime-cu12", marker = "extra == 'cu12'", specifier = ">=12" },
+    { name = "nvidia-cuda-runtime-cu12", marker = "extra == 'cu12-torch'", specifier = ">=12" },
+    { name = "pandas", marker = "extra == 'benchmark'" },
+    { name = "pin", marker = "extra == 'benchmark'" },
+    { name = "pybind11", marker = "extra == 'pybind'" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">6.2.5,<9.0" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
+    { name = "pytest-xdist", marker = "extra == 'dev'" },
     { name = "pyyaml" },
-    { name = "scikit-image" },
+    { name = "robometrics", extras = ["evaluator"], marker = "extra == 'benchmark'", git = "https://github.com/fishbotics/robometrics.git" },
+    { name = "ruff", marker = "extra == 'dev'" },
     { name = "scipy", specifier = ">=1.7.0" },
+    { name = "seaborn", marker = "extra == 'benchmark'" },
     { name = "setuptools-scm", specifier = ">=6.2" },
-    { name = "sphinx", marker = "extra == 'ci'" },
     { name = "sphinx", marker = "extra == 'doc'" },
-    { name = "sphinx-copybutton", marker = "extra == 'ci'" },
+    { name = "sphinx-autodoc-typehints", marker = "extra == 'doc'" },
     { name = "sphinx-copybutton", marker = "extra == 'doc'" },
-    { name = "sphinx-rtd-theme", marker = "extra == 'ci'" },
+    { name = "sphinx-reredirects", marker = "extra == 'doc'" },
     { name = "sphinx-rtd-theme", marker = "extra == 'doc'" },
-    { name = "tomli", marker = "extra == 'isaacsim'" },
-    { name = "torch", specifier = ">=1.10" },
+    { name = "tabulate", marker = "extra == 'benchmark'" },
+    { name = "torch", marker = "extra == 'cu12-torch'", specifier = ">=2.5", index = "https://download.pytorch.org/whl/cu128", conflict = { package = "nvidia-curobo", extra = "cu12-torch" } },
+    { name = "torch", marker = "extra == 'cu13-torch'", specifier = ">=2.9", index = "https://download.pytorch.org/whl/cu130", conflict = { package = "nvidia-curobo", extra = "cu13-torch" } },
     { name = "tqdm" },
-    { name = "trajectory-smoothing", marker = "extra == 'smooth'", url = "https://github.com/balakumar-s/trajectory_smoothing/raw/main/dist/trajectory_smoothing-0.3-cp38-cp38-linux_x86_64.whl" },
     { name = "trimesh" },
-    { name = "twine", marker = "extra == 'ci'" },
+    { name = "ty", marker = "extra == 'dev'" },
     { name = "usd-core", marker = "extra == 'usd'" },
-    { name = "warp-lang", specifier = ">=0.9.0" },
+    { name = "viser" },
+    { name = "warp-lang", specifier = ">=0.10.0" },
     { name = "wheel" },
-    { name = "wheel", marker = "extra == 'isaacsim'" },
     { name = "yourdfpy", specifier = ">=0.0.53" },
 ]
-provides-extras = ["ci", "smooth", "usd", "dev", "isaacsim", "doc"]
+provides-extras = ["cu12", "cu13", "cu12-torch", "cu13-torch", "pybind", "usd", "dev", "doc", "benchmark"]
 
 [[package]]
 name = "nvidia-cusolver-cu12"
@@ -2186,6 +2176,15 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/08/c4/120d2dfd92dff2c776d68f361ff8705fdea2ca64e20b612fab0fd3f581ac/nvidia_nccl_cu12-2.28.9-py3-none-manylinux_2_18_aarch64.whl", hash = "sha256:50a36e01c4a090b9f9c47d92cec54964de6b9fcb3362d0e19b8ffc6323c21b60", size = 296766525, upload-time = "2025-11-18T05:49:16.094Z" },
     { url = "https://files.pythonhosted.org/packages/4a/4e/44dbb46b3d1b0ec61afda8e84837870f2f9ace33c564317d59b70bc19d3e/nvidia_nccl_cu12-2.28.9-py3-none-manylinux_2_18_x86_64.whl", hash = "sha256:485776daa8447da5da39681af455aa3b2c2586ddcf4af8772495e7c532c7e5ab", size = 296782137, upload-time = "2025-11-18T05:49:34.248Z" },
+]
+
+[[package]]
+name = "nvidia-nvfatbin-cu12"
+version = "12.9.82"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/05/9d/1dfeac6c0a33c6a27d5da774c95cd5d7afc772c5502d20165f134bd0c523/nvidia_nvfatbin_cu12-12.9.82-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:16cbfbd12287508212f22f42dff6ff51cf9b528b906f57f615b080da16dea1ea", size = 966865, upload-time = "2025-06-05T20:09:51.643Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/13/3487c9080fa91dbb9f7520576cdfff1a493da9b58ff393e3547a6310dde0/nvidia_nvfatbin_cu12-12.9.82-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:92d516bdb9287970cecbf855a0fd39d09599db806148038e1ed2cf0eaef92af2", size = 913672, upload-time = "2025-06-05T20:09:43.641Z" },
 ]
 
 [[package]]
@@ -2454,15 +2453,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e9/e6/78ebbb10a8c8e4b61a59249394a4a594c1a7af95593dc933a349c8d00964/pyasn1_modules-0.4.2.tar.gz", hash = "sha256:677091de870a80aae844b1ca6134f54652fa2c8c5a52aa396440ac3106e941e6", size = 307892, upload-time = "2025-03-28T02:41:22.17Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/47/8d/d529b5d697919ba8c11ad626e835d4039be708a35b0d22de83a269a6682c/pyasn1_modules-0.4.2-py3-none-any.whl", hash = "sha256:29253a9207ce32b64c3ac6600edc75368f98473906e8fd1043bd6b5b1de2c14a", size = 181259, upload-time = "2025-03-28T02:41:19.028Z" },
-]
-
-[[package]]
-name = "pybind11"
-version = "3.0.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/cc/f0/35145a3c3baffeef55d4b8324caa33abaa8fa56ab345ecd4b2211d09163e/pybind11-3.0.4.tar.gz", hash = "sha256:3286b59c8a774b9ee650169302dd5a4eedc30a8617905a0560dd8ee44775130c", size = 589533, upload-time = "2026-04-19T03:08:15.925Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/06/c3a23c9a0263b136c519f033a58d4641e73065fefc7754e9667ec206d992/pybind11-3.0.4-py3-none-any.whl", hash = "sha256:961720ee652da51d531b7b2451a6bd2bc042b0106e6d9baa48ecb7d58034ce63", size = 314166, upload-time = "2026-04-19T03:08:14.091Z" },
 ]
 
 [[package]]
@@ -2897,66 +2887,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e9/67/cae617f1351490c25a4b8ac3b8b63a4dda609295d8222bad12242dfdc629/rich-14.3.4.tar.gz", hash = "sha256:817e02727f2b25b40ef56f5aa2217f400c8489f79ca8f46ea2b70dd5e14558a9", size = 230524, upload-time = "2026-04-11T02:57:45.419Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/76/6d163cfac87b632216f71879e6b2cf17163f773ff59c00b5ff4900a80fa3/rich-14.3.4-py3-none-any.whl", hash = "sha256:07e7adb4690f68864777b1450859253bed81a99a31ac321ac1817b2313558952", size = 310480, upload-time = "2026-04-11T02:57:47.484Z" },
-]
-
-[[package]]
-name = "robocasa"
-version = "1.0.0"
-source = { editable = "third_party/robocasa" }
-dependencies = [
-    { name = "gymnasium", marker = "sys_platform == 'linux'" },
-    { name = "h5py", marker = "sys_platform == 'linux'" },
-    { name = "hidapi", marker = "sys_platform == 'linux'" },
-    { name = "imageio", marker = "sys_platform == 'linux'" },
-    { name = "lxml", marker = "sys_platform == 'linux'" },
-    { name = "mujoco", marker = "sys_platform == 'linux'" },
-    { name = "numba", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "opencv-python", marker = "sys_platform == 'linux'" },
-    { name = "pillow", marker = "sys_platform == 'linux'" },
-    { name = "pygame", marker = "sys_platform == 'linux'" },
-    { name = "pynput", marker = "sys_platform == 'linux'" },
-    { name = "pyyaml", marker = "sys_platform == 'linux'" },
-    { name = "scipy", marker = "sys_platform == 'linux'" },
-    { name = "termcolor", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "gymnasium" },
-    { name = "h5py" },
-    { name = "hidapi" },
-    { name = "imageio" },
-    { name = "lxml" },
-    { name = "mujoco", specifier = ">=3.3.1" },
-    { name = "numba", specifier = ">=0.61.2" },
-    { name = "numpy", specifier = ">=2.2.5" },
-    { name = "opencv-python" },
-    { name = "pillow" },
-    { name = "pygame" },
-    { name = "pynput" },
-    { name = "pyyaml" },
-    { name = "scipy", specifier = ">=1.15.2" },
-    { name = "termcolor" },
-    { name = "tqdm" },
-]
-
-[[package]]
-name = "robosuite"
-version = "1.5.1"
-source = { git = "https://github.com/ARISE-Initiative/robosuite.git?rev=v1.5.1#a071383d53568ab798eb315c0e95357911be922d" }
-dependencies = [
-    { name = "mink", marker = "sys_platform == 'linux'" },
-    { name = "mujoco", marker = "sys_platform == 'linux'" },
-    { name = "numba", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "opencv-python", marker = "sys_platform == 'linux'" },
-    { name = "pillow", marker = "sys_platform == 'linux'" },
-    { name = "pynput", marker = "sys_platform == 'linux'" },
-    { name = "pytest", marker = "sys_platform == 'linux'" },
-    { name = "scipy", marker = "sys_platform == 'linux'" },
-    { name = "termcolor", marker = "sys_platform == 'linux'" },
 ]
 
 [[package]]

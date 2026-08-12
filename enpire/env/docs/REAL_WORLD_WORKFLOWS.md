@@ -54,9 +54,9 @@ residual checks and a physical sanity check pass.
 
 ## 3. Start services in one command
 
-Put only non-secret, local paths in the ignored `.enpire_env` if the tmux panes
-need them. Credentials remain in a secret manager or the launching process
-environment.
+Export required station-local paths in the launching process environment.
+Service panes inherit that environment; ENPIRE does not implicitly source
+checkout-local environment files. Credentials remain in a secret manager.
 
 ```bash
 # SAM3 + licensed AnyGrasp
@@ -93,29 +93,21 @@ List or inspect a task without motion:
 
 ```bash
 uv run enpire cap list
-uv run enpire cap run cube-pick --station my-yam --dry-run
+uv run enpire cap run pickup --prompt "blue cube" --station my-yam --dry-run
 ```
 
-Run the simple cube pickup using the standard segmentation, AnyGrasp, planning,
+Run the generic prompted pickup using the standard segmentation, grasp planning,
 and control tools:
 
 ```bash
-uv run enpire cap run cube-pick --station my-yam --confirm-motion
+uv run enpire cap run pickup --prompt "blue cube" \
+  --station my-yam --confirm-motion
 ```
 
-The same entry exposes the migrated GPU and zip-tie scripts:
-
-```bash
-uv run enpire cap run gpu-handover --station my-yam --confirm-motion
-uv run enpire cap run gpu-reset --station my-yam --confirm-motion
-uv run enpire cap run gpu-reset-dual --station my-yam --confirm-motion
-uv run enpire cap run ziptie-reset --station my-yam --confirm-motion
-uv run enpire cap run ziptie-reward --station my-yam --confirm-motion
-```
-
-These are source-faithful operational scripts. Task geometry remains controlled
-by their documented environment variables and must be reviewed for the current
-fixture before execution.
+Only tasks whose complete, reviewed source is distributed are exposed by
+`enpire cap list`. GPU and zip-tie CaP scripts from internal deployments are
+not part of this release. The separately licensed PLD configurations for
+`gpu_insertion` and `ziptie` remain available through the PLD entry points.
 
 ## 5. Pin-insertion PLD pipeline
 

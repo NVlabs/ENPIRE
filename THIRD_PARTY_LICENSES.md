@@ -6,7 +6,7 @@ This document lists all third-party software incorporated into or distributed wi
 
 | No. | Package | Category | License | Source / License Link |
 |-----|---------|----------|---------|----------------------|
-| 1 | cuRobo | git submodule @ v0.7.7 (planning) | NVIDIA Research License | [NVlabs/curobo – LICENSE](https://github.com/NVlabs/curobo/blob/main/LICENSE) |
+| 1 | cuRobo | git submodule @ v0.8.0 (planning) | Apache-2.0 | [NVlabs/curobo v0.8.0 – LICENSE](https://github.com/NVlabs/curobo/blob/v0.8.0/LICENSE) |
 | 2 | PyRoki | vendored (planning) | MIT | [chungmin99/pyroki – LICENSE](https://github.com/chungmin99/pyroki/blob/main/LICENSE) |
 | 3 | i2rt | vendored (control) | MIT | [i2rt-robotics/i2rt – LICENSE](https://github.com/i2rt-robotics/i2rt/blob/main/LICENSE) |
 | 4 | RealtimeSTT | vendored (voice) | MIT | [KoljaB/RealtimeSTT – LICENSE](https://github.com/KoljaB/RealtimeSTT/blob/master/LICENSE) |
@@ -56,85 +56,13 @@ This document lists all third-party software incorporated into or distributed wi
 
 ## Full license texts for vendored components
 
-### 1. cuRobo — NVIDIA Research License
+### 1. cuRobo — Apache License 2.0
 
-cuRobo is included as a git submodule at `third_party/curobo/` (tag v0.7.7, commit `0a50de1`).
-
-```
-Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-
-NVIDIA License
-
-1. Definitions
-
-"Licensor" means any person or entity that distributes its Work.
-"Work" means (a) the original work of authorship made available under this
-license, which may include software, documentation, or other files, and (b)
-any additions to or derivative works thereof that are made available under
-this license.
-
-2. License Grant
-
-2.1 Copyright Grant. Subject to the terms and conditions of this license,
-each Licensor grants to you a perpetual, worldwide, non-exclusive,
-royalty-free, copyright license to use, reproduce, prepare derivative works
-of, publicly display, publicly perform, sublicense and distribute its Work
-and any resulting derivative works in any form.
-
-3. Limitations
-
-3.1 Redistribution. You may reproduce or distribute the Work only if (a) you
-do so under this License, (b) you include a complete copy of this License
-with your distribution, and (c) you retain without modification any copyright,
-patent, trademark, or attribution notices that are present in the Work.
-
-3.2 Derivative Works. You may specify that additional or different terms apply
-to the use, reproduction, and distribution of your derivative works of the
-Work ("Your Terms") only if (a) Your Terms provide that the use limitation in
-Section 3.3 applies to your derivative works, and (b) you identify the
-specific derivative works that are subject to Your Terms. Notwithstanding Your
-Terms, this License (including the redistribution requirements in Section 3.1)
-will continue to apply to the Work itself.
-
-3.3 Use Limitation. The Work and any derivative works thereof only may be
-used or intended for use with the web services, computing platforms or
-applications provided by NVIDIA Corporation or its affiliates (collectively
-"NVIDIA Platforms").
-
-3.4 Patent Claims. If you bring or threaten to bring a patent claim against
-any Licensor (including any claim, cross-claim or counterclaim in a lawsuit)
-to enforce any patents that you allege are infringed by any Work, then your
-rights under this License from such Licensor (including the grant in Section
-2.1) will terminate immediately.
-
-3.5 Trademarks. You are not granted any right or license under this License
-to use any trademarks, service marks, trade names, products, or services of
-NVIDIA Corporation. You may use the NVIDIA name solely to identify the origin
-of Work subject to the requirements of this License.
-
-3.6 Termination. If you violate any term of this License, then your rights
-under this License (including the grant in Section 2.1) will terminate
-immediately.
-
-4. Disclaimer of Warranty
-
-THE WORK IS PROVIDED "AS IS" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY WARRANTIES OR
-CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A
-PARTICULAR PURPOSE. YOU ARE SOLELY RESPONSIBLE FOR DETERMINING THE
-APPROPRIATENESS OF USING OR REDISTRIBUTING THE WORK AND ASSUME ANY RISKS
-ASSOCIATED WITH YOUR EXERCISE OF PERMISSIONS UNDER THIS LICENSE.
-
-5. Limitation of Liability
-
-IN NO EVENT AND UNDER NO LEGAL THEORY, WHETHER IN TORT (INCLUDING NEGLIGENCE),
-CONTRACT, OR OTHERWISE, UNLESS REQUIRED BY APPLICABLE LAW (SUCH AS
-DELIBERATE AND GROSSLY NEGLIGENT ACTS) OR AGREED TO IN WRITING, SHALL ANY
-LICENSOR BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY DIRECT, INDIRECT,
-SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER ARISING AS A
-RESULT OF THIS LICENSE OR OUT OF THE USE OR INABILITY TO USE THE WORK,
-EVEN IF SUCH LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-```
+cuRobo is included as a git submodule at `third_party/curobo/` (tag v0.8.0,
+commit `4ea77366ca48ee453e7df139e39fa6532af49f3b`). Its license is the Apache
+License, Version 2.0. The complete license text is included at
+`third_party/curobo/LICENSE`; it is also the same standard Apache-2.0 text
+included in ENPIRE's root [`LICENSE`](LICENSE).
 
 ---
 
@@ -200,7 +128,7 @@ THE SOFTWARE.
 
 ## Notes on specific packages
 
-**cuRobo (NVIDIA Research License):** The NVIDIA Research License restricts use to NVIDIA Platforms and is **not** a permissive open-source license.  cuRobo must not be used for commercial applications outside of NVIDIA services without a separate agreement.  The `planning-local` extra that installs cuRobo is opt-in and is not required for any other ENPIRE capability.
+**cuRobo (Apache-2.0):** ENPIRE pins cuRobo v0.8.0, the Apache-2.0 research release. The `planning-local` extra that installs cuRobo remains opt-in because it requires a compatible CUDA environment, not because of a field-of-use restriction.
 
 **pyzed / Stereolabs ZED SDK:** The ZED Python API requires acceptance of the Stereolabs SDK License Agreement.  The `camera-zed` extra is opt-in.  The ZED host SDK must be installed separately from Stereolabs.
 

@@ -72,11 +72,13 @@ def _iter_hf_hub_roots() -> list[Path]:
 
 
 def _resolve_local_hf_snapshot(repo_id: str) -> Path | None:
-    required_files = ("config.json", "preprocessor_config.json")
     repo_dir = f"models--{repo_id.replace('/', '--')}"
 
     def usable_snapshot(path: Path) -> bool:
-        return all((path / name).is_file() for name in required_files)
+        return (path / "config.json").is_file() and any(
+            (path / name).is_file()
+            for name in ("processor_config.json", "preprocessor_config.json")
+        )
 
     for hub_root in _iter_hf_hub_roots():
         base = hub_root / repo_dir
@@ -110,8 +112,12 @@ def _resolve_sam3_refs() -> tuple[
     model_kwargs: dict[str, Any] = {}
     if processor_snapshot is None:
         processor_snapshot = "facebook/sam3"
+    else:
+        processor_kwargs["local_files_only"] = True
     if model_snapshot is None:
         model_snapshot = "facebook/sam3"
+    else:
+        model_kwargs["local_files_only"] = True
     return processor_snapshot, processor_kwargs, model_snapshot, model_kwargs
 
 
@@ -159,100 +165,6 @@ def _load_sam3(device: str):
     raise RuntimeError(
         f"Failed to load SAM3 using attention backends: {attn_candidates}"
     ) from last_error
-
-
-def text_to_masks(
-    rgb: np.ndarray, text: str, score_threshold: float = 0.2
-) -> list[tuple[np.ndarray, tuple[int, int, int, int], float]]:
-    """SAM3 text-prompted segmentation on a single image. Thread-safe.
-
-    Args:
-        rgb:             uint8 HxWx3 numpy array (RGB).
-        text:            Natural-language description, e.g. "yellow mustard bottle".
-        score_threshold: Minimum detection confidence (default 0.2).
-
-    Returns:
-        List of (mask_01, bbox_xywh, score), sorted by descending score.
-        mask_01   -- uint8 HxW, values 0=background / 1=object.
-        bbox_xywh -- tight bounding box of the mask as (x, y, w, h).
-        score     -- SAM3 detection confidence in [0, 1].
-
-    Raises:
-        RuntimeError if no object is found above score_threshold.
-    """
-    import torch
-
-    global _sam3_proc, _sam3_model
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    with _sam3_lock:
-        if _sam3_model is None:
-            _load_sam3(device)
-
-        from PIL import Image as _PIL
-
-        inputs = _sam3_proc(
-            images=_PIL.fromarray(rgb),
-            text=text,
-            return_tensors="pt",
-        ).to(device)
-
-        with torch.inference_mode():
-            if device == "cuda":
-                with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                    outputs = _sam3_model(**inputs)
-            else:
-                outputs = _sam3_model(**inputs)
-
-        results = _sam3_proc.post_process_instance_segmentation(
-            outputs,
-            threshold=score_threshold,
-            target_sizes=[rgb.shape[:2]],
-        )[0]
-
-        masks = results.get("masks", [])
-        scores = results.get("scores", [])
-        if len(masks) == 0:
-            raise RuntimeError(
-                f"SAM3 could not find '{text}' in frame (threshold={score_threshold}). "
-                "Try a more descriptive prompt or move the object into view."
-            )
-
-        if hasattr(scores, "detach"):
-            scores_np = scores.detach().to(dtype=torch.float32).cpu().numpy()
-        else:
-            scores_np = np.asarray(scores, dtype=np.float32)
-
-        detections: list[tuple[np.ndarray, tuple[int, int, int, int], float]] = []
-        for idx in np.argsort(-scores_np):
-            raw_mask = masks[int(idx)]
-            if hasattr(raw_mask, "detach"):
-                mask = (
-                    raw_mask.detach()
-                    .to(dtype=torch.float32)
-                    .cpu()
-                    .numpy()
-                    .astype(np.uint8)
-                )
-            else:
-                mask = np.asarray(raw_mask, dtype=np.uint8)
-
-            ys, xs = np.where(mask > 0)
-            if len(xs) == 0 or len(ys) == 0:
-                continue
-            bbox_xywh = (
-                int(xs.min()),
-                int(ys.min()),
-                int(xs.max() - xs.min()),
-                int(ys.max() - ys.min()),
-            )
-            detections.append((mask, bbox_xywh, float(scores_np[int(idx)])))
-
-        if not detections:
-            raise RuntimeError(
-                f"SAM3 found masks for '{text}', but all masks were empty."
-            )
-        return detections
 
 
 def text_to_mask(
@@ -534,4 +446,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

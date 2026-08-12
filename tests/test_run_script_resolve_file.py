@@ -9,7 +9,6 @@ import types
 from pathlib import Path
 from unittest.mock import patch
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FORGE_ROOT = REPO_ROOT / "enpire" / "env" / "forge"
 RUN_SCRIPT_PATH = FORGE_ROOT / "run_script.py"
@@ -17,8 +16,8 @@ EXPECTED_SCRIPT = (
     FORGE_ROOT
     / "cap"
     / "saved_scripts"
-    / "table_bussing"
-    / "nclass_sorting_nvidiagemini.py"
+    / "examples"
+    / "pick_object.py"
 ).resolve()
 
 
@@ -84,7 +83,7 @@ def _load_run_script_module() -> types.ModuleType:
 def test_resolve_file_accepts_repo_prefixed_saved_script_path() -> None:
     module = _load_run_script_module()
     resolved = module.resolve_file(
-        "enpire/cap/saved_scripts/table_bussing/nclass_sorting_nvidiagemini.py"
+        "enpire/cap/saved_scripts/examples/pick_object.py"
     )
     assert resolved == EXPECTED_SCRIPT
 
@@ -96,7 +95,7 @@ def test_resolve_file_accepts_repo_relative_path_outside_repo_cwd(
     module = _load_run_script_module()
     monkeypatch.chdir(tmp_path)
     resolved = module.resolve_file(
-        "cap/saved_scripts/table_bussing/nclass_sorting_nvidiagemini.py"
+        "cap/saved_scripts/examples/pick_object.py"
     )
     assert resolved == EXPECTED_SCRIPT
 

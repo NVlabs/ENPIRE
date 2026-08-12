@@ -40,6 +40,7 @@ _TWO_D_LOCAL_AXIS_MIN_RADIUS_PX = 6.0
 _TWO_D_LOCAL_AXIS_MAX_RADIUS_PX = 32.0
 _TWO_D_LOCAL_AXIS_RADIUS_FRACTION = 0.18
 _TWO_D_LOCAL_AXIS_MIN_NEIGHBOR_POINTS = 12
+_SAM3_SCORE_THRESHOLD = 0.1
 
 
 @dataclass
@@ -1052,7 +1053,13 @@ class SampleGraspPose2DTool(Tool):
         np.save(buf, rgb)
         image_b64 = base64.b64encode(buf.getvalue()).decode()
 
-        payload = json.dumps({"text": object_name, "image_b64": image_b64}).encode()
+        payload = json.dumps(
+            {
+                "text": object_name,
+                "image_b64": image_b64,
+                "score_threshold": _SAM3_SCORE_THRESHOLD,
+            }
+        ).encode()
         req = urllib.request.Request(
             f"{self._sam3_url}/segment",
             data=payload,

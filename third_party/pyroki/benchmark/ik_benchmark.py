@@ -1,7 +1,10 @@
+# SPDX-FileCopyrightText: Copyright (c) 2023-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 # ruff: noqa: E402
 """Modified version of cuRobo's IK benchmark script:
 
-    https://github.com/NVlabs/curobo/blob/0a50de1ba72db304195d59d9d0b1ed269696047f/benchmark/ik_benchmark.py
+    https://github.com/NVlabs/curobo/blob/v0.8.0/benchmark/ik_benchmark.py
 
 Compares a PyRoki-based IK solver ("IK-Beam") against cuRobo's IK solver.
 
@@ -21,9 +24,10 @@ Example outputs, on RTX 4090:
 |  4 | franka.yml |         2000 |          50.2503  |         99.95 |      0.0043114   |      6.93035e-06 |          29.8455  |           100 |          0.000388033 |      4.88794e-07 |
 +----+------------+--------------+-------------------+---------------+------------------+------------------+-------------------+---------------+----------------------+------------------+
 
-Run with versions:
+Historical results above were produced with:
 - Python 3.12
-- curobo @ 0a50de1ba72db304195d59d9d0b1ed269696047f
+- a pre-v0.8 cuRobo release (the implementation below has since been migrated
+  to the v0.8.0 API)
 - jaxls @ e43d482d747615323c23fb935bf215419ad07f1e
 - jax 0.6.0, CUDA 12.4
 
@@ -36,17 +40,6 @@ Hardware:
 # pyright: reportMissingImports=false
 # pyright: reportPossiblyUnboundVariable=false
 # pyright: reportMissingModuleSource=false
-
-#
-# Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-#
-# NVIDIA CORPORATION, its affiliates and licensors retain all intellectual
-# property and proprietary rights in and to this material, related
-# documentation and any modifications thereto. Any use, reproduction,
-# disclosure or distribution of this material and related documentation
-# without an express license agreement from NVIDIA CORPORATION or
-# its affiliates is strictly prohibited.
-#
 
 # Disable JAX prealloc etc
 import os
@@ -61,20 +54,13 @@ import time
 import numpy as np
 import torch
 
-# CuRobo
-from curobo.geom.types import WorldConfig
-from curobo.types.base import TensorDeviceType
-from curobo.types.math import Pose
-from curobo.types.robot import RobotConfig
-from curobo.util.logger import setup_curobo_logger
-from curobo.util_file import (
-    get_robot_configs_path,
-    get_world_configs_path,
-    join_path,
-    load_yaml,
-    write_yaml,
-)
-from curobo.wrap.reacher.ik_solver import IKSolver, IKSolverConfig
+# cuRobo v0.8
+from curobo._src.solver.solver_ik import IKSolver
+from curobo._src.solver.solver_ik_cfg import IKSolverCfg
+from curobo._src.util.config_io import join_path, resolve_config, write_yaml
+from curobo._src.util.logging import setup_curobo_logger
+from curobo.content import get_robot_configs_path
+from curobo.types import DeviceCfg, JointState
 
 # set seeds
 torch.manual_seed(2)
@@ -296,33 +282,35 @@ def run_full_config_collision_free_ik(
     high_precision=False,
     num_seeds=12,
 ):
-    tensor_args = TensorDeviceType()
-    robot_data = load_yaml(join_path(get_robot_configs_path(), robot_file))["robot_cfg"]
+    device_cfg = DeviceCfg()
+    robot_data = resolve_config(join_path(get_robot_configs_path(), robot_file))
+    if "kinematics" not in robot_data:
+        robot_data = robot_data["robot_cfg"]
     if not collision_free:
         robot_data["kinematics"]["collision_link_names"] = None
-        robot_data["kinematics"]["lock_joints"] = {}
+        robot_data["kinematics"]["collision_spheres"] = None
     robot_data["kinematics"]["collision_sphere_buffer"] = 0.0
-    robot_cfg = RobotConfig.from_dict(robot_data)
-    world_cfg = WorldConfig.from_dict(
-        load_yaml(join_path(get_world_configs_path(), world_file))
-    )
     position_threshold = 0.005
-    grad_iters = None
     if high_precision:
         position_threshold = 0.001
-        grad_iters = 100
-    ik_config = IKSolverConfig.load_from_robot_config(
-        robot_cfg,
-        world_cfg,
-        position_threshold=position_threshold,
+    ik_config = IKSolverCfg.create(
+        robot=robot_data,
+        optimizer_configs=["ik/lbfgs_ik.yml"],
+        metrics_rollout="metrics_base.yml",
+        transition_model="ik/transition_ik.yml",
+        scene_model=world_file if collision_free else None,
+        position_tolerance=position_threshold,
         num_seeds=num_seeds,
         self_collision_check=collision_free,
-        self_collision_opt=collision_free,
-        tensor_args=tensor_args,
+        load_collision_spheres=collision_free,
+        device_cfg=device_cfg,
         use_cuda_graph=use_cuda_graph,
-        high_precision=high_precision,
-        regularization=False,
-        grad_iters=grad_iters,
+        max_batch_size=batch_size,
+        seed_solver_num_seeds=max(32, num_seeds * 2),
+        override_optimizer_num_iters={
+            "particle": None,
+            "lbfgs": 100 if high_precision else None,
+        },
     )
     ik_solver = IKSolver(ik_config)
 
@@ -331,11 +319,13 @@ def run_full_config_collision_free_ik(
         while q_sample.shape[0] == 0:
             q_sample = ik_solver.sample_configs(batch_size)
 
-        kin_state = ik_solver.fk(q_sample)
-        goal = Pose(kin_state.ee_position, kin_state.ee_quaternion)
+        kin_state = ik_solver.compute_kinematics(
+            JointState.from_position(q_sample, joint_names=ik_solver.joint_names)
+        )
+        goal = kin_state.tool_poses.as_goal()
 
         st_time = time.time()
-        result = ik_solver.solve_batch(goal)
+        result = ik_solver.solve_pose(goal)
         torch.cuda.synchronize()
         total_time = (time.time() - st_time) / q_sample.shape[0]
         if i == 0:
@@ -345,8 +335,12 @@ def run_full_config_collision_free_ik(
         total_time,
         100.0 * torch.count_nonzero(result.success).item() / len(q_sample),
         # np.mean(result.position_error[result.success].cpu().numpy()).item(),
-        np.percentile(result.position_error[result.success].cpu().numpy(), 98).item(),
-        np.percentile(result.rotation_error[result.success].cpu().numpy(), 98).item(),
+        np.percentile(
+            result.position_error[result.success.view(-1)].cpu().numpy(), 98
+        ).item(),
+        np.percentile(
+            result.rotation_error[result.success.view(-1)].cpu().numpy(), 98
+        ).item(),
     )
 
     return curobo_out, pyroki_out

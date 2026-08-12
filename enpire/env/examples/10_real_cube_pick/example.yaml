@@ -1,7 +1,0 @@
-name: real-cube-pick
-description: Pick a visible cube with existing ENPIRE vision, planning, and control skills.
-hardware: yam
-entrypoint: cap/saved_scripts/examples/pick_cube.py
-motion: true
-install_extras: [vision, planning, control-yam, camera-realsense]
-

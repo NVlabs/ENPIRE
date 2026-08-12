@@ -236,7 +236,7 @@ Once the tmux session is up (cap_server, cap_agent, reward_server, cap_ui all ru
 open the CAP UI at `http://localhost:5173` and execute scripts via oracle mode. Example:
 
 ```
-cap/saved_scripts/examples/pick_cube.py       # example pick-and-place
+cap/saved_scripts/examples/pick_object.py     # generic prompted pickup
 cap/saved_scripts/test_freespace_move.py      # YAM cuRobo free-space move
 ```
 

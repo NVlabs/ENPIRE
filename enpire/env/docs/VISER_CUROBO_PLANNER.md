@@ -44,7 +44,7 @@ The script is a **standalone client** -- it does not run inside the CAP sandbox.
 
 ```bash
 # Terminal 1: cap_server (real YAM)
-source .forge_env && uv run python -u cap/server/cap_server.py \
+uv run python -u cap/server/cap_server.py \
   --env yam-real --port 18600
 
 # Terminal 2: Viser planner

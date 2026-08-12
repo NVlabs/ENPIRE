@@ -1,9 +1,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import shlex
 import subprocess
+import sys
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Literal
 
 import tyro
@@ -38,6 +41,15 @@ def _load_default_force_feedback_ratios() -> tuple[
 
 
 DEFAULT_FORCE_FEEDBACK_RATIOS = _load_default_force_feedback_ratios()
+_FORGE_ROOT = Path(__file__).resolve().parent
+
+
+def _python_command(relative_script: str) -> str:
+    """Run a Forge script with the already-synchronized ENPIRE interpreter."""
+    return (
+        f"{shlex.quote(sys.executable)} "
+        f"{shlex.quote(str(_FORGE_ROOT / relative_script))}"
+    )
 
 
 class TmuxSession:
@@ -151,39 +163,41 @@ def main(args: Args):
 
     if not args.fello_only:
         robots_session.new_window(
-            "follow_l", "uv run robot/yam/arm_server.py --mode follower --side left"
+            "follow_l", f"{_python_command('robot/yam/arm_server.py')} --mode follower --side left"
         )
         robots_session.new_window(
-            "follow_r", "uv run robot/yam/arm_server.py --mode follower --side right"
+            "follow_r", f"{_python_command('robot/yam/arm_server.py')} --mode follower --side right"
         )
 
     if args.use_fello or args.fello_only:
         robots_session.new_window(
             "leader_l",
-            f"uv run robot/fello/fello_server.py --side left --can-interface {LEFT_LEADER_CAN_INTERFACE} --port {LEFT_LEADER_PORT}",
+            f"{_python_command('robot/fello/fello_server.py')} --side left --can-interface {LEFT_LEADER_CAN_INTERFACE} --port {LEFT_LEADER_PORT}",
         )
         robots_session.new_window(
             "leader_r",
-            f"uv run robot/fello/fello_server.py --side right --can-interface {RIGHT_LEADER_CAN_INTERFACE} --port {RIGHT_LEADER_PORT}",
+            f"{_python_command('robot/fello/fello_server.py')} --side right --can-interface {RIGHT_LEADER_CAN_INTERFACE} --port {RIGHT_LEADER_PORT}",
         )
     elif args.use_fello_right:
         robots_session.new_window(
             "leader_r",
-            f"uv run robot/fello/fello_server.py --side right --can-interface {RIGHT_LEADER_CAN_INTERFACE} --port {RIGHT_LEADER_PORT}",
+            f"{_python_command('robot/fello/fello_server.py')} --side right --can-interface {RIGHT_LEADER_CAN_INTERFACE} --port {RIGHT_LEADER_PORT}",
         )
     elif args.mode != "evaluation":
         robots_session.new_window(
-            "leader_l", "uv run robot/yam/arm_server.py --mode leader --side left"
+            "leader_l", f"{_python_command('robot/yam/arm_server.py')} --mode leader --side left"
         )
         robots_session.new_window(
-            "leader_r", "uv run robot/yam/arm_server.py --mode leader --side right"
+            "leader_r", f"{_python_command('robot/yam/arm_server.py')} --mode leader --side right"
         )
 
     # Live motor temperature table (followers + leaders)
     # Be careful: this procedure burns like 1.5 CPU core and could cause fluctuating latency issues in data collection.
     # Turn it off if its save to reserve more CPU power.
     if args.monitor_motor_temperature:
-        robots_session.new_window("motor_temps", "uv run robot/monitor_motor_temps.py")
+        robots_session.new_window(
+            "motor_temps", _python_command("robot/monitor_motor_temps.py")
+        )
 
     # Start camera servers
     cameras_session = TmuxSession("cameras")
@@ -195,10 +209,12 @@ def main(args: Args):
     main_session = TmuxSession("main")
     if args.mode == "dev":
         fello_flag = " --use-fello" if args.use_fello or args.use_fello_right else ""
-        main_session.new_window("main", f"uv run teleop_policy.py{fello_flag}")
+        main_session.new_window(
+            "main", f"{_python_command('teleop_policy.py')}{fello_flag}"
+        )
     elif args.mode == "data_collection":
         dc_parts = [
-            "uv run python tools/data_collection/run_data_collection.py",
+            _python_command("tools/data_collection/run_data_collection.py"),
             "--station=1",
             "--display-image",
             "--data-saving-path ./data/BC"
@@ -219,7 +235,7 @@ def main(args: Args):
     elif args.mode == "a5_data_collection":
         main_session.new_window(
             "main",
-            "uv run python tools/data_collection/run_data_collection.py --task-list-path a5-tasks.txt",
+            f"{_python_command('tools/data_collection/run_data_collection.py')} --task-list-path a5-tasks.txt",
         )
     elif args.mode == "evaluation":
         main_session.new_window("main", "echo 'Run your evaluation script here:'")

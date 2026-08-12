@@ -1,3 +1,6 @@
+/* SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
 interface ModeSelectorProps {
   mode: "agent" | "oracle";
   onChange: (mode: "agent" | "oracle") => void;

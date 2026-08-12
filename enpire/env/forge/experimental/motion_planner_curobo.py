@@ -4,8 +4,8 @@
 """cuRobo motion planner for the YAM bimanual station.
 
 This module mirrors the public API of ``experimental.motion_planner.YamMotionPlanner``
-well enough to drop into the scripted Move-To flow. It uses cuRobo's
-``MotionGen`` as the primary planner and optionally validates the generated
+well enough to drop into the scripted Move-To flow. It uses cuRobo v0.8's
+``BatchMotionPlanner`` as the primary planner and optionally validates the generated
 trajectory against the existing MuJoCo collision checker for parity with the
 current planner.
 """
@@ -117,7 +117,9 @@ warnings.filterwarnings(
 
 
 def _ensure_local_curobo_on_syspath() -> None:
-    candidate = THIRD_PARTY_ROOT / "curobo" / "src"
+    # cuRobo v0.8 moved the Python package from ``src/curobo`` to
+    # ``curobo`` at the repository root.
+    candidate = THIRD_PARTY_ROOT / "curobo"
     if candidate.is_dir():
         candidate_str = str(candidate)
         if candidate_str not in sys.path:
@@ -126,6 +128,25 @@ def _ensure_local_curobo_on_syspath() -> None:
 
 def _silence_curobo_import_logs() -> None:
     logging.getLogger("curobo").setLevel(logging.ERROR)
+
+
+def _metrics_rollout_without_self_collision() -> str:
+    """Return v0.8 metrics with self-collision disabled consistently.
+
+    ``MotionPlannerCfg.create(self_collision_check=False)`` disables the
+    optimizer rollout's self-collision cost in cuRobo v0.8, but does not
+    propagate that setting to the metrics rollout used to decide success.
+    The result is a trajectory that optimizes without self-collision and is
+    then rejected by a still-enabled self-collision metric. ENPIRE uses its
+    calibrated MuJoCo model to validate the complete returned trajectory, so
+    keep cuRobo's requested self-collision disable effective in both places.
+    """
+    path = (
+        _YAM_MODEL_ROOT
+        / "curobo"
+        / "metrics_no_self_collision.yml"
+    )
+    return str(path)
 
 
 def _xyzw_to_wxyz(quat_xyzw: np.ndarray) -> np.ndarray:
@@ -251,19 +272,17 @@ class YamMotionPlannerCurobo:
                 "cuRobo planner requires CUDA, but torch.cuda.is_available() is False"
             )
 
-        self._TensorDeviceType = self._imports["TensorDeviceType"]
+        self._DeviceCfg = self._imports["DeviceCfg"]
         self._Pose = self._imports["Pose"]
+        self._GoalToolPose = self._imports["GoalToolPose"]
         self._JointState = self._imports["JointState"]
-        self._WorldConfig = self._imports["WorldConfig"]
+        self._WorldConfig = self._imports["Scene"]
         self._Cuboid = self._imports["Cuboid"]
         self._Sphere = self._imports["Sphere"]
-        self._CollisionCheckerType = self._imports["CollisionCheckerType"]
-        self._MotionGen = self._imports["MotionGen"]
-        self._MotionGenConfig = self._imports["MotionGenConfig"]
-        self._MotionGenPlanConfig = self._imports["MotionGenPlanConfig"]
-        self._MotionGenStatus = self._imports["MotionGenStatus"]
+        self._BatchMotionPlanner = self._imports["BatchMotionPlanner"]
+        self._MotionPlannerCfg = self._imports["MotionPlannerCfg"]
 
-        self._tensor_args = self._TensorDeviceType(
+        self._tensor_args = self._DeviceCfg(
             device=self._torch.device(self._device)
         )
         self._kin = YamKinematics()
@@ -313,33 +332,22 @@ class YamMotionPlannerCurobo:
         _ensure_local_curobo_on_syspath()
         try:
             import torch
-            from curobo.geom.sdf.world import CollisionCheckerType
-            from curobo.geom.types import Cuboid, Sphere, WorldConfig
-            from curobo.types.base import TensorDeviceType
-            from curobo.types.math import Pose
-            from curobo.types.state import JointState
-            from curobo.util.logger import setup_curobo_logger
-            from curobo.wrap.reacher.motion_gen import (
-                MotionGen,
-                MotionGenConfig,
-                MotionGenPlanConfig,
-                MotionGenStatus,
-            )
+            from curobo.batch_motion_planner import BatchMotionPlanner
+            from curobo.motion_planner import MotionPlannerCfg
+            from curobo.scene import Cuboid, Scene, Sphere
+            from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose
 
-            setup_curobo_logger("error")
             return {
                 "torch": torch,
-                "CollisionCheckerType": CollisionCheckerType,
                 "Cuboid": Cuboid,
                 "Sphere": Sphere,
-                "WorldConfig": WorldConfig,
-                "TensorDeviceType": TensorDeviceType,
+                "Scene": Scene,
+                "DeviceCfg": DeviceCfg,
                 "Pose": Pose,
+                "GoalToolPose": GoalToolPose,
                 "JointState": JointState,
-                "MotionGen": MotionGen,
-                "MotionGenConfig": MotionGenConfig,
-                "MotionGenPlanConfig": MotionGenPlanConfig,
-                "MotionGenStatus": MotionGenStatus,
+                "BatchMotionPlanner": BatchMotionPlanner,
+                "MotionPlannerCfg": MotionPlannerCfg,
             }
         except Exception as exc:  # pragma: no cover - depends on local env
             raise RuntimeError(
@@ -352,12 +360,29 @@ class YamMotionPlannerCurobo:
             yaml.safe_load(self._robot_cfg_path.read_text())["robot_cfg"]
         )
         kin = robot_cfg["kinematics"]
-        kin["use_usd_kinematics"] = False
-        kin["usd_path"] = ""
-        kin["isaac_usd_path"] = ""
+        # Translate ENPIRE's v0.7 robot config fields to cuRobo v0.8's
+        # public format. Keep this adapter for calibrated configs copied from
+        # older deployments.
+        for legacy_key in (
+            "use_usd_kinematics",
+            "usd_path",
+            "usd_robot_root",
+            "isaac_usd_path",
+            "usd_flip_joints",
+            "usd_flip_joint_limits",
+        ):
+            kin.pop(legacy_key, None)
+        legacy_links = kin.pop("link_names", None)
+        legacy_ee = kin.pop("ee_link", None)
+        kin.setdefault("tool_frames", legacy_links or [legacy_ee])
+        kin["tool_frames"] = [name for name in kin["tool_frames"] if name]
+        kin.setdefault("format_version", 2.0)
         kin["urdf_path"] = str(self._urdf_path)
         kin["asset_root_path"] = str(self._asset_root)
-        self._joint_names = list(kin["cspace"]["joint_names"])
+        cspace = kin["cspace"]
+        if "retract_config" in cspace:
+            cspace.setdefault("default_joint_position", cspace.pop("retract_config"))
+        self._joint_names = list(cspace["joint_names"])
         return robot_cfg
 
     def _build_world_cfg(self):
@@ -437,65 +462,42 @@ class YamMotionPlannerCurobo:
     ):
         motion_gen_preset = self._solver_preset["motion_gen"]
         if self._collision_checking:
-            static_mesh_count = len(world_cfg.mesh) if world_cfg.mesh is not None else 0
-            collision_kwargs = {
-                "collision_checker_type": self._CollisionCheckerType.MESH,
-                "self_collision_check": False,
-                "self_collision_opt": False,
-                "collision_cache": {"mesh": max(static_mesh_count + 256, 260)},
-                "collision_activation_distance": 0.01,
-            }
+            static_mesh_count = len(world_cfg.mesh) if world_cfg is not None else 0
+            collision_cache = {"mesh": max(static_mesh_count + 256, 260)}
+            scene_model = world_cfg
         else:
-            collision_kwargs = {
-                "collision_checker_type": None,
-                "self_collision_check": False,
-                "self_collision_opt": False,
-                "collision_activation_distance": None,
-            }
-        motion_gen_cfg = self._MotionGenConfig.load_from_robot_config(
-            deepcopy(robot_cfg),
-            world_cfg,
-            self._tensor_args,
-            **collision_kwargs,
+            collision_cache = None
+            scene_model = None
+        motion_gen_cfg = self._MotionPlannerCfg.create(
+            robot=deepcopy(robot_cfg),
+            metrics_rollout=_metrics_rollout_without_self_collision(),
+            scene_model=scene_model,
+            collision_cache=collision_cache,
+            self_collision_check=False,
+            device_cfg=self._tensor_args,
             use_cuda_graph=_USE_CUDA_GRAPH_BY_DEFAULT,
-            interpolation_dt=_INTERPOLATION_DT,
             num_ik_seeds=int(motion_gen_preset["num_ik_seeds"]),
-            num_graph_seeds=int(motion_gen_preset["num_graph_seeds"]),
             num_trajopt_seeds=int(motion_gen_preset["num_trajopt_seeds"]),
-            position_threshold=self._position_threshold,
-            rotation_threshold=self._rotation_threshold,
-            cspace_threshold=self._cspace_threshold,
-            trajopt_tsteps=int(motion_gen_preset["trajopt_tsteps"]),
-            maximum_trajectory_dt=0.5,
-            fixed_iters_trajopt=True,
-            ik_opt_iters=int(motion_gen_preset["ik_opt_iters"]),
-            grad_trajopt_iters=int(motion_gen_preset["grad_trajopt_iters"]),
+            position_tolerance=self._position_threshold,
+            orientation_tolerance=self._rotation_threshold,
+            optimizer_collision_activation_distance=(
+                0.01 if self._collision_checking else 0.0
+            ),
+            max_batch_size=int(warmup_batch or 1),
+            multi_env=False,
+            max_goalset=1,
         )
-        motion_gen = self._MotionGen(motion_gen_cfg)
-        warmup_kwargs = {
-            "enable_graph": _ENABLE_GRAPH_SEARCH_BY_DEFAULT,
-            "warmup_js_trajopt": False,
-        }
-        if warmup_batch is not None:
-            warmup_kwargs["batch"] = int(warmup_batch)
-        motion_gen.warmup(**warmup_kwargs)
+        motion_gen = self._BatchMotionPlanner(motion_gen_cfg)
+        motion_gen.warmup(enable_graph=_ENABLE_GRAPH_SEARCH_BY_DEFAULT)
         return motion_gen
 
     def _build_plan_config(self, *, batch_mode: bool = False):
         plan_preset = self._solver_preset["plan"]
-        return self._MotionGenPlanConfig(
-            enable_graph=_ENABLE_GRAPH_SEARCH_BY_DEFAULT,
-            enable_graph_attempt=int(plan_preset["enable_graph_attempt"]),
-            enable_finetune_trajopt=self._enable_finetune_trajopt,
-            max_attempts=int(plan_preset["max_attempts"]),
-            timeout=float(plan_preset["timeout"]),
-            time_dilation_factor=(
-                plan_preset["time_dilation_factor_batch"]
-                if batch_mode
-                else plan_preset["time_dilation_factor_single"]
-            ),
-            use_start_state_as_retract=True,
-        )
+        del batch_mode
+        return {
+            "enable_graph_attempt": int(plan_preset["enable_graph_attempt"]),
+            "max_attempts": int(plan_preset["max_attempts"]),
+        }
 
     def _all_motion_gens(self) -> list[Any]:
         return [self._motion_gen] if self._motion_gen is not None else []
@@ -514,7 +516,7 @@ class YamMotionPlannerCurobo:
             warmup_batch=self._batch_planner_capacity,
         )
         joint_limits = (
-            self._motion_gen.kinematics.kinematics_config.joint_limits.position.detach()
+            self._motion_gen.kinematics.get_joint_limits().position.detach()
             .cpu()
             .numpy()
         )
@@ -524,9 +526,13 @@ class YamMotionPlannerCurobo:
 
     def set_finetune_enabled(self, enabled: bool) -> None:
         self._enable_finetune_trajopt = bool(enabled)
-        if self._ee_pose_plan_config is not None:
-            self._ee_pose_plan_config.enable_finetune_trajopt = (
-                self._enable_finetune_trajopt
+        if enabled:
+            warnings.warn(
+                "cuRobo v0.8 BatchMotionPlanner does not expose MotionGen's "
+                "finetune toggle; v0.8's trajectory solver performs its own "
+                "time-optimal refinement.",
+                RuntimeWarning,
+                stacklevel=2,
             )
 
     @property
@@ -705,11 +711,10 @@ class YamMotionPlannerCurobo:
         motion_gen = motion_gen or self._motion_gen
         if motion_gen is None:
             raise RuntimeError("Motion generator is not initialized")
-        plan = motion_gen.get_full_js(plan)
         if plan.joint_names is not None and self._joint_names is not None:
-            plan = plan.get_ordered_joint_state(self._joint_names)
+            plan = plan.reorder(self._joint_names)
         positions = plan.position.detach().cpu().numpy()
-        if positions.ndim == 3 and positions.shape[0] == 1:
+        while positions.ndim > 2 and positions.shape[0] == 1:
             positions = positions[0]
         return np.asarray(positions, dtype=np.float64)
 
@@ -727,6 +732,24 @@ class YamMotionPlannerCurobo:
             quaternion=self._tensor_args.to_device(
                 _xyzw_to_wxyz(quat_xyzw).astype(np.float32)
             ),
+        )
+
+    def _make_goal_tool_poses(
+        self,
+        left_pos: np.ndarray,
+        left_quat_xyzw: np.ndarray,
+        right_pos: np.ndarray,
+        right_quat_xyzw: np.ndarray,
+    ):
+        """Build cuRobo v0.8's explicit multi-tool goal tensor."""
+        pose_by_frame = {
+            "left_grasp": self._make_pose(left_pos, left_quat_xyzw),
+            "right_grasp": self._make_pose(right_pos, right_quat_xyzw),
+        }
+        tool_frames = list(getattr(self._motion_gen, "tool_frames", pose_by_frame))
+        return self._GoalToolPose.from_poses(
+            pose_by_frame,
+            ordered_tool_frames=tool_frames,
         )
 
     @staticmethod
@@ -1074,54 +1097,71 @@ class YamMotionPlannerCurobo:
                 (fixed_batch_size, 1),
             ),
         )
-        goal_pose = self._make_pose(padded_left_pos, padded_left_quat)
-        link_poses = {
-            "right_grasp": self._make_pose(padded_right_pos, padded_right_quat)
-        }
+        goal_tool_poses = self._make_goal_tool_poses(
+            padded_left_pos,
+            padded_left_quat,
+            padded_right_pos,
+            padded_right_quat,
+        )
 
-        plan_cfg = self._ee_pose_plan_config.clone()
+        plan_cfg = dict(self._ee_pose_plan_config)
         print(
             "[cuRoboPlanner] plan_batch_to_pose_chunk "
             f"solver_speed={self._solver_speed} "
             f"side={side} actual_batch={actual_batch_size} fixed_batch={fixed_batch_size} "
             f"pad_mode=repeat-last-query "
-            f"validate_trajectory={'on' if validate_trajectory else 'off'} "
-            f"time_dilation_factor={getattr(plan_cfg, 'time_dilation_factor', None)}"
+            f"validate_trajectory={'on' if validate_trajectory else 'off'}"
         )
         try:
-            result = self._motion_gen.plan_batch(
+            result = self._motion_gen.plan_pose(
+                goal_tool_poses,
                 start_state,
-                goal_pose,
-                plan_cfg,
-                link_poses=link_poses,
+                max_attempts=int(plan_cfg["max_attempts"]),
+                success_ratio=1.0,
+                enable_graph_attempt=int(plan_cfg["enable_graph_attempt"]),
             )
         except Exception as exc:
             raise RuntimeError(
                 "cuRobo batch plan failed "
                 f"(side={side}, actual_batch={actual_batch_size}, fixed_batch={fixed_batch_size}, "
                 f"pad_mode=repeat-last-query, "
-                f"validate_trajectory={validate_trajectory}, "
-                f"time_dilation_factor={getattr(plan_cfg, 'time_dilation_factor', None)}): {exc}"
+                f"validate_trajectory={validate_trajectory}): {exc}"
             ) from exc
 
+        if result is None:
+            success = np.zeros((actual_batch_size,), dtype=bool)
+            return {
+                "status": "Planning_Failed",
+                "status_detail": "cuRobo v0.8 did not find an IK solution",
+                "success_mask": success,
+                "status_by_index": ["IK_Failed"] * actual_batch_size,
+                "status_detail_by_index": [
+                    "cuRobo v0.8 did not find an IK solution"
+                ]
+                * actual_batch_size,
+                "position_error_m": np.full(actual_batch_size, np.nan),
+                "rotation_error_deg": np.full(actual_batch_size, np.nan),
+                "left_positions_by_index": [None] * actual_batch_size,
+                "right_positions_by_index": [None] * actual_batch_size,
+                **_curobo_timing_info(None),
+            }
+
         success_all = (
-            np.asarray(result.success.detach().cpu().numpy(), dtype=bool).reshape(-1)
+            np.asarray(result.success.detach().cpu().numpy(), dtype=bool)
             if result.success is not None
-            else np.zeros((fixed_batch_size,), dtype=bool)
+            else np.zeros((fixed_batch_size, 1), dtype=bool)
         )
+        if success_all.ndim > 1:
+            success_all = np.any(success_all, axis=-1)
+        success_all = success_all.reshape(-1)
         if success_all.shape[0] != fixed_batch_size:
             raise ValueError(
                 f"cuRobo returned batch size {success_all.shape[0]}, expected padded size {fixed_batch_size}"
             )
         success = success_all[:actual_batch_size].copy()
 
-        status_detail = getattr(result.status, "value", str(result.status))
-        status_detail = None if status_detail in {"None", "null"} else status_detail
-        failed_status = (
-            "IK_Failed"
-            if result.status == self._MotionGenStatus.IK_FAIL
-            else "Planning_Failed"
-        )
+        status_detail = None
+        failed_status = "Planning_Failed"
         status_by_index = np.where(success, "Success", failed_status).tolist()
         status_detail_by_index: list[str | None] = [
             None if ok else status_detail for ok in success
@@ -1130,7 +1170,7 @@ class YamMotionPlannerCurobo:
         right_positions_by_index: list[np.ndarray | None] = [None] * actual_batch_size
 
         if np.any(success):
-            interpolated_plan = getattr(result, "interpolated_plan", None)
+            interpolated_plan = getattr(result, "interpolated_trajectory", None)
             if interpolated_plan is None:
                 for idx, ok in enumerate(success.tolist()):
                     if not ok:
@@ -1141,16 +1181,20 @@ class YamMotionPlannerCurobo:
                         "Batch planner did not return a trajectory"
                     )
             else:
-                plan_batch = (
-                    result.get_paths()
-                    if getattr(result, "path_buffer_last_tstep", None) is not None
-                    else [interpolated_plan[idx] for idx in range(actual_batch_size)]
-                )
+                last_tstep = getattr(result, "interpolated_last_tstep", None)
                 for idx, ok in enumerate(success.tolist()):
                     if not ok:
                         continue
-                    positions = self._joint_state_positions(
-                        plan_batch[idx], self._motion_gen
+                    seed_idx = 0
+                    stop = interpolated_plan.position.shape[-2]
+                    if last_tstep is not None:
+                        stop = int(last_tstep[idx, seed_idx].item()) + 1
+                    positions = np.asarray(
+                        interpolated_plan.position[idx, seed_idx, :stop]
+                        .detach()
+                        .cpu()
+                        .numpy(),
+                        dtype=np.float64,
                     )
                     raw_left_positions = np.asarray(
                         positions[:, :6], dtype=np.float64

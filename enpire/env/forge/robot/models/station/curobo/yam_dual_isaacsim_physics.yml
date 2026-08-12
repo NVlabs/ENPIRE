@@ -2,19 +2,13 @@
 # station.xml-derived inertials and collisions.
 robot_cfg:
   kinematics:
-    use_usd_kinematics: false
-    usd_path: "robot/yam_station/curobo/station_dual_physics.usd"
-    usd_robot_root: "/robot"
-    isaac_usd_path: ""
-    usd_flip_joints: {}
-    usd_flip_joint_limits: []
+    format_version: 2.0
 
     urdf_path: "robot/yam_station/station_physics.urdf"
     asset_root_path: "robot/yam_station"
 
     base_link: "base_link"
-    ee_link: "left_grasp"
-    link_names: ["left_grasp", "right_grasp"]
+    tool_frames: ["left_grasp", "right_grasp"]
     lock_joints: null
     extra_links: null
 
@@ -175,7 +169,7 @@ robot_cfg:
         - right_joint4
         - right_joint5
         - right_joint6
-      retract_config:
+      default_joint_position:
         - -0.3
         - 1.35
         - 1.6

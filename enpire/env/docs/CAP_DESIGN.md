@@ -85,14 +85,15 @@ Either way, the **tool API is identical** — only the env behind it changes.
 
 ```bash
 # Standalone (config.yaml defaults)
-uv run python run_script.py script_file=cap/saved_scripts/examples/pick_cube.py
+ENPIRE_PICK_PROMPT="blue cube" uv run python run_script.py \
+  script_file=cap/saved_scripts/examples/pick_object.py
 
 # With an experiment config (env, ports, seed, …)
 uv run python run_script.py experiment=my_task \
     script_file=cap/saved_scripts/my_script.py
 
-# Real YAM
-source .forge_env && uv run python run_script.py \
+# Real YAM (export station-local configuration in the invoking shell)
+uv run python run_script.py \
     script_file=<script.py> skill_library_path=cap/saved_scripts/skill_library \
     env.name=yam-real robot=real_yam
 ```
@@ -242,7 +243,7 @@ uv run python launch.py --mode=evaluation --no-attach
 bash tmux/launch_realworld_localserver_realsense.sh --no-evaluation --no-attach
 
 # 3. Run a code-as-policy script
-source .forge_env && uv run python run_script.py \
+uv run python run_script.py \
   script_file=<script.py> skill_library_path=cap/saved_scripts/skill_library \
   env.name=yam-real robot=real_yam
 ```

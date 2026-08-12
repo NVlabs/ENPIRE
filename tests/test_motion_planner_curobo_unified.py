@@ -6,6 +6,7 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 import numpy as np
+import torch
 
 from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
 
@@ -49,6 +50,86 @@ def test_plan_to_pose_routes_through_batch_interface() -> None:
     assert result["status"] == "Success"
     assert result["left_positions"].shape == (2, 6)
     assert result["right_positions"].shape == (2, 6)
+
+
+def test_v08_batch_result_is_trimmed_and_split_by_arm() -> None:
+    planner = YamMotionPlannerCurobo.__new__(YamMotionPlannerCurobo)
+    planner._batch_planner_capacity = 2
+    planner._solver_speed = "fast"
+    planner._ee_pose_plan_config = {"max_attempts": 2, "enable_graph_attempt": 1}
+    planner._validator = None
+    planner._make_joint_state = lambda left, right: (left, right)
+    planner._make_goal_tool_poses = lambda *args: args
+
+    trajectory = torch.arange(2 * 1 * 5 * 12, dtype=torch.float32).reshape(
+        2, 1, 5, 12
+    )
+    fake_result = SimpleNamespace(
+        success=torch.tensor([[True], [True]]),
+        interpolated_trajectory=SimpleNamespace(position=trajectory),
+        interpolated_last_tstep=torch.tensor([[2], [4]]),
+        position_error=torch.tensor([[0.001], [0.002]]),
+        rotation_error=torch.tensor([[0.01], [0.02]]),
+        solve_time=0.01,
+        total_time=0.02,
+    )
+
+    class _Planner:
+        def plan_pose(self, goal, start, **kwargs):
+            assert len(goal) == 4
+            assert np.asarray(start[0]).shape == (2, 6)
+            assert kwargs == {
+                "max_attempts": 2,
+                "success_ratio": 1.0,
+                "enable_graph_attempt": 1,
+            }
+            return fake_result
+
+    planner._motion_gen = _Planner()
+    current_left = np.zeros(6, dtype=np.float64)
+    current_right = np.ones(6, dtype=np.float64)
+    result = planner._plan_batch_to_pose_chunk(
+        current_left_jp=current_left,
+        current_right_jp=current_right,
+        target_left_pos=np.asarray([[0.4, 0.2, 0.8]]),
+        target_left_quat_xyzw=np.asarray([[0.0, 0.0, 0.0, 1.0]]),
+        target_right_pos=np.asarray([[0.4, -0.2, 0.8]]),
+        target_right_quat_xyzw=np.asarray([[0.0, 0.0, 0.0, 1.0]]),
+        side="left",
+        validate_trajectory=False,
+    )
+
+    assert result["success_mask"].tolist() == [True]
+    assert result["left_positions_by_index"][0].shape == (3, 6)
+    np.testing.assert_allclose(
+        result["right_positions_by_index"][0],
+        np.tile(current_right, (3, 1)),
+    )
+
+
+def test_v08_none_result_is_reported_as_ik_failure() -> None:
+    planner = YamMotionPlannerCurobo.__new__(YamMotionPlannerCurobo)
+    planner._batch_planner_capacity = 1
+    planner._solver_speed = "fast"
+    planner._ee_pose_plan_config = {"max_attempts": 1, "enable_graph_attempt": 0}
+    planner._validator = None
+    planner._make_joint_state = lambda left, right: (left, right)
+    planner._make_goal_tool_poses = lambda *args: args
+    planner._motion_gen = SimpleNamespace(plan_pose=lambda *args, **kwargs: None)
+
+    result = planner._plan_batch_to_pose_chunk(
+        current_left_jp=np.zeros(6),
+        current_right_jp=np.zeros(6),
+        target_left_pos=np.asarray([[0.4, 0.2, 0.8]]),
+        target_left_quat_xyzw=np.asarray([[0.0, 0.0, 0.0, 1.0]]),
+        target_right_pos=np.asarray([[0.4, -0.2, 0.8]]),
+        target_right_quat_xyzw=np.asarray([[0.0, 0.0, 0.0, 1.0]]),
+        side="both",
+    )
+
+    assert result["status"] == "Planning_Failed"
+    assert result["status_by_index"] == ["IK_Failed"]
+    assert result["success_mask"].tolist() == [False]
 
 
 # ---------------------------------------------------------------------------

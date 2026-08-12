@@ -15,7 +15,7 @@ The following projects are vendored as editable local packages under `third_part
 
 | Component | Path | Origin | License |
 |-----------|------|--------|---------|
-| cuRobo | `third_party/curobo/` | [NVlabs/curobo](https://github.com/NVlabs/curobo) | NVIDIA Research License |
+| cuRobo | `third_party/curobo/` | [NVlabs/curobo](https://github.com/NVlabs/curobo) | Apache-2.0 |
 | PyRoki | `third_party/pyroki/` | [chungmin99/pyroki](https://github.com/chungmin99/pyroki) | MIT — Copyright (c) 2025 Chung Min Kim |
 | i2rt | `third_party/i2rt/` | [i2rt-robotics/i2rt](https://github.com/i2rt-robotics/i2rt) | MIT — Copyright (c) I2RT Robotics |
 | RealtimeSTT | `third_party/ui/RealtimeSTT/` | [KoljaB/RealtimeSTT](https://github.com/KoljaB/RealtimeSTT) | MIT — Copyright (c) 2023 Kolja Beigel |

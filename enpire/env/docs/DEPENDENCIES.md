@@ -25,8 +25,9 @@ uv sync --project enpire/policy/pld/runtime --extra dev
 
 | Dependency | Used for | Install/source | Upstream |
 |---|---|---|---|
-| cuRobo | GPU IK, collision checking, and trajectory generation | `planning-local`; vendored in `third_party/curobo` | [NVlabs/curobo](https://github.com/NVlabs/curobo) |
-| NVIDIA Warp | cuRobo CUDA kernels | `planning-local`; pinned to `1.12.0` | [NVIDIA/warp](https://github.com/NVIDIA/warp) |
+| cuRobo v0.8.0 | GPU IK, collision checking, and trajectory generation | `planning-local`; Apache-2.0 submodule in `third_party/curobo` | [NVlabs/curobo](https://github.com/NVlabs/curobo) |
+| CUDA Python (`cuda.core`) | Runtime compilation and launch of cuRobo v0.8 CUDA kernels | `planning-local`; selected through `nvidia-curobo[cu12]` | [NVIDIA/cuda-python](https://github.com/NVIDIA/cuda-python) |
+| NVIDIA Warp | cuRobo geometry and perception utilities | `planning-local`; pinned to `1.12.0` | [NVIDIA/warp](https://github.com/NVIDIA/warp) |
 | MuJoCo | YAM simulation, models, gravity compensation, and IK | `planning`, `control-yam` | [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) |
 | Mink | MuJoCo differential IK | `planning`, `control-yam` | [kevinzakka/mink](https://github.com/kevinzakka/mink) |
 | Pink / Pinocchio | Alternate rigid-body kinematics | `planning` | [stephane-caron/pink](https://github.com/stephane-caron/pink) |

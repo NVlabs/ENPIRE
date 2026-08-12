@@ -62,15 +62,14 @@ planning = [
     "yourdfpy==0.0.59",
 ]
 
-# Local CUDA cuRobo server. The vendored cuRobo license is research-only;
-# this extra requires a matching NVIDIA driver, CUDA toolkit, and compiler.
+# Local CUDA cuRobo server. cuRobo v0.8.0 is Apache-2.0; this extra requires
+# a matching NVIDIA driver, CUDA toolkit, and compiler.
 planning-local = [
     "ninja",
-    "nvidia-curobo",
+    "nvidia-curobo[cu12]",
     "portal>=3.7.3",
     "torch>=2.8",
-    # cuRobo's collision checker imports ``warp.torch``, which was removed
-    # from Warp 1.15. Keep the version proven by the original Forge lock.
+    # Keep the Warp version validated with ENPIRE's cuRobo v0.8 migration.
     "warp-lang==1.12.0",
     "yourdfpy==0.0.59",
 ]
@@ -159,9 +158,11 @@ pld = [
 
 dev = [
     "coverage[toml]>=7.6",
+    "evdev>=1.9; sys_platform == 'linux'",
     "fastapi>=0.115",
     "httpx>=0.27",
     "msgpack>=1.0",
+    "pandas>=2.2",
     "pillow>=10",
     "pytest>=8.3",
     "pytest-cov>=6",

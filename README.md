@@ -31,7 +31,7 @@ The loop is: **reset → execute → verify → record → refine.**
 
 | Task | Mode | Policy | Notes |
 |------|------|--------|-------|
-| Cube pick | CaP | `cap/saved_scripts/examples/pick_cube.py` | Hardware-free quickstart |
+| Prompted pickup | CaP | `cap/saved_scripts/examples/pick_object.py` | One generic real-world pickup script |
 | **Push-T** | **CaP + PLD** | `cap/saved_scripts/pusht/` · `enpire/policy/rl/pusht/` | **Fully reproducible end-to-end autoresearch example** — includes CaP reset loop, vision reward, RL training, and 3D-printable T-block (`robot/models/objects/meshes/t_block.stl`) |
 | GPU insertion | CaP | `cap/saved_scripts/skill_library/` | — |
 | Pin insertion | PLD (online RL) | `enpire/policy/pld/` | — |
@@ -103,10 +103,8 @@ uv run enpire services start --profile robot \
 ### Code-as-Policy tasks
 
 ```bash
-uv run enpire cap run cube-pick    --station my-yam --confirm-motion
-uv run enpire cap run gpu-handover --station my-yam --confirm-motion
-uv run enpire cap run gpu-reset    --station my-yam --confirm-motion
-uv run enpire cap run ziptie-reset --station my-yam --confirm-motion
+uv run enpire cap run pickup --prompt "blue cube" \
+  --station my-yam --confirm-motion
 ```
 
 ### Push-T (CaP auto-research)
@@ -144,14 +142,9 @@ uv run enpire rl control resume  --confirm-control
 ```
 ENPIRE/
 ├── assets/                   figures for this README
-├── cap/saved_scripts/
-│   ├── skill_library/        shared robot tools (freespace_move, grasp, detect …)
-│   ├── pusht/                push-T CaP skills
-│   ├── gpu/                  GPU insertion scripts
-│   └── ziptie/               zip-tie scripts
 ├── enpire/
 │   ├── env/
-│   │   ├── forge/            runtime, tool registry, YAM station, CaP runner
+│   │   ├── forge/            runtime, YAM station, CaP runner and released scripts
 │   │   ├── examples/         learning path + task capsules
 │   │   └── docs/             INSTALL.md, REAL_WORLD_WORKFLOWS.md, NEW_TASK.md
 │   └── policy/

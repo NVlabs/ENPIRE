@@ -1,3 +1,6 @@
+/* SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ActionLogEntry } from "../hooks/useRobotState";
 

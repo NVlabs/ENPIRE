@@ -27,8 +27,14 @@ _ADDR = (_DIAG_HOST, _DIAG_PORT)
 
 _sock: socket.socket | None = None
 if _ENABLED:
-    _sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    _sock.setblocking(False)
+    try:
+        _sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        _sock.setblocking(False)
+    except OSError:
+        # Diagnostics must never prevent the runtime (or a restricted test
+        # environment) from importing. ``emit`` already treats a missing
+        # socket as a disabled no-op.
+        _sock = None
 
 
 def emit(src: str, event: str, ep: int = 0, step: int = 0, **meta) -> None:

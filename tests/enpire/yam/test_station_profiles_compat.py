@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib
+from pathlib import Path
 
 import pytest
 
@@ -52,3 +53,14 @@ def test_macos_requires_external_can_profile(monkeypatch) -> None:
 
     with pytest.raises(RuntimeError, match="external station profile"):
         profiles.active_station_can()
+
+
+def test_explicit_calibrated_xml_path_outranks_legacy_aliases(monkeypatch) -> None:
+    from enpire.env.forge.robot.models.station.paths import get_station_xml
+
+    monkeypatch.setenv("FORGE_STATION_XML", "/legacy/forge.xml")
+    monkeypatch.setenv("YAM_STATION_CALIBRATED_XML", "/legacy/yam.xml")
+    monkeypatch.setenv("YAM_STATION_CALIBRATED_XML_PATH", "/verification/calibrated.xml")
+    monkeypatch.setenv("CAP_TOP_CAMERA_BACKEND", "realsense")
+
+    assert get_station_xml() == Path("/verification/calibrated.xml")

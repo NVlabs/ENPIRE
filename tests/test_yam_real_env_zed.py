@@ -1,47 +1,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+"""Release-surface regression for the removed internal ZED wrapper."""
+
 from __future__ import annotations
 
-import unittest
-from types import SimpleNamespace
-from unittest.mock import patch
-
-from enpire.env.forge.robot.yam.yam_real_env import NonBlockingZed
+from enpire.env.forge.robot.yam import yam_real_env
 
 
-class TestNonBlockingZedResolver(unittest.TestCase):
-    def test_resolve_device_matches_symlink_target(self) -> None:
-        devices = [
-            SimpleNamespace(path="/dev/video8", serial_number=111, camera_state="AVAILABLE"),
-            SimpleNamespace(path="/dev/video12", serial_number=10000001, camera_state="AVAILABLE"),
-        ]
-
-        def fake_realpath(path: str) -> str:
-            return {
-                "/dev/video_top_zed2i": "/dev/video12",
-                "/dev/video8": "/dev/video8",
-                "/dev/video12": "/dev/video12",
-            }.get(path, path)
-
-        with patch("enpire.env.forge.robot.yam.yam_real_env.os.path.exists", return_value=True), patch(
-            "enpire.env.forge.robot.yam.yam_real_env.os.path.realpath",
-            side_effect=fake_realpath,
-        ):
-            device = NonBlockingZed._resolve_device("/dev/video_top_zed2i", devices)
-
-        self.assertEqual(device.serial_number, 10000001)
-
-    def test_resolve_device_falls_back_when_only_one_camera_exists(self) -> None:
-        devices = [
-            SimpleNamespace(path="/dev/video12", serial_number=10000001, camera_state="AVAILABLE"),
-        ]
-
-        with patch("enpire.env.forge.robot.yam.yam_real_env.os.path.exists", return_value=False):
-            device = NonBlockingZed._resolve_device("/dev/video_top_zed2i", devices)
-
-        self.assertEqual(device.serial_number, 10000001)
-
-
-if __name__ == "__main__":
-    unittest.main()
+def test_internal_nonblocking_zed_wrapper_is_not_exported() -> None:
+    assert not hasattr(yam_real_env, "NonBlockingZed")
