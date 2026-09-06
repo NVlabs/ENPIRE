@@ -289,6 +289,15 @@ height shifts x/y as well as z.
 
 Both variables belong in the station's environment file, not in the command.
 
+> **Check this on a new station before running at speed.** Unlike the AnyGrasp
+> path — which clamps every proposal up to `ANYGRASP_MIN_PLANNER_Z_M`
+> (default `0.80`, i.e. 50 mm above the default table plane) — the 2D path
+> applies **no floor at all**: `TABLE_SURFACE_Z_M + ENPIRE_2D_GRASP_Z_OFFSET_M`
+> is commanded verbatim. With both defaults that is `0.75`, right at the table
+> plane, so an over-estimated `TABLE_SURFACE_Z_M` drives the fingertips into the
+> table. Measure the plane (§ above), and make the first run on new hardware
+> with `ENPIRE_PLANNING_SPEED=0.25`.
+
 ### Push-T (CaP auto-research)
 
 ```bash
