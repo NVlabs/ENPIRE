@@ -5,11 +5,13 @@
 
 Keyboard shortcuts while RUNNING:
   SPACE  — pause / resume motion (robot holds current position)
+  O      — pause and open both grippers (release whatever is held)
   X / Q  — stop current script motion, go home, and exit
 
 Keyboard shortcuts after script DONE:
   ENTER  — go home then exit
   S      — skip go home, exit immediately
+  O      — open both grippers
   X / Q  — go home then exit
 
 Usage — automatic via run_script.py:
@@ -183,11 +185,15 @@ def _header_panel(paused: bool, stopping: bool, done: bool) -> Panel:
         hint.append(" go home & exit  ", style="dim")
         hint.append("  [S] ", style="bold white on dark_orange")
         hint.append(" skip home & exit  ", style="dim")
+        hint.append("  [O] ", style="bold white on cyan")
+        hint.append(" open grippers  ", style="dim")
         hint.append("  [X] ", style="bold white on red")
         hint.append(" go home & exit", style="dim")
     else:
         hint.append("  [SPACE] ", style="bold white on dark_orange")
         hint.append(" pause/resume  ", style="dim")
+        hint.append("  [O] ", style="bold white on cyan")
+        hint.append(" pause & open grippers  ", style="dim")
         hint.append("  [X] ", style="bold white on red")
         hint.append(" stop & go home", style="dim")
 
@@ -286,6 +292,7 @@ class YamDashboard:
         self._stdout_lock = threading.Lock()
         self._stdout_lines: deque[str] = deque(maxlen=8)
         self._stdout_partial = ""
+        self._release_active = threading.Event()  # a manual gripper release is running
 
     # ------------------------------------------------------------------
     # Profiler hooks — script tools only, not dashboard state polling
@@ -372,6 +379,10 @@ class YamDashboard:
             elif key_lower == "s":
                 self._should_go_home = False
                 self._exit_event.set()
+            elif key_lower == "o":
+                # The script is finished but the gripper keeps its last target,
+                # so a held object stays clamped until the process exits.
+                self._request_release(pause_first=False)
             elif key_lower in ("x", "q", "\x03"):
                 _stop_requested.set()
                 self._should_go_home = True
@@ -384,9 +395,64 @@ class YamDashboard:
                 _pause_requested.clear()
             else:
                 _pause_requested.set()
+        elif key_lower == "o":
+            self._request_release(pause_first=True)
         elif key_lower in ("x", "q", "\x03"):
             if not _stop_requested.is_set():
                 _stop_requested.set()
+
+    # ------------------------------------------------------------------
+    # Manual gripper release
+    # ------------------------------------------------------------------
+
+    def _request_release(self, *, pause_first: bool) -> None:
+        """Open both grippers on a worker thread, so the key never blocks.
+
+        ``set_gripper_direct`` polls until the gripper settles, which takes long
+        enough that running it on the key-handler thread would freeze input —
+        including the stop key — while an object is still clamped.
+
+        Mid-script the script thread is streaming ``command_joint_state`` at its
+        own rate; an open command issued alongside it is immediately overwritten
+        by the next frame. Pausing first parks that thread in its wait loop
+        (``skills.py``) so it stops commanding, and the release actually holds.
+        """
+        if self._release_active.is_set():
+            return  # a release is already running; ignore the repeat keypress
+        self._release_active.set()
+        if pause_first:
+            _pause_requested.set()
+        threading.Thread(
+            target=self._release_grippers, name="yam-release", daemon=True
+        ).start()
+
+    def _release_grippers(self) -> None:
+        try:
+            from enpire.env.forge.cap.agent.tools.native import set_gripper_direct
+
+            self._note("[release] opening both grippers…")
+            failures: list[str] = []
+            for side in ("left", "right"):
+                try:
+                    # Short timeout and a high velocity limit: this is a manual
+                    # release, so it should feel immediate rather than settle
+                    # precisely. No torque limit — nothing should resist opening.
+                    set_gripper_direct(
+                        self._env, side, 1.0, timeout=0.5, vel_limit=30.0
+                    )
+                except Exception as exc:  # one arm failing must not block the other
+                    failures.append(f"{side}: {exc}")
+            if failures:
+                self._note("[release] FAILED — " + "; ".join(failures))
+            else:
+                self._note("[release] grippers open. [SPACE] resumes the script.")
+        finally:
+            self._release_active.clear()
+
+    def _note(self, message: str) -> None:
+        """Surface an operator-facing line in the script-output panel."""
+        with self._stdout_lock:
+            self._stdout_lines.append(message)
 
     def _on_key_press(self, key):
         from pynput import keyboard as _kb

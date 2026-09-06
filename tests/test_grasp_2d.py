@@ -7,8 +7,8 @@ import numpy as np
 import pytest
 
 from enpire.env.forge.cap.agent.tools.grasp_2d import (
-    SampleGraspPose2DTool,
     _TWO_D_GRASP_PLANNER_Z_M,
+    SampleGraspPose2DTool,
     compute_segmented_cloud_height_m,
     estimate_local_tangent_from_mask,
     extract_segmented_object_world_points,
