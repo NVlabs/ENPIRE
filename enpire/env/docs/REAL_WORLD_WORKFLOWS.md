@@ -31,6 +31,11 @@ help, then explicitly permit motion:
 uv run enpire station gravcomp --station my-yam --both --camera both --confirm-motion
 ```
 
+Calibration needs a printed ChArUco board and cannot be automated. See
+[`CALIBRATION_BOARD.md`](CALIBRATION_BOARD.md) for how to generate, print at the
+correct scale, and mount it — the board goes on the gripper for the top camera
+but stays fixed in the world for the wrist cameras.
+
 Mount the ChArUco board rigidly to the instructed gripper, set the external YAM
 model root, and run the integrated calibration:
 

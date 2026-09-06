@@ -88,6 +88,20 @@ The `calibrate-all` command starts both arm servers automatically in a tmux
 session, runs the intrinsic → extrinsic → hand-eye sequence, and writes the
 calibrated MuJoCo XML to the path you specify.
 
+Calibration is the one step that needs a person: it requires a printed ChArUco
+board, mounted on the gripper for the top camera and fixed in the world for the
+wrist cameras. Generate a board matched to this station's constants with
+
+```bash
+uv run python -m enpire.env.forge.yam.calibration.make_board --output charuco_board.png
+```
+
+and read [`enpire/env/docs/CALIBRATION_BOARD.md`](enpire/env/docs/CALIBRATION_BOARD.md)
+before printing — a board printed at anything other than 100% scale biases every
+resulting transform and nothing downstream will warn you. If your board differs
+from the 5×5 / 40 mm default, pass `--squares-x`, `--squares-y`,
+`--square-length`, and `--marker-length` to `station calibrate-all`.
+
 ### Binding cameras to roles
 
 Cameras are addressed by **role** (`top`, `left`, `right`). List the attached
