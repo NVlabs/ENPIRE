@@ -225,4 +225,4 @@ reset, success, safety, evaluation, and metric code are outside policy-edit
 scope.
 
 All datasets, model checkpoints, calibration, learned goal metadata, and run
-artifacts remain outside Git. See [SECURITY.md](../SECURITY.md).
+artifacts remain outside Git. See [SECURITY.md](../../../SECURITY.md).

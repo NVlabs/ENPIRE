@@ -17,6 +17,10 @@ packaging, orchestration, and task contracts.
 ## Safe first commands
 
 ```bash
+# Required first: cuRobo is a submodule resolved as an editable path dependency,
+# so an empty third_party/curobo fails EVERY uv command, including this sync.
+git submodule update --init --recursive
+
 uv sync --extra dev
 uv run enpire --version
 uv run enpire tools list
@@ -64,8 +68,11 @@ The original `cap/`, `experimental/`, and `robot/` packages are compatibility
 implementations. Do not duplicate their algorithms in the public facade.
 
 Practitioner commands and external-file requirements are documented in
-`docs/REAL_WORLD_WORKFLOWS.md`; direct and native dependencies are documented
-in `docs/DEPENDENCIES.md`.
+`enpire/env/docs/REAL_WORLD_WORKFLOWS.md`; direct and native dependencies are
+documented in `enpire/env/docs/DEPENDENCIES.md`. Dependencies that cannot be
+installed automatically have dedicated guides:
+`enpire/env/docs/CUROBO_SETUP.md`, `enpire/env/docs/ANYGRASP_SETUP.md`, and
+`enpire/env/docs/CALIBRATION_BOARD.md`.
 
 ## Implementation rules
 

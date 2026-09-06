@@ -43,8 +43,14 @@ The loop is: **reset → execute → verify → record → refine.**
 **Requirements:** Python 3.11, [uv](https://docs.astral.sh/uv/), Linux x86-64, tmux.
 
 ```bash
-git clone https://github.com/NVlabs/ENPIRE.git
+# --recurse-submodules is required: cuRobo is a submodule that uv resolves as an
+# editable path dependency, so without it every `uv sync` and `uv run` fails with
+# "third_party/curobo does not appear to be a Python project".
+git clone --recurse-submodules https://github.com/NVlabs/ENPIRE.git
 cd ENPIRE
+
+# Already cloned without it? Populate the submodule now:
+git submodule update --init --recursive
 
 # Hardware-free baseline (simulation + tests)
 uv sync --extra dev
@@ -183,7 +189,9 @@ uv run enpire services start --profile robot \
 ```
 
 A pick needs **three** services up. `cap-real` includes AnyGrasp, which needs a
-machine-locked licence; a station without one starts just what a 2D grasp uses:
+machine-locked licence issued per machine and takes about a week to obtain — see
+[`enpire/env/docs/ANYGRASP_SETUP.md`](enpire/env/docs/ANYGRASP_SETUP.md). A
+station without one starts just what a 2D grasp uses:
 
 ```bash
 uv run enpire services start --services sam3,curobo,yam \
@@ -199,7 +207,7 @@ started nothing. To add a service to a running set, either give it its own
 | Service | Port | Needed for |
 |---|---|---|
 | `sam3` | 6767 | text-prompted segmentation |
-| `curobo` | 8611 | collision-aware motion planning |
+| `curobo` | 8611 | collision-aware motion planning ([setup](enpire/env/docs/CUROBO_SETUP.md)) |
 | arm servers | 11333 / 11334 | left / right YAM control |
 
 Both model services warm up on first start and are silent while they do it, so
@@ -216,6 +224,9 @@ of on the first request. `curobo` JIT-compiles its warp kernels on first launch
 hundred MB; later starts reuse the cache. Until port 8611 is listening,
 `freespace_move` blocks retrying the connection and **the arm never moves**,
 with no error.
+
+Note that 8611 is Portal RPC, not HTTP — `curl localhost:8611/health` will not
+work, so check it with `ss` as above. Only `sam3` on 6767 answers HTTP.
 
 ### Code-as-Policy tasks
 

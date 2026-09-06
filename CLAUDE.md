@@ -7,14 +7,23 @@ canonical repository workflow for both human and coding-agent contributors.
 ## Start here
 
 ```bash
+# Required first: cuRobo is a submodule that uv resolves as an editable path
+# dependency, so an uninitialized third_party/curobo breaks EVERY uv command
+# with "does not appear to be a Python project" — including uv sync --extra dev.
+git submodule update --init --recursive
+
 uv sync --extra dev
 uv run enpire tools list
 uv run enpire examples list
 uv run pytest -q tests/enpire
 ```
 
-For real workflows, read `docs/REAL_WORLD_WORKFLOWS.md` and
-`enpire/env/docs/DEPENDENCIES.md`. Inspect commands with `--dry-run` before enabling
+For real workflows, read `enpire/env/docs/REAL_WORLD_WORKFLOWS.md` and
+`enpire/env/docs/DEPENDENCIES.md`. External dependencies that cannot be
+installed automatically have their own guides:
+`enpire/env/docs/CUROBO_SETUP.md`, `enpire/env/docs/ANYGRASP_SETUP.md`
+(per-machine licence), and `enpire/env/docs/CALIBRATION_BOARD.md` (needs a
+printed board and a human). Inspect commands with `--dry-run` before enabling
 motion. The PLD learner is installed from its isolated runtime project.
 
 Do not start robot motion, install udev rules, connect to external services, or
