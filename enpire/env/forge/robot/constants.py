@@ -57,6 +57,37 @@ YAM_GRIPPER_GRAVCOMP_TORQUE_LIMIT_NM = 0.5  # Nm, soft hold without relaxing GPU
 # Gripper motor direction: motor_pos → env_pos = SIGN * motor_pos
 YAM_GRIPPER_SIGN = -1
 
+
+def yam_gripper_sign(side: str) -> int:
+    """Gripper motor direction for one arm.
+
+    ``_calibrate_gripper`` labels ``min(env_positions)`` closed and ``max`` open,
+    so the sign has to orient that axis per arm. A station whose two gripper
+    motors are mounted mirrored needs opposite signs, which a single global
+    constant cannot express: the arm with the wrong sign calibrates inverted and
+    then refuses to open, because its "open" target is where it already sits.
+
+    Override per side with ``ENPIRE_YAM_GRIPPER_SIGN_LEFT`` /
+    ``ENPIRE_YAM_GRIPPER_SIGN_RIGHT`` (``1`` or ``-1``); both default to
+    ``YAM_GRIPPER_SIGN`` so existing stations are unaffected.
+    """
+    import os
+
+    raw = os.environ.get(f"ENPIRE_YAM_GRIPPER_SIGN_{side.strip().upper()}", "").strip()
+    if not raw:
+        return YAM_GRIPPER_SIGN
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ValueError(
+            f"ENPIRE_YAM_GRIPPER_SIGN_{side.upper()} must be 1 or -1, got {raw!r}"
+        ) from exc
+    if value not in (1, -1):
+        raise ValueError(
+            f"ENPIRE_YAM_GRIPPER_SIGN_{side.upper()} must be 1 or -1, got {value}"
+        )
+    return value
+
 # ---------------------------------------------------------------------------
 # Safety: max joint velocity (rad/s)
 #

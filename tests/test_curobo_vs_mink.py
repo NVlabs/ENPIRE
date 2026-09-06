@@ -4,8 +4,10 @@
 """Compare CuRobo (plan_to_pose) vs Mink (seeded IK) + cubic spline."""
 
 from __future__ import annotations
+
 import sys
 from pathlib import Path
+
 import numpy as np
 
 _REPO = Path(__file__).resolve().parents[1]
@@ -103,13 +105,17 @@ def plot_comparison(desired, ee_curobo, ee_mink, res_curobo, res_mink, title, sa
 
 def run_curobo(waypoints, rpy, side, subsample):
     """CuRobo plan_to_pose segment-by-segment (old approach)."""
-    from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
-    from enpire.env.forge.experimental.curobo_waypoint_planner import (
-        densify_waypoints, interpolate_orientations, display_rpy_to_quat_xyzw,
-    )
-    from scipy.interpolate import CubicSpline
-    from enpire.env.forge.robot.yam.kinematics import YamKinematics
     import time
+
+    from scipy.interpolate import CubicSpline
+
+    from enpire.env.forge.experimental.curobo_waypoint_planner import (
+        densify_waypoints,
+        display_rpy_to_quat_xyzw,
+        interpolate_orientations,
+    )
+    from enpire.env.forge.experimental.motion_planner_curobo import YamMotionPlannerCurobo
+    from enpire.env.forge.robot.yam.kinematics import YamKinematics
 
     planner = YamMotionPlannerCurobo(
         device="cuda:0", solver_speed="fast",

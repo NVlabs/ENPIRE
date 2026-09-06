@@ -284,7 +284,7 @@ class TestProfileEquivalence:
         assert profile.arms["right"].ee_frame_name == "right_grasp"
 
     def test_protocol_conformance_sim_backend(self):
-        from enpire.env.forge.cap.env.base import SceneProtocol, EnvProtocol
+        from enpire.env.forge.cap.env.base import EnvProtocol, SceneProtocol
         from enpire.env.forge.cap.server.sim_backend import SimBackend
 
         backend = SimBackend(viewer=False)
@@ -317,11 +317,11 @@ class TestGetStateKeyFormat:
 
     def test_get_state_keys_and_shapes(self):
         """get_state() must return these exact keys with these exact shapes."""
-        from enpire.env.forge.cap.server.cap_server import CapServer
-
         # Directly check what get_state returns by setting up minimal state
         # Use the _StubServer pattern from existing tests
         import threading
+
+        from enpire.env.forge.cap.server.cap_server import CapServer
 
         class _MinimalServer:
             def __init__(self):

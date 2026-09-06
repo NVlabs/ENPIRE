@@ -3,10 +3,9 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from types import SimpleNamespace
-
-import os
 
 import numpy as np
 import pytest

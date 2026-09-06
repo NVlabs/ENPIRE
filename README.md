@@ -76,10 +76,10 @@ One-time setup per physical station (YAM arms + cameras):
 ```bash
 export ENPIRE_YAM_MODEL_ROOT=/path/to/yam-model-assets
 
-uv run enpire station init     --station my-yam
-uv run enpire station register --station my-yam   # detects CAN/USB serials
+uv run enpire station init     --station my-yam-station-name
+uv run enpire station register --station my-yam-station-name   # detects CAN/USB serials
 uv run enpire station calibrate-all \
-  --station my-yam \
+  --station my-yam-station-name \
   --output-xml /path/outside/repo/station_calibrated.xml \
   --confirm-motion
 ```
@@ -88,24 +88,181 @@ The `calibrate-all` command starts both arm servers automatically in a tmux
 session, runs the intrinsic → extrinsic → hand-eye sequence, and writes the
 calibrated MuJoCo XML to the path you specify.
 
+### Binding cameras to roles
+
+Cameras are addressed by **role** (`top`, `left`, `right`). List the attached
+librealsense serials, and identify each by covering a lens and watching which
+stream darkens:
+
+```bash
+uv run python -c "import pyrealsense2 as rs; [print(d.get_info(rs.camera_info.serial_number)) for d in rs.context().query_devices()]"
+```
+
+Bind them with any one of these — `resolve_realsense_serial` tries them in
+order, so an earlier one wins:
+
+| | How | Notes |
+|---|---|---|
+| 1 | `CAP_<ROLE>_REALSENSE_SERIAL=<SERIAL>` | one-off, highest priority |
+| 2 | `~/.local/share/enpire/camera_aliases.json`, `{"<SERIAL>": "video_top", ...}` | **recommended**, no root, stays out of Git |
+| 3 | udev rule → `/dev/video_<role>` | persistent, needs admin |
+
+```
+# udev: ATTRS{serial} is the USB serial, NOT the librealsense one
+# (udevadm info -a -p /sys/class/video4linux/videoN | grep -m1 'ATTRS{serial}')
+# A D405 exposes six nodes, so ATTR{index}=="0" pins one per camera.
+SUBSYSTEM=="video4linux", ATTRS{idVendor}=="8086", ATTRS{serial}=="<USB_SERIAL>", ATTR{index}=="0", SYMLINK+="video_top"
+```
+
+Verify, and record the serials in the station profile's `cameras:` block:
+
+```bash
+uv run python -c "from enpire.env.forge.robot.camera_factory import resolve_realsense_serial as r; print([(n, r(n)) for n in ('top','left','right')])"
+```
+
+> Calibration needs none of this (`resolve_serial` passes a serial straight
+> through) — only the CaP runtime resolves by role, so a station can calibrate
+> fine yet still fail a pick with `No symlink: /dev/video_left`.
+
+> The CaP runtime defaults its top-camera backend to **ZED**
+> (`robot/models/station/paths.py`). On a RealSense station set
+> `CAP_TOP_CAMERA_BACKEND=realsense`, or model loading fails looking for
+> `station_zed2itop_calibrated.xml`.
+
 ---
 
 ## Running tasks
 
-### Start services (perception + arm servers)
+### Quick reference: a 2D pick from a cold machine
 
 ```bash
-uv run enpire services start --profile cap-real          # AnyGrasp, cameras
-uv run enpire services start --profile robot \
-  --station my-yam --confirm-motion                      # YAM arm servers
+# 0. station environment (serials, camera backend, table plane) in one file
+set -a; source station.env; set +a
+
+# 1. all three services in ONE call (motion-capable: it starts the arm servers).
+#    Two separate `services start` calls both default to the tmux session
+#    "enpire", and the second aborts with "session already exists".
+uv run enpire services start --services sam3,curobo,yam \
+  --station my-yam-station-name --confirm-motion
+
+# 2. wait for all four ports — nothing below works until they are up
+curl -s localhost:6767/health          # {"status":"ok","model_loaded":true,...}
+ss -ltn | grep -E '6767|8611|11333|11334'
+
+# 3. pick
+ENPIRE_PICK_GRASP_MODE=2d ENPIRE_PICK_CAMERA=top ENPIRE_PLANNING_SPEED=1.0 \
+uv run enpire cap run pickup --prompt "<object>" \
+  --station my-yam-station-name --confirm-motion
 ```
+
+`ENPIRE_PLANNING_SPEED` scales motion (built-in default `1.5`). Drop it well
+below `1.0` — `0.25` is about 6x slower — for a first run on new hardware or an
+untested grasp height, so there is time to hit the e-stop. Each section below
+expands on one of these steps.
+
+### Start services (perception + planning + arm servers)
+
+```bash
+uv run enpire services start --profile cap-real       # AnyGrasp, cameras
+uv run enpire services start --profile robot \
+  --station my-yam-station-name --confirm-motion      # YAM arm servers
+```
+
+A pick needs **three** services up. `cap-real` includes AnyGrasp, which needs a
+machine-locked licence; a station without one starts just what a 2D grasp uses:
+
+```bash
+uv run enpire services start --services sam3,curobo,yam \
+  --station my-yam-station-name --confirm-motion
+```
+
+Start them in **one** call. Every `services start` writes to the tmux session
+named by `--session` (default `enpire`) and refuses to reuse an existing one, so
+a second call aborts with `tmux session 'enpire' already exists` — having
+started nothing. To add a service to a running set, either give it its own
+`--session`, or `tmux kill-session -t enpire` and start the full set again.
+
+| Service | Port | Needed for |
+|---|---|---|
+| `sam3` | 6767 | text-prompted segmentation |
+| `curobo` | 8611 | collision-aware motion planning |
+| arm servers | 11333 / 11334 | left / right YAM control |
+
+Both model services warm up on first start and are silent while they do it, so
+verify before running a task rather than watching an idle terminal:
+
+```bash
+curl -s localhost:6767/health          # {"status":"ok","model_loaded":true,...}
+ss -ltn | grep -E '6767|8611|11333|11334'
+```
+
+`sam3` is started with `--preload` so weights load at boot (~3 GB VRAM) instead
+of on the first request. `curobo` JIT-compiles its warp kernels on first launch
+— that takes tens of seconds and grows `~/.cache/warp/<version>` to a few
+hundred MB; later starts reuse the cache. Until port 8611 is listening,
+`freespace_move` blocks retrying the connection and **the arm never moves**,
+with no error.
 
 ### Code-as-Policy tasks
 
 ```bash
 uv run enpire cap run pickup --prompt "blue cube" \
-  --station my-yam --confirm-motion
+  --station my-yam-station-name --confirm-motion
 ```
+
+#### 2D top-down grasps
+
+`pickup` defaults to the AnyGrasp 6-DoF backend, which needs a machine-locked
+licence. The calibrated top-down sampler is the alternative, and for **flat or
+short objects lying on a surface it usually works better than AnyGrasp** — a
+top-down approach is the right grasp for them anyway, and it depends only on
+segmentation plus a known table plane, never on depth:
+
+```bash
+ENPIRE_PICK_GRASP_MODE=2d ENPIRE_PICK_CAMERA=top \
+uv run enpire cap run pickup --prompt "blue cube" \
+  --station my-yam-station-name --confirm-motion
+```
+
+This matters on short-baseline cameras: a D405 has a ~18 mm stereo baseline, so
+depth error grows as `z²/(baseline·fx)` — tens of mm by 0.5 m and ~90 mm at 1 m.
+Point-cloud modes (`obb`) cannot work from a top camera at table range, while
+`2d` is unaffected because segmentation is a colour operation.
+
+Two values set the grasp height, and `2d` grasps are only as good as they are:
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `TABLE_SURFACE_Z_M` | `0.75` | table plane in base frame |
+| `ENPIRE_2D_GRASP_Z_OFFSET_M` | `0.0` | height **above** that plane to grasp at |
+
+The commanded grasp z is their sum — the offset is not a clearance floor, it is
+written directly into every candidate. It defaults to `0.0`, fingertips at the
+table plane, which is what flat and short objects need.
+
+Override it with any constant to grasp higher up — roughly half the object's
+height closes the fingers around its middle:
+
+```bash
+ENPIRE_2D_GRASP_Z_OFFSET_M=0.03 \
+ENPIRE_PICK_GRASP_MODE=2d ENPIRE_PICK_CAMERA=top \
+uv run enpire cap run pickup --prompt "mug" --station my-yam-station-name --confirm-motion
+```
+
+| Offset | Grasps at | Suits |
+|---|---|---|
+| `0.0` (default) | table plane | flat objects, thin or short items |
+| `0.015` | 15 mm up | a ~30 mm tall object, gripped mid-height |
+| `0.03` | 30 mm up | taller objects such as a mug or box |
+
+Measure `TABLE_SURFACE_Z_M` rather than trusting the default. Detect a ChArUco
+board lying flat on the table and transform its pose by the calibrated
+`T_base_from_camera`; do **not** use depth on a short-baseline camera. Note the
+plane also sets the grasp's **lateral** position — the mask centroid is
+intersected with it along the camera ray — so on an off-nadir camera a wrong
+height shifts x/y as well as z.
+
+Both variables belong in the station's environment file, not in the command.
 
 ### Push-T (CaP auto-research)
 
@@ -113,7 +270,7 @@ uv run enpire cap run pickup --prompt "blue cube" \
 export RL_DATA_PATH=/path/outside/repo/rl-data
 
 # Supervisor runs the CaP reset script in a loop and records per-trial results
-bash tmux/realworld_rl/rl_pusht.sh --station my-yam --use-spacemouse
+bash tmux/realworld_rl/rl_pusht.sh --station my-yam-station-name --use-spacemouse
 
 # Score a completed run
 uv run enpire rl score --data-dir "$RL_DATA_PATH/<run-id>" --window 50 --plot
@@ -123,7 +280,7 @@ uv run enpire rl score --data-dir "$RL_DATA_PATH/<run-id>" --window 50 --plot
 
 ```bash
 export RL_DATA_PATH=/path/outside/repo/rl-data
-export ENPIRE_YAM_STATION=my-yam
+export ENPIRE_YAM_STATION=my-yam-station-name
 
 uv run enpire rl control health
 uv run enpire rl control pause   --confirm-control
@@ -131,7 +288,7 @@ uv run enpire rl control restart --confirm-control        # → prints run_dir
 uv run enpire rl learner --task pin_insertion             # terminal 1
 uv run enpire rl actor   --task pin_insertion             # terminal 2
 bash tmux/realworld_rl/rl_gear.sh \
-  --task pin_insertion --station my-yam --use-spacemouse  # terminal 3
+  --task pin_insertion --station my-yam-station-name --use-spacemouse  # terminal 3
 uv run enpire rl control resume  --confirm-control
 ```
 

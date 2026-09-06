@@ -8,7 +8,6 @@ from pathlib import Path
 
 import enpire.env.forge.cap.utils.anygrasp_runtime as runtime
 
-
 _POINTER_TEXT = """version https://git-lfs.github.com/spec/v1
 oid sha256:deadbeef
 size 123

@@ -40,9 +40,9 @@ from enpire.env.forge.robot.constants import (
     YAM_GRIPPER_KP,
     YAM_GRIPPER_MOTOR_ID,
     YAM_GRIPPER_MOTOR_TYPE,
-    YAM_GRIPPER_SIGN,
     YAM_GRIPPER_TORQUE_LIMIT_NM,
     YAM_GRIPPER_VEL_LIMIT,
+    yam_gripper_sign,
 )
 from enpire.env.forge.robot.yam.yam_controller import YamRobot
 
@@ -304,6 +304,19 @@ class LeaderRobotServer:
 # ---------------------------------------------------------------------------
 
 
+def _disconnect_quietly(robot: Any, can_interface: str) -> None:
+    """Release motors on shutdown without masking the original failure.
+
+    Called from a ``finally``, so a disconnect error here must not replace the
+    exception that actually stopped the server.
+    """
+    try:
+        robot.disconnect()
+        print(f"[{can_interface}] motors disabled on shutdown")
+    except Exception:
+        logging.exception("[%s] failed to disable motors on shutdown", can_interface)
+
+
 @dataclass
 class Args:
     mode: Literal["follower", "leader"] = "follower"
@@ -351,13 +364,21 @@ def main(args: Args) -> None:
             default_kp=YAM_ARM_KP + [YAM_GRIPPER_KP],
             default_kd=YAM_ARM_KD + [YAM_GRIPPER_KD],
             gripper_index=len(YAM_ARM_MOTOR_IDS),
-            gripper_sign=YAM_GRIPPER_SIGN,
+            gripper_sign=yam_gripper_sign(args.side),
             gripper_vel_limit=YAM_GRIPPER_VEL_LIMIT,
             gripper_torque_limit_nm=YAM_GRIPPER_TORQUE_LIMIT_NM,
             bustype=CAN_BUSTYPE,
         )
         robot.connect()
-        FollowerRobotServer(robot, port).serve()
+        try:
+            FollowerRobotServer(robot, port).serve()
+        finally:
+            # disconnect() is the only path that sends motor.disable(). Without
+            # this the motors stay energised after the server stops: MIT-mode
+            # arm joints decay to zero torque on their own, but a FORCE_POS
+            # gripper latches its target and keeps drawing current until it is
+            # explicitly disabled or power is cut.
+            _disconnect_quietly(robot, can_interface)
     else:
         try:
             from i2rt.robots.get_robot import get_yam_robot

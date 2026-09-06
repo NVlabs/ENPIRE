@@ -172,7 +172,10 @@ def main():
 
     # --- Sanity check: FK of a single top-down point ---
     print("\n--- Sanity check: single top-down FK ---")
-    from enpire.env.forge.experimental.curobo_waypoint_planner import display_rpy_to_quat_xyzw, quat_xyzw_to_display_rpy
+    from enpire.env.forge.experimental.curobo_waypoint_planner import (
+        display_rpy_to_quat_xyzw,
+        quat_xyzw_to_display_rpy,
+    )
     q_xyzw = display_rpy_to_quat_xyzw(top_down_rpy)
     rpy_back = quat_xyzw_to_display_rpy(q_xyzw)
     print(f"  Top-down RPY: {top_down_rpy}")

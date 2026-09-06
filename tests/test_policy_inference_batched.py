@@ -15,9 +15,8 @@ from __future__ import annotations
 
 import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
-
 import pytest
+from gymnasium import spaces
 
 from enpire.env.forge.cap.policy.backend import PolicyBackend
 from enpire.env.forge.cap.policy.inference import InferencePolicyConfig, inference_policy

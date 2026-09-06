@@ -11,14 +11,10 @@ Tests cover:
 """
 from __future__ import annotations
 
-import types
 import unittest
-from copy import deepcopy
-from typing import Any
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # Helpers / stubs
@@ -51,7 +47,6 @@ def _make_initial_state(left_jp=None, right_jp=None):
 class TestStateType(unittest.TestCase):
     def test_sync_to_init_in_state_literal(self):
         """'sync_to_init' must appear in the State Literal type's __args__."""
-        import sys
         import importlib
 
         # Import without triggering portal/hardware side-effects
@@ -169,7 +164,6 @@ class TestGetActionSyncToInitBranch(unittest.TestCase):
 
     def test_branch_emits_event_key(self):
         """Branch must set info['event'] = 'sync_to_init'."""
-        import ast
         src = open("experimental/start_stop_play_policy.py").read()
         # Simple string-search heuristic: check the source contains the pattern
         self.assertIn("\"sync_to_init\"", src)
@@ -178,7 +172,6 @@ class TestGetActionSyncToInitBranch(unittest.TestCase):
 
     def test_branch_transitions_to_pause(self):
         """Branch must call enter_state('pause') before returning."""
-        import ast
         src = open("experimental/start_stop_play_policy.py").read()
         self.assertIn("enter_state(\"pause\")", src)
 

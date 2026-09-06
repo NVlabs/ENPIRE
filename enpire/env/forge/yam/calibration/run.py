@@ -21,12 +21,39 @@ def _port_open(port: int) -> bool:
         return sock.connect_ex(("127.0.0.1", port)) == 0
 
 
+def board_argv(
+    squares_x: int | None = None,
+    squares_y: int | None = None,
+    square_length: float | None = None,
+    marker_length: float | None = None,
+) -> list[str]:
+    """Render explicit ChArUco board overrides as calibrator arguments.
+
+    Values left as ``None`` are omitted so the calibrator keeps its own
+    ``config`` defaults instead of re-stating them here.
+    """
+    argv: list[str] = []
+    for flag, value in (
+        ("--squares-x", squares_x),
+        ("--squares-y", squares_y),
+        ("--square-length", square_length),
+        ("--marker-length", marker_length),
+    ):
+        if value is not None:
+            argv.extend([flag, str(value)])
+    return argv
+
+
 def run_calibration(
     *,
     camera: str,
     resolution: str | None,
     launch_server: bool,
     confirm_motion: bool,
+    squares_x: int | None = None,
+    squares_y: int | None = None,
+    square_length: float | None = None,
+    marker_length: float | None = None,
 ) -> int:
     if not confirm_motion:
         raise RuntimeError("Pass --confirm-motion after clearing the robot workspace.")
@@ -50,6 +77,7 @@ def run_calibration(
     argv = ["--camera", camera, "--no-interactive", "--confirm-motion"]
     if resolution is not None:
         argv.extend(["--resolution", resolution])
+    argv.extend(board_argv(squares_x, squares_y, square_length, marker_length))
     try:
         from .calibrator import main
 

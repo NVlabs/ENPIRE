@@ -61,6 +61,10 @@ def test_pickup_script_passes_prompt_to_existing_pick_skill(monkeypatch) -> None
     monkeypatch.setitem(sys.modules, "skill_library.pick", pick)
     launch = build_cap_launch("pickup", station="test-station", prompt="blue cube")
     monkeypatch.setenv("ENPIRE_PICK_PROMPT", launch.env["ENPIRE_PICK_PROMPT"])
+    # The script reads these from the ambient environment, so an operator shell
+    # that exports them (station.env does) must not change what this asserts.
+    monkeypatch.delenv("ENPIRE_PICK_GRASP_MODE", raising=False)
+    monkeypatch.delenv("ENPIRE_PICK_CAMERA", raising=False)
     script = launch.cwd / next(
         task.script for task in list_tasks() if task.name == "pickup"
     )
