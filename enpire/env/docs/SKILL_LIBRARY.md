@@ -1,237 +1,221 @@
-# Skill Library — Overview
+# Skill library — the tools a CaP script can call
 
-> **Cross-references**: [SKILL_LIBRARY_YAM](SKILL_LIBRARY_YAM.md) | [CAP_DESIGN](CAP_DESIGN.md) | AGENT_PIPELINE_DESIGN
+This is the reference for writing a task script. It covers the two tool
+surfaces, the world-frame and RPY contract that every tool shares, which tools
+work on real hardware, and the camera data contract.
 
----
-
-## Overview
-
-The CAP agent framework provides ~43 tools (skills) that LLM-generated code can call to control robots, perceive the scene, plan motions, and execute learned policies. This document is the master catalog. Per-environment pages cover env-specific behavior and recommended tool subsets.
-
-**Key design**: All tools are registered globally regardless of environment. There is no per-env filtering at the registry level — instead, embodiment prompt specs (`cap/prompt/embodiment/`) document a reduced tool set to keep LLM context focused.
-
-## Architecture
-
-Tools flow through two execution paths:
-
-```
-Path A: CapServer mode (Portal RPC)
-  Agent code → Tool class → Portal RPC → CapServer → Env
-
-Path B: Direct mode (in-process)
-  Agent code → Direct callable → Env methods (no RPC)
-```
-
-- **Path A** (`cap/agent/tools/__init__.py`): `ToolRegistry` registers `Tool` subclasses that communicate via Portal RPC to `cap_server`. Used for YAM real and sim.
-- **Path B** (`cap/agent/tools/direct.py`): Direct callables bypass RPC and call env/server methods in-process. Used for `run_agent.py --direct` mode.
-
-Both paths return the same dataclass types (`RobotState`, `FreespaceResult`, `Detection3D`, etc.) so agent code is portable.
-
-## Data Types
-
-All tools return structured dataclasses defined in `cap/agent/tools/base.py`:
-
-### RobotState / ArmState
-
-```python
-@dataclass
-class ArmState:
-    joint_pos: list[float]   # 7 joint positions in radians
-    gripper_pos: float       # 0.0 (closed) to 1.0 (open)
-    ee_pos: list[float]      # [x, y, z] in meters, world frame
-    ee_quat: list[float]     # [x, y, z, w] quaternion
-    ee_rpy: list[float]      # [roll, pitch, yaw] in degrees
-
-@dataclass
-class RobotState:
-    arms: dict[str, ArmState]  # keyed by side name ("left", "right")
-    # Backward-compatible properties: state.left_ee_pos, state.right_joint_pos, etc.
-```
-
-### MoveResult
-
-```python
-@dataclass
-class MoveResult:
-    reached: bool              # whether EE converged to target
-    feasible: bool = True      # whether controller found a valid path
-    cmd_pos_err: float | None  # final position error in meters
-    final_pos: list[float]
-    final_quat: list[float]
-```
-
-### FreespaceResult
-
-```python
-@dataclass
-class FreespaceResult:
-    status: str          # "Success", "IK_Failed", "Planning_Failed", "Execution_Failed"
-    ik_error_m: float
-    final_pos_error_m: float
-    final_rot_error_deg: float
-    trajectory_steps: int
-    executed: bool
-    reason: str          # human-readable explanation when not Success
-    side: str | None
-    batch_candidates: list[FreespaceBatchCandidate]  # when using grasp_candidates mode
-```
-
-### Detection3D
-
-```python
-@dataclass
-class Detection3D:
-    label: str                         # object name
-    score: float                       # confidence (1.0 for oracle)
-    box_2d: list[float]                # 2D bounding box [x1, y1, x2, y2]
-    position_3d: list[float]           # [x, y, z] in meters, world frame
-    quaternion_xyzw: list[float]       # [x, y, z, w]
-    rpy: list[float]                   # [roll, pitch, yaw] in degrees
-    half_extents: list[float]          # bounding box half-sizes [dx, dy, dz]
-    vis_b64: str | None                # annotated visualization (base64 JPEG)
-```
-
-### Other Types
-
-| Type | Returned by | Key fields |
-|------|-------------|------------|
-| `SegmentationResult` | `segment_object` | mask, bbox_xywh, score, mask_area |
-| `SkillResult` | `execute_skill`, `learn_skill` | success, steps_executed, info |
-| `NudgeResult` | `nudge` | success, final_pos, final_quat |
-| `FreespaceBatchCandidate` | `freespace_move` (batch mode) | rank, position, rpy, score, ik_error_m, trajectory_steps |
+Paths below are relative to `enpire/env/forge/`. Line numbers are deliberately
+omitted — they rot faster than the code.
 
 ---
 
-## Tool Catalog
+## 1. Two surfaces, one set of tools
 
-### A. Robot State & Motion Control
+**Script namespace** — what a CaP task script sees as bare functions. Built by
+`cap/env/real_bimanual_yam/skills.py: make_namespace(env)` and injected into the
+script's globals by `run_script.py`, which is why saved scripts call
+`freespace_move(...)` with no import:
 
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `get_robot_state` | Get joint positions, gripper states, EE poses for all arms | (none) |
-| `_ik_servo` | Move EE to target [x,y,z] + orientation via IK/OSC. Blocking. `rpy` accepts 3-value RPY (degrees) or 4-value quaternion [x,y,z,w]. **YAM only** — RoboCasa uses `freespace_move`. | side, pos, rpy, gripper, max_duration_sec, max_vel, tol, check_feasibility, dry_run_only |
-| `_ik_servo_keypoints` | Execute EE trajectory through timestamped waypoints. Blocking. **YAM only.** | side, timestamps, keypoints (each [px,py,pz,r,p,y] radians), max_vel |
-| `move_joint_keypoints` | Execute joint-space trajectory via timestamped waypoints. Blocking. | side, timestamps, joint_positions, gripper_positions |
-| `set_gripper` | Set gripper position. Blocking until settled. | side, pos (0=closed, 1=open), vel_limit, torque_limit |
-| `open_gripper` | Fully open gripper. Shortcut for `set_gripper(side, 1.0)`. | side |
-| `close_gripper` | Fully close gripper. Shortcut for `set_gripper(side, 0.0)`. | side |
-| `go_home` | Move all arms to home configuration. Blocking. | (none) |
+| Group | Callables |
+|---|---|
+| Motion | `freespace_move`, `nudge`, `nudge_world_pose_preserving`, `go_home`, `go_home_fast` |
+| Gripper | `set_gripper`, `set_gripper_fast`, `open_gripper`, `open_gripper_fast`, `close_gripper` |
+| Grasping | `sample_grasp_pose_anygrasp`, `sample_grasp_pose_2d`, `sample_grasp_pose_3d_bb`, `select_best_grasp` |
+| Perception | `segment_object`, `segment_all_objects`, `detect_object`, `detect_objects_oneshot`, `end_detection`, `list_detections`, `vlm_query` |
+| Cameras | `get_camera_image`, `get_camera_intrinsics`, `get_camera_extrinsics`, `render_rgb`, `render_depth` |
+| State | `get_robot_state`, `get_task_info`, `display_rpy_to_quat` |
 
-### B. Collision-Free Motion Planning
+**Registry** — the stable, named surface exposed by `uv run enpire tools list`,
+used by the agent and the CLI. It is deliberately much smaller:
 
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `freespace_move` | Collision-free planning via cuRobo (default) or RRT-Connect. Supports single-arm, bimanual, and batched grasp candidate evaluation. Blocking. | left_target_pos, left_target_rpy, right_target_pos, right_target_rpy, grasp_candidates, planning_speed, backend, solver_speed, validate_trajectory |
-| `nudge` | Small delta EE movement (position + orientation). Uses `_ik_servo` (YAM) or cuRobo planning (RoboCasa). | side, delta_pos [dx,dy,dz], delta_rpy [dr,dp,dy] degrees |
+```
+control.get_state     control.set_gripper     planning.freespace
+vision.detect         vision.segment          vlm.query
+```
 
-### C. Grasping & Manipulation
+Both dispatch into the same implementations under `cap/agent/tools/`. Tools
+branch on `self._env`: in direct mode they call env methods in-process; in the
+legacy server mode they go over Portal RPC.
 
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `grasp` | High-level grasp: open → approach → descend → close → lift. Blocking. | side, position, rpy, pre_height, z_offset |
-| `place` | High-level place: move above → descend → open → lift. Blocking. | side, position, rpy, pre_height |
-| `sample_grasp_pose_anygrasp` | Generate grasp poses from point cloud via AnyGrasp. Returns ranked candidates. | object_points, grasp_from_top, k, timeout_s |
-
-### D. Perception & Object Detection
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `detect_object` | Detect objects via BundleSDF (6-DOF tracking) or oracle (sim ground-truth). | query, camera, backend ("oracle" or "bundlesdf"), max_retries |
-| `detect_objects_oneshot` | One-shot detection without tracking state. | query, camera, backend |
-| `track_object` | Start real-time 6-DOF tracking via BundleSDF. Returns immediately. | query, camera, name |
-| `get_object_pose` | Poll latest pose from active tracking session. | (none) |
-| `stop_tracking` | Stop active BundleSDF tracking. | (none) |
-| `segment_object` | Segment object via SAM3 text-prompted segmentation. | query, media, camera, score_thresh |
-| `list_scene_objects` | Use Qwen3-VL to list all visible objects. | camera, prompt |
-
-### E. Vision-Language Models
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `vlm_query` | Unified VLM interface — SmolVLM, Gemini, Gemini Pro, Qwen, GPT. | text, media, model, temperature, reasoning_effort |
-| `smol_vlm` | Legacy SmolVLM query (deprecated — use `vlm_query`). | text, camera, image |
-
-### F. Skill Execution & Policy
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `execute_skill` | Run a learned flow-matching policy skill. Blocking. | skill_name, params |
-| `learn_skill` | Run RL training episode with remote policy server. Blocking. | skill_name, params (rl_host, rl_port, max_steps, output_dir, control_mode) |
-| `start_policy_output` | Initialize external policy model session. | model, replan_horizon, task_description |
-| `step_policy_output` | Execute one step of external policy. Blocking. | (none) |
-| `stop_policy_output` | Halt policy session. | (none) |
-| `use_policy_output` | One-shot wrapper: start → step until done → stop. | model, max_steps, task_description |
-
-### G. Scene Management (Sim Only)
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `setup_scene` | Load named scene into simulation. | name |
-| `clear_table` | Remove all scene objects. | (none) |
-| `list_scenes` | List available scenes. | (none) |
-| `get_object_positions` | Get positions/orientations of all scene objects. | (none) |
-| `set_body_pose` | Set a body's pose in simulation. | name, pos, quat_wxyz, gravity_comp |
-
-### H. Task Management
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `get_task_info` | Get task state: reward, success, done, object positions, env name. | (none) |
-| `load_task` | Load new task/scene (e.g. RoboCasa task). Resets env. | task_name |
-
-### I. Camera & Image
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `get_camera_image` | Get latest RGB image from camera. | camera |
-| `save_image` | Save image from media source to local file. | media, path, filename |
-
-### J. BundleSDF Multi-Object Tracking
-
-Lower-level multi-session tracking (alternative to `track_object`/`detect_object`).
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `add_detection` | Start 6-DOF tracking for named object. Async. | object, camera, name |
-| `get_detection` | Poll latest pose from named session. | name |
-| `end_detection` | Stop tracking for named session. | name |
-| `list_detections` | List all active sessions. | (none) |
-
-### K. Safety Zones
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `set_safety_zone` | Define safe EE workspace (convex hull of keyposes ± margins). | side, keyposes (7-D each), pos_margin, ori_margin |
-| `get_safety_zone` | Query active safety zone. | (none) |
-| `clear_safety_zone` | Clear safety zone(s). | side (optional) |
-
-### L. Reward
-
-| Tool | Description | Key Parameters |
-|------|-------------|----------------|
-| `setup_reward` | Set reward function for RL training. | mode (constant-0, constant-1, random, gemini, etc.) |
+You can also call them from plain Python without a script: build a
+`RealYamEnv`, pass it to `make_namespace(env)`, and call the returned
+callables directly. That path has no dashboard, so no pause and no manual
+gripper release.
 
 ---
 
-## Environment Comparison
+## 2. Coordinate frame contract
 
-| Aspect | RoboCasa (PandaOmron) | RoboCasa (GR1) | YAM (MuJoCo/Warp) | YAM (Hardware) |
-|--------|-----------------------|----------------|---------------------|----------------|
-| Arms | 1 (right) | 2 (left, right) | 2 (left, right) | 2 (left, right) |
-| Cameras | top, wrist | top, wrist | top, left, right | top, left, right |
-| Control freq | 20 Hz | 20 Hz | 60 Hz | 60 Hz |
-| IK method | OSC_POSE (default) or joint_position (cuRobo) | OSC_POSE or joint_position | Pinocchio + pink IK | Pinocchio + pink IK |
-| Gripper encoding | 0–1 | 0–1 | 0–1 | 0–1 |
-| `detect_object` oracle | Yes (ground-truth from task info) | Yes | Yes (scene object positions) | No (vision only) |
-| `freespace_move` | Available (cuRobo via remote cloud GPU) | Available | Available (cuRobo local or remote) | Available |
-| Scene management | `load_task`, `get_task_info` | `load_task`, `get_task_info` | `setup_scene`, `clear_table` | N/A |
-| Safety zones | Not typically used | Not typically used | Available | Available |
-| `learn_skill` / RL | Supported | Supported | Supported | Supported |
+**Every tool input and output is in the robot world frame** (URDF `base_link`):
 
-## Key Files
+```
+    +X  forward  (toward the work table)
+    +Y  left     (toward the left arm)
+    +Z  up
+    Origin: floor level, centred between the arm bases (left y=+0.31, right y=-0.31)
+```
 
-- `cap/agent/tools/__init__.py` — `ToolRegistry`, `create_default_registry()` factory
-- `cap/agent/tools/base.py` — `Tool` ABC, all result dataclasses
-- `cap/agent/tools/direct.py` — Direct callable wrappers (bypass Portal RPC)
-- `cap/prompt/embodiment/` — Per-robot LLM prompt specs (tool subsets)
-- `cap/prompt/task/` — Per-task strategy guides
+Reference points: floor `z=0`, table surface `z≈0.75`, arm bases at
+`(0.2525, ±0.31, 0.75)`.
+
+| Data | Source | Frame |
+|---|---|---|
+| `get_robot_state()` EE poses | Pinocchio FK | World |
+| `freespace_move()` targets | user input | World |
+| `nudge()` deltas | user input | World, applied to the FK-sourced current pose |
+| `sample_grasp_pose_*()` candidates | remapped to planner convention | World (display RPY) |
+
+### Display RPY — the thing that catches people
+
+The RPY exposed to scripts is **not** conventional XYZ Euler. It is a Viser
+display convention:
+
+```
+roll = euler_xyz[1]      pitch = -euler_xyz[0]      yaw = -(euler_xyz[2] + 90)
+```
+
+`freespace_move`, `nudge`, and `grasp_anygrasp` all use it internally and
+consistently. Do not compose rotations by hand — use `display_rpy_to_quat`, or
+use `nudge`, which takes a world-frame **delta** and sidesteps the convention
+entirely.
+
+Camera→world uses a mount flip `F = diag(-1, -1, 1)` for D405 cameras to convert
+OpenCV to Pinocchio convention; ZED 2i uses none. This is controlled by
+`robot/models/station/paths.py: needs_optical_flip()` and applied inside the
+tool, not trusted from a model server.
+
+---
+
+## 3. Sim-only vs real-transferable
+
+Some perception calls return **simulator ground truth** and cannot run on
+hardware. Mixing them into a policy silently prevents sim→real transfer.
+
+**Ground truth — sim only:**
+
+| Call | Why |
+|---|---|
+| `detect_object(..., backend="oracle")` | reads simulator body poses, then fuzzy-matches the query name |
+| `get_task_info()` | task state from the simulator |
+| `get_object_positions()` / `get_oracle_targets()` | raw GT scene state |
+
+**Sensor-based — runs unchanged in sim and on real YAM:**
+`segment_object` (SAM3), `sample_grasp_pose_anygrasp`, `sample_grasp_pose_2d`,
+`detect_objects_oneshot`, `vlm_query`, and the camera calls.
+
+**Rule of thumb:** if a call needs `backend="oracle"` or `get_task_info`, it is
+sim-only. Autoresearch evaluation strips oracle tools from generated scripts
+(`runtime_role="script"`, `CAP_DISABLE_TASK_INFO_IN_SCRIPT=1`) so vision-only
+policies cannot cheat.
+
+---
+
+## 4. Camera data contract
+
+`render_rgb` / `render_depth` / `get_camera_intrinsics` / `get_camera_extrinsics`
+return:
+
+| Field | Type | Notes |
+|---|---|---|
+| `rgb` | `np.ndarray (H, W, 3) uint8` | cameras named `top`, `left`, `right` |
+| `depth` | `np.ndarray (H, W) float32` | metres |
+| `intrinsics` | `[fx, fy, cx, cy]` | pinhole |
+| `extrinsics` | `{position[3], rotation[9 row-major], needs_optical_flip}` | cam→world |
+
+For HTTP model servers, `rgb` is PNG→base64 (`image_base64`) and `depth` is
+`np.save` float32 bytes→base64 (`depth_base64`), with the optical flip
+**pre-applied** so it arrives in OpenCV convention.
+
+Cameras are addressed by **role**, not device path. See the "Binding cameras to
+roles" section of the top-level `README.md`.
+
+---
+
+## 5. Grasping: pick the right backend
+
+| Backend | Needs | Best for |
+|---|---|---|
+| `sample_grasp_pose_anygrasp` | machine-locked licence ([`ANYGRASP_SETUP.md`](ANYGRASP_SETUP.md)) | 6-DoF grasps on arbitrary geometry |
+| `sample_grasp_pose_2d` | segmentation + a known table plane | **flat or short objects on a table** — often better than AnyGrasp, and needs no licence |
+| `sample_grasp_pose_3d_bb` | point cloud | coarse bounding-box grasps |
+
+`sample_grasp_pose_2d` never uses depth, which matters on a short-baseline
+camera such as the D405. Its height is `TABLE_SURFACE_Z_M +
+ENPIRE_2D_GRASP_Z_OFFSET_M`, written verbatim into every candidate with **no
+clearance floor** — unlike the AnyGrasp path, which clamps to
+`ANYGRASP_MIN_PLANNER_Z_M` (default `0.80`). Measure your table plane. See the
+"2D top-down grasps" section of `README.md`.
+
+`select_best_grasp` ranks candidates; `freespace_move(grasp_candidates=...,
+batch_side=..., preview_only=True)` ranks them by plannability without moving.
+
+---
+
+## 6. Compliant gripper close
+
+`set_gripper(side, pos, vel_limit=None, torque_limit=None)` — `pos` is `1.0`
+open, `0.0` closed.
+
+When `torque_limit` is set, the settle loop performs **stall detection**: if the
+gripper stops moving for `GRIPPER_TORQUE_LIMIT_HOLD_S`, it concludes it has
+clamped an object and returns early rather than forcing the position target.
+That is the compliant close — grip firmly without crushing. `vel_limit` slows
+the close for gentleness.
+
+`open_gripper` / `close_gripper` are thin wrappers in `cap/agent/tools/native.py`.
+
+> The operator TUI also binds **`O`** to open both grippers mid-script; it
+> pauses first so the script thread cannot overwrite the open command.
+
+---
+
+## 7. Bimanual notes
+
+Arms are `"left"` and `"right"`. `freespace_move` takes targets for one arm or
+both; **omit the inactive arm entirely** rather than passing its current pose —
+targets not supplied hold position. Supplying both plans a synchronized
+bimanual motion.
+
+Gripper motor direction is per-arm (`yam_gripper_sign`), overridable with
+`ENPIRE_YAM_GRIPPER_SIGN_LEFT` / `_RIGHT` for stations whose motors are mounted
+mirrored.
+
+---
+
+## 8. A real-transferable example
+
+```python
+# 1. PERCEIVE — sensor-based only, so this runs in sim and on real YAM
+mask  = segment_object("red block", camera="top")
+cands = sample_grasp_pose_2d("red block", camera="top")
+
+# 2. PLAN — rank candidates by plannability without moving
+ranked = freespace_move(grasp_candidates=cands, batch_side="right", preview_only=True)
+best   = ranked.best_candidate
+
+# 3. APPROACH — collision-free move (RPY in degrees, world frame, display convention)
+freespace_move(right_target_pos=best.position, right_target_rpy=best.rpy)
+
+# 4. GRASP — compliant, force-limited close
+close_gripper("right", vel_limit=2.0, torque_limit=0.4)
+
+# 5. LIFT, then descend with small world-frame deltas
+freespace_move(right_target_pos=hover_pos, right_target_rpy=best.rpy)
+nudge("right", delta_pos=[0, 0, -0.01])
+
+# 6. VERIFY
+state = get_robot_state()
+```
+
+`freespace_move` requires the cuRobo service on port 8611. Until it is
+listening the call blocks silently and the arm never moves — see
+[`CUROBO_SETUP.md`](CUROBO_SETUP.md).
+
+---
+
+## Related
+
+- [`NEW_TASK.md`](NEW_TASK.md) — authoring and running a task
+- [`grasp_orientation.md`](grasp_orientation.md) — grasp frame conventions in depth
+- [`CAP_DESIGN.md`](CAP_DESIGN.md) — how the layers fit together
+- `README.md` — camera role binding, services, running a pick

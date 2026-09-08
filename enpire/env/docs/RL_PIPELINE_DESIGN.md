@@ -12,7 +12,7 @@ Use the CAP skill infrastructure (`enpire/`) as the RL actor environment. The `l
 | Document | Relevance |
 |----------|-----------|
 | [`docs/CAP_DESIGN.md`](CAP_DESIGN.md) | CAP server architecture, control loop, Portal RPC bindings |
-| [`docs/TABLE_BUSSING_SKILLS.md`](TABLE_BUSSING_SKILLS.md) | Table bussing skill tools used in RL scripts |
+| [`SKILL_LIBRARY.md`](SKILL_LIBRARY.md) | Table bussing skill tools used in RL scripts |
 
 ## Projects Involved
 

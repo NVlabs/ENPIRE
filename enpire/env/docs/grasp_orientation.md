@@ -5,7 +5,7 @@ execution on the YAM bimanual robot. Covers both the **AnyGrasp 6-DOF neural
 grasp planner** (primary) and the **heuristic RPY approach** (fallback).
 
 > **Cross-references:**
-> - [TABLE_BUSSING_SKILLS.md](TABLE_BUSSING_SKILLS.md) -- tool abstractions and AnyGrasp `object_input_mode` default
+> - [SKILL_LIBRARY.md](SKILL_LIBRARY.md) -- tool abstractions and AnyGrasp `object_input_mode` default
 > - [CAP_DESIGN.md](CAP_DESIGN.md) -- overall CAP agent architecture
 
 ---

@@ -4,7 +4,7 @@
 > **modern direct-mode** execution model (`run_script.py` / `run_agent.py`, no
 > CapServer). Companion docs hold the deeper material so this one stays focused:
 > physical-robot tools (GT-vs-real behavior, signatures) →
-> [`PHYSICAL_TOOLS_GUIDE.md`](PHYSICAL_TOOLS_GUIDE.md);
+> [`SKILL_LIBRARY.md`](SKILL_LIBRARY.md);
 > RL pipeline → [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md);
 > agent pipeline → `AGENT_PIPELINE_DESIGN.md`.
 
@@ -182,7 +182,7 @@ Conventions: motion is **blocking**; RPY arguments are in **degrees**;
 `detect_object` returns structured 6-DOF poses while `vlm_query` returns
 free-form text. For full per-tool signatures and the important **GT-vs-real**
 behavior markings (which tools use ground truth in sim vs. live perception on
-hardware), see [`PHYSICAL_TOOLS_GUIDE.md`](PHYSICAL_TOOLS_GUIDE.md).
+hardware), see [`SKILL_LIBRARY.md`](SKILL_LIBRARY.md).
 
 ### Model-server ports
 
@@ -326,7 +326,7 @@ For the deleted React UI, see the project git history.
 
 | Document | Topic |
 |----------|-------|
-| `docs/PHYSICAL_TOOLS_GUIDE.md` | Physical-robot tool catalog, signatures, GT-vs-real behavior |
+| `SKILL_LIBRARY.md` | Physical-robot tool catalog, signatures, GT-vs-real behavior |
 | `docs/AGENT_PIPELINE_DESIGN.md` | Agent pipeline (run_agent.py): steps, memory, log folder |
 | `docs/RL_PIPELINE.md` | Practitioner RL guide: launch sequence, autoresearch loop, score |
 | `docs/RL_PIPELINE_DESIGN.md` | RL internal design: obs/action spaces, HIL timing, safety zones |
@@ -336,4 +336,3 @@ For the deleted React UI, see the project git history.
 | `docs/VLM_QUERY.md` | VLM query tool: backends, media interface, configuration |
 | `docs/VISER_CUROBO_PLANNER.md` | Interactive cuRobo motion planning UI |
 | `docs/MULTI_CAMERA_CONFIG.md` | Multi-camera / per-station configuration |
-| `docs/SERIAL_FOOTSWITCH.md` | Serial footswitch for HIL takeover |

@@ -512,4 +512,4 @@ ChArUco board detection and camera calibration engine. Used for extrinsic calibr
 |-----|-------------|
 | [CAP_DESIGN.md](CAP_DESIGN.md) | CAP server control loop, Portal RPC API including camera image/depth/intrinsics endpoints |
 | [RL_PIPELINE_DESIGN.md](RL_PIPELINE_DESIGN.md) | RL observation building resizes camera images to `_RL_IMAGE_SIZE` |
-| [TABLE_BUSSING_SKILLS.md](TABLE_BUSSING_SKILLS.md) | Skill tools (VLM query, segmentation) use `CAMERA_NAMES` for camera selection |
+| [SKILL_LIBRARY.md](SKILL_LIBRARY.md) | Skill tools (VLM query, segmentation) use `CAMERA_NAMES` for camera selection |
