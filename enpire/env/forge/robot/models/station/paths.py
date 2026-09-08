@@ -247,6 +247,13 @@ def needs_optical_flip(camera: str) -> bool:
     convention, matching the top-camera calibration.
     """
     camera = str(camera).strip().lower()
+    role = {"left_wrist": "left", "right_wrist": "right"}.get(camera, camera)
+    convention_key = f"CAP_{role.upper()}_CAMERA_FRAME_CONVENTION"
+    convention = os.environ.get(convention_key, "").strip().lower()
+    if convention:
+        if convention not in {"opencv", "pinocchio"}:
+            raise ValueError(f"{convention_key} must be opencv or pinocchio")
+        return convention == "pinocchio"
     if camera == "top":
         # Both public station XML variants use calibrated OpenCV convention.
         return False

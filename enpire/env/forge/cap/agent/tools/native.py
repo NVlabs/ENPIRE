@@ -9,6 +9,7 @@ end-effectors, commanding grippers, and going home.
 
 from __future__ import annotations
 
+import os
 import time
 from typing import Any
 
@@ -253,6 +254,11 @@ def execute_bimanual_joint_keypoints_direct(
     start_interp_s: float = 0.0,
 ) -> dict[str, Any]:
     """Execute bimanual waypoints directly against RealYamEnv-style command APIs."""
+    # Keep commanding the checked endpoint before a subsequent gripper command
+    # snapshots the measured arm pose. Some stations need more than 0.2 seconds.
+    settle_s = float(os.environ.get("ENPIRE_TRAJECTORY_SETTLE_S", "0.2"))
+    if not np.isfinite(settle_s) or not 0.0 <= settle_s <= 5.0:
+        raise ValueError("ENPIRE_TRAJECTORY_SETTLE_S must be finite and between 0 and 5")
     if hasattr(env, "move_bimanual_joint_keypoints"):
         return env.move_bimanual_joint_keypoints(
             timestamps,
@@ -347,7 +353,7 @@ def execute_bimanual_joint_keypoints_direct(
             break
         time.sleep(dt)
 
-    settle_steps = max(1, int(round(0.2 / dt)))
+    settle_steps = max(1, int(round(settle_s / dt)))
     for _ in range(settle_steps):
         _command_joint7(env, "left", left7[-1])
         _command_joint7(env, "right", right7[-1])

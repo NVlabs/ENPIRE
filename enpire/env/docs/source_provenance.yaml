@@ -5,6 +5,17 @@ policy:
   credentials_allowed: false
 
 repositories:
+  cap_generic_motion_baseline:
+    path_hint: ENPIRE
+    branch: revision-0901
+    commit: 3a54dff956244a3e5940457d4527d5c69f75dec6
+    license_status: Apache-2.0
+    include:
+      - enpire/env/forge/cap/agent/tools/freespace_move.py
+      - enpire/env/forge/cap/agent/tools/native.py
+      - enpire/env/forge/cap/agent/tools/__init__.py
+    characterization: tests/enpire/cap/test_move_to_pose.py
+
   target:
     path_hint: ENPIRE
     branch: release
