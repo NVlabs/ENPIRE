@@ -6,7 +6,7 @@
 > physical-robot tools (GT-vs-real behavior, signatures) →
 > [`PHYSICAL_TOOLS_GUIDE.md`](PHYSICAL_TOOLS_GUIDE.md);
 > RL pipeline → [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md);
-> agent pipeline → [`AGENT_PIPELINE_DESIGN.md`](AGENT_PIPELINE_DESIGN.md).
+> agent pipeline → `AGENT_PIPELINE_DESIGN.md`.
 
 ## Vision
 
@@ -103,7 +103,7 @@ uv run python run_script.py \
 "The agent generates Python code, executes it via run_script.py subprocess,
 observes the result, and optionally re-generates in a loop." The agent never
 touches the robot directly; every code attempt is run as an isolated
-`run_script.py` subprocess. See [`AGENT_PIPELINE_DESIGN.md`](AGENT_PIPELINE_DESIGN.md)
+`run_script.py` subprocess. See `AGENT_PIPELINE_DESIGN.md`
 for pipeline steps, memory, and the log-folder layout.
 
 ```bash
@@ -202,8 +202,8 @@ For real-YAM bringup, `tmux/launch_realworld_localserver_realsense.sh` launches
 the model servers above (serve_sam3, serve_bundlesdf, serve_anygrasp, cuRobo,
 pyroki, NVIDIA/VLM provider) — plus the robot bringup
 (`launch.py --mode=evaluation --no-attach`). See
-[`VLM_QUERY.md`](VLM_QUERY.md), [`BUNDLESDF_OBJECT_DETECTION.md`](BUNDLESDF_OBJECT_DETECTION.md),
-and [`VISER_CUROBO_PLANNER.md`](VISER_CUROBO_PLANNER.md) for cuRobo server detail.
+`VLM_QUERY.md`, `BUNDLESDF_OBJECT_DETECTION.md`,
+and `VISER_CUROBO_PLANNER.md` for cuRobo server detail.
 
 ## Environments / Embodiments
 
@@ -217,7 +217,7 @@ them. Cameras and station profiles are configured per-station; see
 
 ## Real-World RL, Inference & Data Collection
 
-This section lists the **simplest canonical launcher** for each real-YAM workflow (GPU-insertion is the running example). For the RL design and the safety setup these depend on, see [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md) and [`SAFETY_ZONE_DESIGN.md`](SAFETY_ZONE_DESIGN.md).
+This section lists the **simplest canonical launcher** for each real-YAM workflow (GPU-insertion is the running example). For the RL design and the safety setup these depend on, see [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md) and `SAFETY_ZONE_DESIGN.md`.
 
 > **Where the scripts live.** `tmux/realworld_rl/*.sh` and `run_script.py` are in **forge** (this repo). The RL **learner/actor** (`scripts/learner_gear.sh`, `scripts/actor_gear.sh`, and the GCRL variants) live in a **separate `minimal_policy` repo** — they are *not* in forge. Run learner/actor from a `minimal_policy` checkout; run the env loop from forge.
 
@@ -252,7 +252,7 @@ Example scripts live in `cap/saved_scripts/examples/` and `cap/saved_scripts/ski
 
 ### Real-world RL (PLD)
 
-See [`RL_PIPELINE.md`](RL_PIPELINE.md) for the full practitioner guide — launch sequence, autoresearch control loop, and score metric.
+See [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md) for the full practitioner guide — launch sequence, autoresearch control loop, and score metric.
 
 Quick reference (three separate terminals):
 
@@ -301,7 +301,7 @@ the policy-level guards:
   `math`, `json`, `cap`, …); unlisted modules are blocked with a clear error.
 
 Task-aware EE **safety zones** for RL exploration are described in
-[`SAFETY_ZONE_DESIGN.md`](SAFETY_ZONE_DESIGN.md). (Interactive e-stop / teleop
+`SAFETY_ZONE_DESIGN.md`. (Interactive e-stop / teleop
 takeover were features of the legacy `cap_agent` UI — see below.)
 
 ## Legacy Bridge Mode

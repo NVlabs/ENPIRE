@@ -12,11 +12,7 @@ Use the CAP skill infrastructure (`enpire/`) as the RL actor environment. The `l
 | Document | Relevance |
 |----------|-----------|
 | [`docs/CAP_DESIGN.md`](CAP_DESIGN.md) | CAP server architecture, control loop, Portal RPC bindings |
-| [`docs/SAFETY_ZONE_DESIGN.md`](SAFETY_ZONE_DESIGN.md) | Task-aware EE safety zones for RL exploration |
-| [`docs/CAP_UI_DESIGN.md`](CAP_UI_DESIGN.md) | UI LearnSkillPanel for live RL status |
-| [`docs/CAP_SYSTEM_DASHBOARD.md`](CAP_SYSTEM_DASHBOARD.md) | System bringup dashboard |
 | [`docs/TABLE_BUSSING_SKILLS.md`](TABLE_BUSSING_SKILLS.md) | Table bussing skill tools used in RL scripts |
-| [`docs/BUNDLESDF_OBJECT_DETECTION.md`](BUNDLESDF_OBJECT_DETECTION.md) | Object detection for scene setup in RL scripts |
 
 ## Projects Involved
 
@@ -420,7 +416,7 @@ Loaded by `cap/utils/prompt_loader.py:25`.
 
 ### 7. Safety Zone Enforcement
 
-See [`docs/SAFETY_ZONE_DESIGN.md`](SAFETY_ZONE_DESIGN.md) for full details.
+See `docs/SAFETY_ZONE_DESIGN.md` for full details.
 
 Safety zones restrict end-effector exploration during RL training. They are set by the LLM agent before launching `learn_skill()` and are enforced every step inside the loop.
 

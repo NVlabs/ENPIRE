@@ -1,6 +1,6 @@
 # Skill Library — Overview
 
-> **Cross-references**: [SKILL_LIBRARY_YAM](SKILL_LIBRARY_YAM.md) | [CAP_DESIGN](CAP_DESIGN.md) | [AGENT_PIPELINE_DESIGN](AGENT_PIPELINE_DESIGN.md)
+> **Cross-references**: [SKILL_LIBRARY_YAM](SKILL_LIBRARY_YAM.md) | [CAP_DESIGN](CAP_DESIGN.md) | AGENT_PIPELINE_DESIGN
 
 ---
 

@@ -7,9 +7,6 @@ CAP agent tool abstractions for ultra long-horizon table bussing tasks.
 > **Cross-references**:
 > - [CAP_DESIGN.md](CAP_DESIGN.md) -- CAP system architecture, Portal RPC layer, agent orchestrator
 > - [RL_PIPELINE_DESIGN.md](RL_PIPELINE_DESIGN.md) -- `execute_skill`, `learn_skill`, reward setup, policy output tools
-> - [SAFETY_ZONE_DESIGN.md](SAFETY_ZONE_DESIGN.md) -- `set_safety_zone` / `clear_safety_zone` for RL exploration
-> - [BUNDLESDF_OBJECT_DETECTION.md](BUNDLESDF_OBJECT_DETECTION.md) -- BundleSDF multi-object 6-DOF tracking internals
-> - [VLM_QUERY.md](VLM_QUERY.md) -- Multi-backend VLM architecture (smol_vlm, gemini, qwen, gpt)
 > - [grasp_orientation.md](grasp_orientation.md) -- Grasp orientation and AnyGrasp debug UI
 > - [MULTI_CAMERA_CONFIG.md](MULTI_CAMERA_CONFIG.md) -- Camera naming (`top`, `left`, `right`) and extrinsics
 
@@ -516,7 +513,7 @@ clear_safety_zone()     # clear both arms
 ```
 
 Zones persist across `learn_skill` episodes until explicitly cleared.
-See [SAFETY_ZONE_DESIGN.md](SAFETY_ZONE_DESIGN.md) for the attenuation and clamping algorithm.
+See SAFETY_ZONE_DESIGN.md for the attenuation and clamping algorithm.
 
 
 ### 10. Policy Execution (`execute_skill`, `learn_skill`, policy output tools)

@@ -221,42 +221,29 @@ const DOCS = [
   { file: "NEW_TASK.md",              title: "Authoring a New Task",           desc: "How to add a task capsule and wire it into the CaP runtime",            cat: "Getting Started" },
 
   { file: "CAP_DESIGN.md",            title: "CAP System Architecture",        desc: "Code-as-Policy agent architecture and layer stack",                     cat: "CAP Framework" },
-  { file: "CAP_SYSTEM_DASHBOARD.md",  title: "System Dashboard",               desc: "Bringup system dashboard for service status and health",                cat: "CAP Framework" },
-  { file: "SAFETY_ZONE_DESIGN.md",    title: "Safety Zone Design",             desc: "Task-aware end-effector safety zones for RL exploration",               cat: "CAP Framework" },
-  { file: "VISER_IK_TELEOP_DESIGN.md",title: "Viser IK Teleop",                desc: "Viser-based IK teleoperation design and workflow",                      cat: "CAP Framework" },
-  { file: "AGENT_PIPELINE_DESIGN.md", title: "Agent Pipeline Design",          desc: "Agent pipeline: steps, context, visual diff, execution memory, logging", cat: "CAP Framework" },
-  { file: "VISER_CUROBO_PLANNER.md",  title: "Viser cuRobo Planner",           desc: "Interactive Viser 3D UI for cuRobo motion planning, AnyGrasp, gizmo",    cat: "CAP Framework" },
 
   { file: "RL_PIPELINE_DESIGN.md",    title: "RL Pipeline Design",             desc: "RL training pipeline: serve_rl_policy, learn_skill, diagnostics",       cat: "RL & Training" },
   { file: "REWARD_MODULE.md",         title: "Reward Module",                  desc: "Reward specification and scoring for real-world RL runs",               cat: "RL & Training" },
 
+  { file: "GENERIC_CAP_MOTION.md",  title: "Generic CaP Motion",           desc: "move_to_pose / set_gripper skill contract, frames, and pose verification", cat: "Skills & Vision" },
   { file: "SKILL_LIBRARY.md",         title: "Skill Library — Overview",       desc: "Full tool catalog, data types, per-env comparison",                     cat: "Skills & Vision" },
   { file: "SKILL_LIBRARY_YAM.md",     title: "Skill Library — YAM",            desc: "YAM bimanual tools, table bussing, RL workflow, hardware notes",        cat: "Skills & Vision" },
   { file: "PHYSICAL_TOOLS_GUIDE.md",  title: "Physical Tools Guide",           desc: "Guide to the physical robot tool surface and safety classes",           cat: "Skills & Vision" },
   { file: "TABLE_BUSSING_SKILLS.md",  title: "Table Bussing Skills",           desc: "Table bussing skill tools: tracking, freespace move, nudge, gripper",   cat: "Skills & Vision" },
-  { file: "BUNDLESDF_OBJECT_DETECTION.md", title: "BundleSDF Object Detection",desc: "BundleSDF multi-object 6-DOF pose tracking system",                     cat: "Skills & Vision" },
-  { file: "VLM_QUERY.md",             title: "VLM Query Pipeline",             desc: "Vision-language model query pipeline for scene understanding",          cat: "Skills & Vision" },
   { file: "grasp_orientation.md",     title: "Grasp Orientation",              desc: "Grasp orientation strategies and approach vectors",                     cat: "Skills & Vision" },
-  { file: "VOICE_INPUT.md",           title: "Voice Input",                    desc: "Voice input integration for natural language commands",                 cat: "Skills & Vision" },
 
   { file: "CALIBRATION_BOARD.md",     title: "ChArUco Calibration Board",      desc: "Generate, print, and mount the board; per-step mounting and failures",  cat: "Hardware & Setup" },
   { file: "CUROBO_SETUP.md",          title: "cuRobo Setup",                   desc: "Submodule init, extras, driver requirements, Warp JIT, port 8611",      cat: "Hardware & Setup" },
   { file: "ANYGRASP_SETUP.md",        title: "AnyGrasp Setup",                 desc: "Per-machine licence application, SDK build, env vars, 2D alternative",  cat: "Hardware & Setup" },
   { file: "MULTI_CAMERA_CONFIG.md",   title: "Multi-Camera Config",            desc: "Multi-source camera configuration (per-station RealSense/ZED)",         cat: "Hardware & Setup" },
   { file: "SERIAL_FOOTSWITCH.md",     title: "Serial Footswitch",              desc: "Serial 3-button footswitch (Waveshare RP2040-Zero) integration",       cat: "Hardware & Setup" },
-  { file: "MACMINI_SETUP.md",         title: "Mac Mini Setup",                 desc: "Mac Mini workstation setup and configuration guide",                    cat: "Hardware & Setup" },
 
-  { file: "remote_serving.md",        title: "Remote Serving",                 desc: "Remote GPU skill server deployment and configuration",                 cat: "Data & Tools" },
 ];
 
-const ASSETS = [
-  { file: "cap_architecture.excalidraw", title: "CAP Architecture Diagram",   desc: "Excalidraw diagram of CAP architecture",          cat: "Diagrams" },
-  { file: "code_editor_to_arm_server.svg",title: "Code Editor to Arm Server",  desc: "SVG: code editor to arm server flow",              cat: "Diagrams" },
-  { file: "chat_to_code_editor.svg",      title: "Chat to Code Editor",        desc: "SVG: chat to code editor flow",                    cat: "Diagrams" },
-];
+const ASSETS = [];
 
 const ALL = [...DOCS, ...ASSETS];
-const CAT_ORDER = ["Getting Started", "CAP Framework", "RL & Training", "Skills & Vision", "Hardware & Setup", "Data & Tools", "Diagrams"];
+const CAT_ORDER = ["Getting Started", "CAP Framework", "RL & Training", "Skills & Vision", "Hardware & Setup", "Data & Tools"];
 
 // ═══════════════════════════════════════════════════════
 // Sidebar nav

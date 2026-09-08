@@ -6,9 +6,7 @@ grasp planner** (primary) and the **heuristic RPY approach** (fallback).
 
 > **Cross-references:**
 > - [TABLE_BUSSING_SKILLS.md](TABLE_BUSSING_SKILLS.md) -- tool abstractions and AnyGrasp `object_input_mode` default
-> - [BUNDLESDF_OBJECT_DETECTION.md](BUNDLESDF_OBJECT_DETECTION.md) -- 6-DOF pose tracking used by `detect_object()`
 > - [CAP_DESIGN.md](CAP_DESIGN.md) -- overall CAP agent architecture
-> - [SAFETY_ZONE_DESIGN.md](SAFETY_ZONE_DESIGN.md) -- task-aware EE safety zones for RL exploration
 
 ---
 

@@ -95,7 +95,14 @@ sync_to_*.sh
 
 # wandb
 /wandb/
-/license_jl/
+
+# Externally supplied AnyGrasp assets: the SDK checkout, its compiled
+# extensions, the detection/tracking checkpoints, and the per-machine licence
+# archive. See enpire/env/docs/ANYGRASP_SETUP.md.
+third_party/anygrasp_sdk/
+checkpoint_detection.tar
+checkpoint_tracking.tar
+license*.zip
 
 # figure outputs
 figures/out/

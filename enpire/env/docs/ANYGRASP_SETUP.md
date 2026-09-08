@@ -152,5 +152,4 @@ variables (`TABLE_SURFACE_Z_M`, `ENPIRE_2D_GRASP_Z_OFFSET_M`).
 - [`INSTALL.md`](INSTALL.md) — install matrix
 - [`CUROBO_SETUP.md`](CUROBO_SETUP.md) — the other externally-supplied dependency
 - [`grasp_orientation.md`](grasp_orientation.md) — grasp frame conventions
-- [`remote_serving.md`](remote_serving.md) — running AnyGrasp on a separate GPU host
 - `THIRD_PARTY_LICENSES.md` — licensing status of bundled and external components

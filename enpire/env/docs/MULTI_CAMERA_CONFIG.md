@@ -512,9 +512,4 @@ ChArUco board detection and camera calibration engine. Used for extrinsic calibr
 |-----|-------------|
 | [CAP_DESIGN.md](CAP_DESIGN.md) | CAP server control loop, Portal RPC API including camera image/depth/intrinsics endpoints |
 | [RL_PIPELINE_DESIGN.md](RL_PIPELINE_DESIGN.md) | RL observation building resizes camera images to `_RL_IMAGE_SIZE` |
-| [BUNDLESDF_OBJECT_DETECTION.md](BUNDLESDF_OBJECT_DETECTION.md) | BundleSDF tracking consumes camera RGB+depth from CAP server |
 | [TABLE_BUSSING_SKILLS.md](TABLE_BUSSING_SKILLS.md) | Skill tools (VLM query, segmentation) use `CAMERA_NAMES` for camera selection |
-| [DATA_STUDIO.md](DATA_STUDIO.md) | Data visualization uses camera image keys from recorded episodes |
-| [SAFETY_ZONE_DESIGN.md](SAFETY_ZONE_DESIGN.md) | Safety zones may use camera extrinsics for workspace bounds |
-| [CAP_UI_DESIGN.md](CAP_UI_DESIGN.md) | UI displays camera feeds via WebSocket from CAP agent |
-| [VLM_QUERY.md](VLM_QUERY.md) | VLM query tool camera selection and media prefixes |

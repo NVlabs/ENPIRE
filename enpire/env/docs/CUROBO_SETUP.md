@@ -178,4 +178,3 @@ changing the Warp or cuRobo version.
 - [`INSTALL.md`](INSTALL.md) — full install matrix
 - [`DEPENDENCIES.md`](DEPENDENCIES.md) — dependency and licensing overview
 - [`ANYGRASP_SETUP.md`](ANYGRASP_SETUP.md) — the other externally-supplied dependency
-- [`remote_serving.md`](remote_serving.md) — running the planner on a separate GPU host

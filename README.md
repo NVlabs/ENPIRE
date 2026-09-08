@@ -23,9 +23,9 @@ The loop is: **reset → execute → verify → record → refine.**
   and calibration infrastructure.
 - **One-command calibration** — `enpire station calibrate-all` launches arm servers,
   runs all three ChArUco/hand-eye sequences in tmux, and writes the calibrated XML.
-- **Agent-readable** — `.codex/README.md` is a self-contained onboarding file;
-  an agent given only the repo URL can install, calibrate, and run auto-research
-  end-to-end.
+- **Agent-readable** — `AGENTS.md` and `CLAUDE.md` give a coding agent the
+  install path, safety rules, and repository map; the setup guides under
+  `enpire/env/docs/` cover the steps that cannot be automated.
 
 ### Demonstrated tasks
 
@@ -342,8 +342,7 @@ ENPIRE/
 │       ├── pld/              JAX PLD actor/learner (isolated runtime)
 │       └── autoresearch_instruction.md
 ├── tmux/realworld_rl/        supervisors and RL launchers
-├── third_party/              vendored: cuRobo, PyRoki, i2rt
-├── .codex/README.md          agent onboarding (full setup + auto-research)
+├── third_party/              vendored: cuRobo, PyRoki, i2rt, overlay_viz, ui
 └── AGENTS.md                 coding-agent implementation rules
 ```
 
