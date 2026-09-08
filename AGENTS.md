@@ -29,22 +29,19 @@ uv run pytest -q tests/enpire
 uv run ruff check enpire tests/enpire
 ```
 
-Optional dependencies are explicit:
+Optional dependencies are explicit. `uv sync` **replaces** the environment
+rather than adding to it, so pass every extra you need in one command — running
+the lines below in sequence would leave you with only the last one:
 
-```bash
-uv sync --extra vision
-uv sync --extra vision-local
-uv sync --extra grasping-local
-uv sync --extra planning
-uv sync --extra planning-local
-uv sync --extra control-yam
-uv sync --extra camera-realsense
-uv sync --extra calibration
-uv sync --extra vlm
-uv sync --extra cap
-uv sync --extra real-rl
-uv sync --extra pld
 ```
+vision  vision-local  grasping-local  planning  planning-local
+control-yam  control-i2rt  camera-realsense  camera-zed  calibration
+vlm  cap  real-rl  pld
+```
+
+`control-i2rt` is separate from `control-yam` and is required for leader-arm
+and teaching-handle modes. See `enpire/env/docs/INSTALL.md` for the full
+real-robot command.
 
 The JAX PLD learner has an isolated project under
 `enpire/policy/pld/runtime`; do not merge its lock into the root environment.

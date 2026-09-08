@@ -58,8 +58,8 @@ uv sync --extra dev
 # Full real-robot stack
 uv sync --extra dev --extra cap --extra vision --extra vision-local \
         --extra grasping-local --extra planning --extra planning-local \
-        --extra control-yam --extra camera-realsense --extra calibration \
-        --extra real-rl
+        --extra control-yam --extra control-i2rt --extra camera-realsense \
+        --extra calibration --extra real-rl
 
 # JAX PLD learner/actor (isolated environment)
 uv sync --project enpire/policy/pld/runtime --extra dev
@@ -118,14 +118,21 @@ stream darkens:
 uv run python -c "import pyrealsense2 as rs; [print(d.get_info(rs.camera_info.serial_number)) for d in rs.context().query_devices()]"
 ```
 
-Bind them with any one of these — `resolve_realsense_serial` tries them in
-order, so an earlier one wins:
+Bind them with any one of these. `resolve_realsense_serial` tries them in this
+order and the first match wins — note that the per-user alias file is checked
+**last**, so a udev symlink or a system alias map will override it:
 
 | | How | Notes |
 |---|---|---|
-| 1 | `CAP_<ROLE>_REALSENSE_SERIAL=<SERIAL>` | one-off, highest priority |
-| 2 | `~/.local/share/enpire/camera_aliases.json`, `{"<SERIAL>": "video_top", ...}` | **recommended**, no root, stays out of Git |
+| 1 | `CAP_<ROLE>_REALSENSE_SERIAL=<SERIAL>` | one-off override, highest priority |
+| 2 | `/usr/local/lib/forge-rl-station/forge_rl_camera_aliases.json` | system-wide alias map, if your station has one |
 | 3 | udev rule → `/dev/video_<role>` | persistent, needs admin |
+| 4 | `~/.local/share/enpire/camera_aliases.json`, `{"<SERIAL>": "video_top", ...}` | no root, stays out of Git — but **lowest** priority |
+
+Both alias maps are keyed by librealsense serial and only match cameras that
+are currently connected. If a role resolves to a serial you did not expect,
+check for a stale entry in the system map or a leftover `/dev/video_<role>`
+symlink before editing the user map.
 
 ```
 # udev: ATTRS{serial} is the USB serial, NOT the librealsense one

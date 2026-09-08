@@ -52,10 +52,16 @@ uv sync \
   --extra planning \
   --extra planning-local \
   --extra control-yam \
+  --extra control-i2rt \
   --extra camera-realsense \
   --extra calibration \
   --extra real-rl
 ```
+
+`control-i2rt` is a separate extra and is **not** pulled in by `control-yam`.
+Omitting it leaves leader-arm and teaching-handle modes to fail at runtime with
+`Leader/teaching-handle mode needs the optional i2rt package`, which is what the
+`--use-spacemouse` data-collection workflows depend on.
 
 A working NVIDIA driver must already be present. A system CUDA toolkit is *not*
 required for the standard path: `nvidia-curobo[cu12]` brings `cuda-core` and
