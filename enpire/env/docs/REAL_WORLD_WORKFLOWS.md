@@ -36,8 +36,8 @@ Calibration needs a printed ChArUco board and cannot be automated. See
 correct scale, and mount it — the board goes on the gripper for the top camera
 but stays fixed in the world for the wrist cameras.
 
-Mount the ChArUco board rigidly to the instructed gripper, set the external YAM
-model root, and run the integrated calibration:
+Follow the on-screen prompt for board placement, set the external YAM model
+root, and run the integrated calibration:
 
 ```bash
 export ENPIRE_YAM_MODEL_ROOT=/path/to/yam-model-assets
@@ -71,10 +71,10 @@ uv run enpire services start --profile perception
 uv run enpire services start --profile cap-real
 
 # YAM servers (motion-capable)
-uv run enpire services start --profile robot --confirm-motion
+uv run enpire services start --profile robot --station my-yam --confirm-motion
 
 # Everything above (motion-capable)
-uv run enpire services start --profile all --confirm-motion
+uv run enpire services start --profile all --station my-yam --confirm-motion
 
 uv run enpire services status
 tmux attach -t enpire
@@ -138,8 +138,9 @@ uv run enpire rl learner --task pin_insertion
 uv run enpire rl actor --task pin_insertion
 
 # terminal 3: robot-side bridge/data collection
-bash tmux/realworld_rl/rl_gear.sh --task pin_insertion \
-  --station my-yam --use-spacemouse
+#   NOTE: the launcher for this (rl_gear.sh) is NOT part of this release.
+#   The learner and actor above are complete; you must supply the
+#   robot-side bridge that speaks the policy-server contract on :8965.
 ```
 
 Hydra overrides pass through with repeated `--override`, for example:
@@ -164,35 +165,23 @@ export RL_DATA_PATH=/path/outside/repo/rl-data
 export ENPIRE_YAM_STATION=my-yam
 export ENPIRE_RL_INITIAL_POSITIONS=/path/outside/repo/pusht_initial_positions.yaml
 export PUSHT_GOAL_IMAGE=/path/outside/repo/pusht_goal_top.png
-bash tmux/realworld_rl/rl_pusht.sh
+bash enpire/env/forge/tmux/realworld_rl/rl_pusht.sh
 ```
 
 The PushT bridge speaks the same policy-server contract at `localhost:8965`.
 Unlike pin/GPU/zip-tie, a PushT-specific PLD learner preset is not claimed by
 this release; connect a compatible actor or add a characterized policy preset.
 
-## 7. GPU insertion and full reset loop
+## 7. GPU insertion and zip-tie
 
-Start the PLD learner and actor with `--task gpu_insertion`, then run the
-robot-side bridge. Set socket selection and whether the CaP handover prepares
-the GPU before learning:
+`--task gpu_insertion` and `--task ziptie` are accepted by `enpire rl
+learner` / `enpire rl actor`, and their task configs ship under
+`enpire/env/forge/tmux/realworld_rl/tasks_config/`.
 
-```bash
-export RL_DATA_PATH=/path/outside/repo/rl-data
-export ENPIRE_YAM_STATION=my-yam
-GPU_RL_PREPARE=1 GPU_TARGET_SOCKET_NUMBER=3 \
-  bash tmux/realworld_rl/rl_gear.sh \
-  --task gpu_insertion --station my-yam --use-spacemouse \
-  --episode-timeout-s 12.0
-```
-
-The two-slot insertion/press/unplug/reset loop is:
-
-```bash
-GPU_RL_PREPARE=1 GPU_TARGET_SOCKET_NUMBER=1 \
-  bash tmux/realworld_rl/gpu_insertion_dual_full_cycle.sh \
-  --station my-yam --use-spacemouse
-```
+The robot-side launchers for these tasks (`rl_gear.sh`,
+`gpu_insertion_dual_full_cycle.sh`) are **not** part of this release, along
+with the GPU/zip-tie manipulation scripts they drive. Treat the learner/actor
+side as usable and the robot side as something you provide.
 
 ## 8. Auto-research reset/evaluate loop
 

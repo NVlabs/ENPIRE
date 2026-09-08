@@ -82,7 +82,7 @@ Either way, the **tool API is identical** — only the env behind it changes.
 
 1. Resolves a Hydra `AgentConfig` (`experiments/config.yaml` + overrides).
 2. Builds env + tool namespace in-process:
-   `adapter.create_runtime(cfg, runtime_role="script")` (run_script.py:619).
+   `adapter.create_runtime(cfg, runtime_role="script")` (run_script.py).
 3. Optionally launches the read-only debug UI (`debug_ui.enabled=true`).
 4. Executes the script file with the tool namespace injected.
 

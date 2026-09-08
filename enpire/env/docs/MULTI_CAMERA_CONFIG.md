@@ -119,7 +119,7 @@ The default camera roles when no profile is loaded are `top`, `left_fixed`,
 
 The **camera factory** is the single entry point for creating camera objects. It resolves backend, resolution, FPS, and device serial through a layered environment variable system, then instantiates the correct driver.
 
-### Backend resolution (`robot/camera_factory.py:52-65`)
+### Backend resolution (`robot/camera_factory.py`)
 
 ```python
 def get_camera_backend(camera_name: str, default: str | None = None) -> str:
@@ -128,9 +128,9 @@ def get_camera_backend(camera_name: str, default: str | None = None) -> str:
 Priority:
 1. `CAP_{NAME}_CAMERA_BACKEND` env var (e.g. `CAP_TOP_CAMERA_BACKEND=zed`).
 2. `CAP_CAMERA_BACKENDS` env var, comma-separated map (e.g. `top=zed,left=realsense`).
-3. Built-in default: `"zed"` for `"top"`, `"realsense"` for everything else (`robot/camera_factory.py:48-49`).
+3. Built-in default: `"zed"` for `"top"`, `"realsense"` for everything else (`robot/camera_factory.py`).
 
-Accepted backend aliases (`robot/camera_factory.py:7-14`):
+Accepted backend aliases (`robot/camera_factory.py`):
 | Alias | Normalized |
 |-------|-----------|
 | `realsense`, `rs`, `d405` | `"realsense"` |
@@ -145,15 +145,15 @@ Accepted backend aliases (`robot/camera_factory.py:7-14`):
 | `CAP_{NAME}_CAMERA_FPS` | per-camera | caller-provided |
 | `CAP_CAMERA_FPS` | global | caller-provided |
 
-Resolution format: `"640x480"` or `"640,480"` (`robot/camera_factory.py:68-78`).
+Resolution format: `"640x480"` or `"640,480"` (`robot/camera_factory.py`).
 
 ### Serial resolution
 
-**RealSense** (`robot/camera_factory.py:99-121`):
+**RealSense** (`robot/camera_factory.py`):
 1. `CAP_{NAME}_REALSENSE_SERIAL` or `CAP_REALSENSE_SERIAL` env var.
 2. Resolve from udev symlink `/dev/video_{name}` by matching the USB device physical port in `pyrealsense2`.
 
-**ZED** (`robot/camera_factory.py:124-142`):
+**ZED** (`robot/camera_factory.py`):
 1. `CAP_{NAME}_ZED_SERIAL` or `CAP_ZED_SERIAL` env var.
 2. If exactly one ZED is connected, uses that serial.
 3. Otherwise, raises with list of connected serials.
@@ -167,7 +167,7 @@ Resolution format: `"640x480"` or `"640,480"` (`robot/camera_factory.py:68-78`).
 | `CAP_{NAME}_ZED_DEPTH_MODE` | `"NEURAL"` | `NEURAL`, `ULTRA`, `PERFORMANCE`, etc. |
 | `CAP_ZED_DEPTH_MODE` | `"NEURAL"` | Global fallback |
 
-### create_camera() (`robot/camera_factory.py:165-201`)
+### create_camera() (`robot/camera_factory.py`)
 
 ```python
 def create_camera(
@@ -187,7 +187,7 @@ Dispatches on resolved backend:
 
 ## Camera drivers
 
-### RealSenseCamera (`robot/realsense.py:34-161`)
+### RealSenseCamera (`robot/realsense.py`)
 
 - Wraps `pyrealsense2` pipeline.
 - Configured by serial number, resolution, FPS, auto-exposure, brightness.
@@ -195,11 +195,11 @@ Dispatches on resolved backend:
 - `get_intrinsics()` returns `dict` with keys `fx, fy, cx, cy, width, height`.
 - `stop()` closes the pipeline.
 
-### ZedCamera (`robot/zed.py:42-189`)
+### ZedCamera (`robot/zed.py`)
 
 - Wraps `pyzed.sl.Camera`.
-- Performs center-crop and resize from native resolution to requested resolution (`robot/zed.py:134-148`).
-- Intrinsics are transformed to match the cropped+resized output (`robot/zed.py:105-132`).
+- Performs center-crop and resize from native resolution to requested resolution (`robot/zed.py`).
+- Intrinsics are transformed to match the cropped+resized output (`robot/zed.py`).
 - `read()` returns `CameraData` matching the same interface as `RealSenseCamera`.
 - Depth: `MEASURE.DEPTH` in metres, NaN replaced with 0.0, resized via nearest-neighbor.
 - `get_intrinsics()` returns `dict` with keys `fx, fy, cx, cy, width, height, native_width, native_height`.
@@ -207,7 +207,7 @@ Dispatches on resolved backend:
 
 ### CameraData (shared return type)
 
-Both `robot/realsense.py:24-30` and `robot/zed.py:34-38` define their own `CameraData` dataclass with the same fields:
+Both `robot/realsense.py` and `robot/zed.py` define their own `CameraData` dataclass with the same fields:
 
 ```python
 @dataclass
@@ -224,12 +224,12 @@ class CameraData:
 
 All backends produce **RGB uint8 HxWx3** frames (default 480x640x3) via `read().images["rgb"]`. The observation key format remains `{name}_camera_image` (e.g. `top_camera_image`). Downstream consumers (data collection, RL, CAP tools) are unaffected.
 
-For the CAP server `_CameraClient` (`cap/server/cap_server.py:395-406`), the public interface is:
+For the CAP server `_CameraClient` (`cap/server/cap_server.py`), the public interface is:
 - `get_rgb() -> np.ndarray` -- RGB uint8 copy
 - `get_depth() -> np.ndarray | None` -- float32 metres copy
 - `get_intrinsics() -> list[float] | None` -- `[fx, fy, cx, cy]` (converted from dict)
 
-The CAP server exposes these over Portal RPC (`cap/server/cap_server.py:2256-2271`):
+The CAP server exposes these over Portal RPC (`cap/server/cap_server.py`):
 - `get_camera_image(camera) -> ndarray`
 - `get_camera_depth(camera) -> ndarray`
 - `get_camera_intrinsics(camera) -> list[float]`
@@ -240,50 +240,50 @@ The CAP server exposes these over Portal RPC (`cap/server/cap_server.py:2256-227
 
 ### YamRealEnv (`robot/yam/yam_real_env.py`)
 
-`NonBlockingCamera` (`robot/yam/yam_real_env.py:40-98`) wraps `camera_factory.create_camera()` in a background thread. Each camera runs a worker that continuously calls `camera.read()` and caches the latest RGB frame.
+`NonBlockingCamera` (`robot/yam/yam_real_env.py`) wraps `camera_factory.create_camera()` in a background thread. Each camera runs a worker that continuously calls `camera.read()` and caches the latest RGB frame.
 
-The env creates cameras for `["top", "left", "right"]` when `enable_cameras=True` (`robot/yam/yam_real_env.py:155-162`). Camera names are currently hard-coded in this file (not yet driven by `station_profiles`).
+The env creates cameras for `["top", "left", "right"]` when `enable_cameras=True` (`robot/yam/yam_real_env.py`). Camera names are currently hard-coded in this file (not yet driven by `station_profiles`).
 
 Constructor also accepts:
-- `enabled_camera_names: tuple[str, ...] | None` -- defaults to `("top", "left", "right")` (`robot/yam/yam_real_env.py:114,123-125`).
-- `top_camera_source: "direct" | "rpc"` -- can route top camera through CAP server RPC instead of direct hardware access (`robot/yam/yam_real_env.py:115,127-131`).
+- `enabled_camera_names: tuple[str, ...] | None` -- defaults to `("top", "left", "right")` (`robot/yam/yam_real_env.py,123-125`).
+- `top_camera_source: "direct" | "rpc"` -- can route top camera through CAP server RPC instead of direct hardware access (`robot/yam/yam_real_env.py,127-131`).
 - `enable_depth_cameras: bool` and `depth_camera_names: tuple[str, ...]` for selective depth.
 
 ### _BaseYamEnv (`robot/yam/_base_yam_env.py`)
 
-- `camera_names` constructor parameter (`robot/yam/_base_yam_env.py:29`) defines which camera slots appear in the obs space and MuJoCo scene.
+- `camera_names` constructor parameter (`robot/yam/_base_yam_env.py`) defines which camera slots appear in the obs space and MuJoCo scene.
 - Default is `("top", "left", "right")`.
-- `CAMERA_HEIGHT = 480`, `CAMERA_WIDTH = 640` (`robot/yam/_base_yam_env.py:18`).
-- Observation space includes `{name}_camera_image: Box(0, 255, (480, 640, 3), uint8)` for each name (`robot/yam/_base_yam_env.py:131-137`).
-- MuJoCo camera resolution is set to match (`robot/yam/_base_yam_env.py:53-56`).
+- `CAMERA_HEIGHT = 480`, `CAMERA_WIDTH = 640` (`robot/yam/_base_yam_env.py`).
+- Observation space includes `{name}_camera_image: Box(0, 255, (480, 640, 3), uint8)` for each name (`robot/yam/_base_yam_env.py`).
+- MuJoCo camera resolution is set to match (`robot/yam/_base_yam_env.py`).
 
 ### YamSimEnv (`robot/yam/yam_sim_env.py`)
 
-- Uses `self.camera_names` from base class (`robot/yam/yam_sim_env.py:57`).
+- Uses `self.camera_names` from base class (`robot/yam/yam_sim_env.py`).
 - Camera IDs mapped by matching MuJoCo camera names containing `"top"`, `"left"`, `"right"`.
 
 ### CAP server (`cap/server/cap_server.py`)
 
-- **Real mode** (`cap/server/cap_server.py:724-733`): creates `_CameraClient(name)` for each name in `CAMERA_NAMES`. Failures are caught and logged (camera becomes unavailable, not fatal).
-- **Sim mode** (`cap/server/cap_server.py:697-707`): creates `SimCameraClient(backend, name)` for each name in `CAMERA_NAMES`.
+- **Real mode** (`cap/server/cap_server.py`): creates `_CameraClient(name)` for each name in `CAMERA_NAMES`. Failures are caught and logged (camera becomes unavailable, not fatal).
+- **Sim mode** (`cap/server/cap_server.py`): creates `SimCameraClient(backend, name)` for each name in `CAMERA_NAMES`.
 
-`_CameraClient.__init__()` (`cap/server/cap_server.py:188-219`):
+`_CameraClient.__init__()` (`cap/server/cap_server.py`):
 1. Calls `get_camera_backend(camera_name)` to determine type.
 2. Calls `create_camera(camera_name, ...)` from `robot/camera_factory`.
 3. Starts a background `_worker` thread.
 4. ZED backend defaults to 30 FPS; RealSense defaults to 60 FPS.
 
-The class also retains legacy `_init_realsense()` and `_init_zed()` methods (`cap/server/cap_server.py:223-391`) that are no longer called from `__init__` but exist for reference/fallback.
+The class also retains legacy `_init_realsense()` and `_init_zed()` methods (`cap/server/cap_server.py`) that are no longer called from `__init__` but exist for reference/fallback.
 
-### RL observation building (`cap/server/cap_server.py:3615-3627`)
+### RL observation building (`cap/server/cap_server.py`)
 
 The `_build_rl_obs()` method resizes camera images to a square `_RL_IMAGE_SIZE` for each name in `CAMERA_NAMES`.
 
 ### VLM and segmentation tools
 
-- `cap/agent/tools/vlm_query.py:32,46` -- imports `CAMERA_NAMES`, validates camera name against the set, supports `"camera:top"` media prefix.
-- `cap/agent/tools/segmentation.py:21` -- imports `CAMERA_NAMES`, validates camera name.
-- `cap/agent/executor.py:290-318` -- `_ask_vlm()` compatibility wrapper normalizes camera name strings.
+- `cap/agent/tools/vlm_query.py,46` -- imports `CAMERA_NAMES`, validates camera name against the set, supports `"camera:top"` media prefix.
+- `cap/agent/tools/segmentation.py` -- imports `CAMERA_NAMES`, validates camera name.
+- `cap/agent/executor.py` -- `_ask_vlm()` compatibility wrapper normalizes camera name strings.
 
 ---
 
@@ -378,10 +378,10 @@ ChArUco board detection and camera calibration engine. Used for extrinsic calibr
 
 ## Adding a new camera type
 
-1. Add the type string to `CameraConfig.type` literal in `robot/station_profiles.py:57`.
-2. Add aliases to `_BACKEND_ALIASES` in `robot/camera_factory.py:7-14`.
+1. Add the type string to `CameraConfig.type` literal in `robot/station_profiles.py`.
+2. Add aliases to `_BACKEND_ALIASES` in `robot/camera_factory.py`.
 3. Create a driver module `robot/<backend>.py` with a class that has `read() -> CameraData`, `get_intrinsics()`, and `stop()`.
-4. Add a branch in `camera_factory.create_camera()` (`robot/camera_factory.py:177-200`).
+4. Add a branch in `camera_factory.create_camera()` (`robot/camera_factory.py`).
 5. Add a serial resolver (e.g. `resolve_<backend>_serial()`) in `robot/camera_factory.py`.
 6. Add udev rules in `hardware/` for the new device.
 

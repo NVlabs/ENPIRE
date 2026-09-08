@@ -71,15 +71,15 @@ Use the CAP skill infrastructure (`enpire/`) as the RL actor environment. The `l
 
 ## Detailed Design
 
-### 1. `learn_skill()` — `cap/server/cap_server.py:2776`
+### 1. `learn_skill()` — `cap/server/cap_server.py`
 
-The single unified RL training loop method on `CapServer`. Registered as Portal RPC at `cap/server/cap_server.py:914`:
+The single unified RL training loop method on `CapServer`. Registered as Portal RPC at `cap/server/cap_server.py`:
 
 ```python
 self._server.bind("learn_skill", self.learn_skill, workers=1)
 ```
 
-**Signature** (`cap/server/cap_server.py:2776`):
+**Signature** (`cap/server/cap_server.py`):
 ```python
 def learn_skill(
     self,
@@ -104,7 +104,7 @@ def learn_skill(
 {"success": False, "steps_executed": int, "reason": str}
 ```
 
-**Step loop logic** (`cap/server/cap_server.py:2929`):
+**Step loop logic** (`cap/server/cap_server.py`):
 1. Check e-stop
 2. Read Fello state from cache (under `_state_lock`)
 3. Resolve RL action to joint targets via `_resolve_action_to_joints()`
@@ -152,15 +152,15 @@ class RLPolicyServer:
         """Returns current training stats."""
 ```
 
-**Dummy server for testing** — `scripts/serve_rl_policy.py:20`:
+**Dummy server for testing** — `scripts/serve_rl_policy.py`:
 
 The `RandomRLPolicyServer` class returns small random delta joint actions. No GPU needed.
 
 ```bash
-uv run scripts/serve_rl_policy.py --port 8965 --control-mode left --action-scale 0.02
+uv run enpire/env/forge/scripts/serve_rl_policy.py --port 8965 --control-mode left --action-scale 0.02
 ```
 
-CLI options (`scripts/serve_rl_policy.py:79`):
+CLI options (`scripts/serve_rl_policy.py`):
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--port` | `8965` | Portal RPC port |
@@ -187,11 +187,11 @@ Holds SAC agent (JAX) + base agent (`minimal_policy`), exposes Portal RPC, runs 
 
 #### Observation (robot → rl_policy_server)
 
-Built by `_build_skill_obs()` (`cap/server/cap_server.py:3629`) then `_build_rl_obs()` (`cap/server/cap_server.py:3599`):
+Built by `_build_skill_obs()` (`cap/server/cap_server.py`) then `_build_rl_obs()` (`cap/server/cap_server.py`):
 
 ```python
 {
-    # Images: uint8, resized to 256x256x3 (from _RL_IMAGE_SIZE at cap_server.py:3572)
+    # Images: uint8, resized to 256x256x3 (from _RL_IMAGE_SIZE at cap_server.py)
     "top_camera_image": ndarray(256, 256, 3),
     "left_camera_image": ndarray(256, 256, 3),
     "right_camera_image": ndarray(256, 256, 3),
@@ -204,9 +204,9 @@ Built by `_build_skill_obs()` (`cap/server/cap_server.py:3629`) then `_build_rl_
 }
 ```
 
-Camera names are dynamically resolved from `config.CAMERA_NAMES` (`cap/config.py:213`), which reads from active station profile.
+Camera names are dynamically resolved from `config.CAMERA_NAMES` (`cap/config.py`), which reads from active station profile.
 
-**Proprio key order** matches `remote_deployment.yaml` / `SERLObsWrapper` (`cap/server/cap_server.py:3575`):
+**Proprio key order** matches `remote_deployment.yaml` / `SERLObsWrapper` (`cap/server/cap_server.py`):
 ```python
 _RL_PROPRIO_KEYS = [
     ("left_joint_pos", 6),
@@ -216,9 +216,9 @@ _RL_PROPRIO_KEYS = [
 ]
 ```
 
-The task description is passed in the raw obs as `obs["annotation.task"]` (`cap/server/cap_server.py:3642`) for VLM reward functions.
+The task description is passed in the raw obs as `obs["annotation.task"]` (`cap/server/cap_server.py`) for VLM reward functions.
 
-#### Action Types — `_resolve_action_to_joints()` (`cap/server/cap_server.py:3392`)
+#### Action Types — `_resolve_action_to_joints()` (`cap/server/cap_server.py`)
 
 The RL policy server returns `{"action": dict, "action_type": str}`. The `action_type` determines how the action dict is interpreted:
 
@@ -237,14 +237,14 @@ All resolvers support **partial action dicts**: if left/right keys are missing, 
 
 #### Takeover Gating: `USE_FELLO` vs `ALWAYS_TAKEOVERABLE`
 
-Two independent flags control Fello takeover scope (`cap/config.py:126`):
+Two independent flags control Fello takeover scope (`cap/config.py`):
 
 | Flag | Default | Effect |
 |------|---------|--------|
 | `USE_FELLO` | `True` | Enables per-step Fello takeover inside `learn_skill` only. Atomic skills (`freespace_move`, `go_home`, `set_gripper`) are **not** interruptible. |
 | `ALWAYS_TAKEOVERABLE` | `False` | Enables control-loop-level Fello takeover for **all** commands (`CONTROL_FREQ_HZ` override). |
 
-**CLI flags** on `cap_server.py` (`cap/server/cap_server.py:3884`):
+**CLI flags** on `cap_server.py` (`cap/server/cap_server.py`):
 - `--use-fello` → sets `USE_FELLO=True`, `ALWAYS_TAKEOVERABLE=False`
 - `--always-takeoverable` → sets both `USE_FELLO=True` and `ALWAYS_TAKEOVERABLE=True`
 
@@ -254,13 +254,13 @@ On real hardware (no `--env`), both flags use their `config.py` defaults.
 
 #### HIL Step Throttle
 
-During human takeover, joint writes continue at `POLICY_FREQ_HZ` for smooth Fello control (no jitter), but obs building, reward evaluation, and the RL server RPC are skipped for `HIL_POLICY_SLOWDOWN - 1` out of every `HIL_POLICY_SLOWDOWN` steps (`cap/config.py:117`):
+During human takeover, joint writes continue at `POLICY_FREQ_HZ` for smooth Fello control (no jitter), but obs building, reward evaluation, and the RL server RPC are skipped for `HIL_POLICY_SLOWDOWN - 1` out of every `HIL_POLICY_SLOWDOWN` steps (`cap/config.py`):
 
 ```python
 HIL_POLICY_SLOWDOWN: int = 3  # RL step every 3rd control step → ~10 Hz
 ```
 
-This keeps the RL server at a lower effective rate (`POLICY_FREQ_HZ / HIL_POLICY_SLOWDOWN`) without stalling the control loop. When the human releases the footswitch, `_hil_substep` resets to 0 so the next step immediately sends a full RL transition (`cap/server/cap_server.py:3218`).
+This keeps the RL server at a lower effective rate (`POLICY_FREQ_HZ / HIL_POLICY_SLOWDOWN`) without stalling the control loop. When the human releases the footswitch, `_hil_substep` resets to 0 so the next step immediately sends a full RL transition (`cap/server/cap_server.py`).
 
 #### Takeover Flow
 
@@ -292,12 +292,12 @@ This keeps the RL server at a lower effective rate (`POLICY_FREQ_HZ / HIL_POLICY
                     └───────────────────┘
 ```
 
-**On takeover onset — press-anchored incremental control** (`cap/server/cap_server.py:2988`):
+**On takeover onset — press-anchored incremental control** (`cap/server/cap_server.py`):
 - **Arm joints**: anchor set from hardware feedback (`robot_ljp` / `robot_rjp`)
 - **Gripper**: anchor set from **last commanded position** (`self._cmd_left_gp` / `self._cmd_right_gp`), not hardware feedback. When the gripper is stalled against an object, command and feedback diverge (e.g. command=0.5 close vs feedback=0.65 stalled). Using feedback would relax the grip.
 - **Gripper settle period**: gripper stays locked at anchor for `FELLO_GRIP_SETTLE_TICKS` steps, then re-anchors and applies Fello gripper delta only after the deadband (`FELLO_GRIP_TAKEOVER_DEADBAND`) is exceeded.
 
-**On takeover release** (`cap/server/cap_server.py:3109`):
+**On takeover release** (`cap/server/cap_server.py`):
 - Hold last human position for 1 control step (smooth transition)
 - RL policy server receives `action_source="rl"` again on next step
 - Policy continues from current state (no explicit reset — SAC is state-conditioned)
@@ -314,7 +314,7 @@ Agent calls learn_skill("task_name", {max_steps: 1000})
     ├─ 3. rl_policy_server: reset episode, return first action + action_type
     ├─ 4. Return action to CAP
     │
-    ├─ [LOOP at POLICY_FREQ_HZ]  (cap/server/cap_server.py:2929)
+    ├─ [LOOP at POLICY_FREQ_HZ]  (cap/server/cap_server.py)
     │   ├─ 5. Check e-stop
     │   ├─ 6. Read Fello state from cache
     │   ├─ 7. Resolve RL action → joint targets
@@ -345,7 +345,7 @@ Reward is obtained per-step inside `learn_skill()`. Two mechanisms are supported
 1. **Local reward function** (in-process, set via `set_reward_mode` RPC)
 2. **External reward server** (Portal RPC on port 8500)
 
-The priority logic is at `cap/server/cap_server.py:2834`:
+The priority logic is at `cap/server/cap_server.py`:
 ```python
 def _get_step_reward(obs: dict) -> float:
     if _local_fn is not None:        # set via set_reward_mode()
@@ -355,7 +355,7 @@ def _get_step_reward(obs: dict) -> float:
     return _reward_client.get_reward(obs)
 ```
 
-#### `set_reward_mode()` — In-process Reward Switching (`cap/server/cap_server.py:3349`)
+#### `set_reward_mode()` — In-process Reward Switching (`cap/server/cap_server.py`)
 
 Portal RPC endpoint that sets a local reward function, bypassing the external server:
 
@@ -372,23 +372,23 @@ client.set_reward_mode("").result()
 The unified reward server supports multiple modes via `--mode`:
 
 ```bash
-uv run -m cap.reward.reward_server --mode <mode> [--port 8500]
+uv run -m enpire.env.forge.cap.reward.reward_server --mode <mode> [--port 8500]
 ```
 
-**Available modes** (`cap/reward/reward_server.py:103`):
+**Available modes** (`cap/reward/reward_server.py`):
 
 | Mode | Function | Description | File |
 |------|----------|-------------|------|
-| `constant-0` | `_constant_zero` | Always returns 0.0 | `cap/reward/reward_server.py:91` |
-| `constant-1` | `_constant_one` | Always returns 1.0 | `cap/reward/reward_server.py:95` |
-| `random` | `_random_reward` | Random {0.0, 1.0} each call | `cap/reward/reward_server.py:99` |
-| `insert_usb` | `insert_usb_reward` | 1.0 if USB drive mounted, else 0.0 | `cap/reward/insert_usb/reward.py:13` |
-| `gemini` | `vlm_reward` | VLM reward via Google Gemini API | `cap/reward/gemini_reward.py:69` |
-| `smolvlm` | `smolvlm_reward` | VLM reward via local SmolVLM vLLM | `cap/reward/smolvlm_reward.py:89` |
+| `constant-0` | `_constant_zero` | Always returns 0.0 | `cap/reward/reward_server.py` |
+| `constant-1` | `_constant_one` | Always returns 1.0 | `cap/reward/reward_server.py` |
+| `random` | `_random_reward` | Random {0.0, 1.0} each call | `cap/reward/reward_server.py` |
+| `insert_usb` | `insert_usb_reward` | 1.0 if USB drive mounted, else 0.0 | `cap/reward/insert_usb/reward.py` |
+| `gemini` | `vlm_reward` | VLM reward via Google Gemini API | `cap/reward/gemini_reward.py` |
+| `smolvlm` | `smolvlm_reward` | VLM reward via local SmolVLM vLLM | `cap/reward/smolvlm_reward.py` |
 
-**`RewardServer` class** (`cap/reward/reward_server.py:36`): Portal RPC server wrapping any `Callable[[dict], float]`. Exposes `get_reward(obs)` and runs a continuous 10 Hz print loop showing the current reward.
+**`RewardServer` class** (`cap/reward/reward_server.py`): Portal RPC server wrapping any `Callable[[dict], float]`. Exposes `get_reward(obs)` and runs a continuous 10 Hz print loop showing the current reward.
 
-**`RewardClient` class** (`cap/reward/reward_client.py:10`): Portal RPC client that connects to reward server and calls `get_reward(obs)`.
+**`RewardClient` class** (`cap/reward/reward_client.py`): Portal RPC client that connects to reward server and calls `get_reward(obs)`.
 
 **Alternative entry point** — `cap/reward/serve_reward.py`: Simpler launcher that loads reward functions by dotted import path. Currently only supports `insert_usb`.
 
@@ -412,7 +412,7 @@ Both VLM backends send camera images + task description to a model and parse YES
 ```json
 {"description": "...", "backend": "gemini|smolvlm", "template": "...{task}..."}
 ```
-Loaded by `cap/utils/prompt_loader.py:25`.
+Loaded by `cap/utils/prompt_loader.py`.
 
 ---
 
@@ -430,11 +430,11 @@ Safety zones restrict end-effector exploration during RL training. They are set 
 | `ClearSafetyZoneTool` :108 | `clear_safety_zone([side])` | Clear one or both arms |
 | `GetSafetyZoneTool` :141 | `get_safety_zone()` | Query current zone config |
 
-**Enforcement** (`cap/server/cap_server.py:3701`): `_enforce_safety_zone()` runs FK on proposed joints, checks EE pose against zone, and interpolates back toward current position if outside. Elastic attenuation smooths the boundary before hard clamping.
+**Enforcement** (`cap/server/cap_server.py`): `_enforce_safety_zone()` runs FK on proposed joints, checks EE pose against zone, and interpolates back toward current position if outside. Elastic attenuation smooths the boundary before hard clamping.
 
 **Server-side safety module** (`cap/server/safety.py`): Implements convex hull distance computation, elastic/hard boundary enforcement, and orientation constraints.
 
-**Typical RL script pattern** (e.g. `cap/saved_scripts/rl/claude_plate_and_stick_learn_insert_safe.py`):
+**Typical RL script pattern:**
 ```python
 # Set safety zone before RL loop
 set_safety_zone("left", [hover_pose, insertion_pose], pos_margin=0.08, ori_margin=0.3)
@@ -453,39 +453,39 @@ clear_safety_zone()
 **`cap/config.py`** — RL-relevant entries:
 
 ```python
-# Control frequencies (cap/config.py:107)
+# Control frequencies (cap/config.py)
 CONTROL_FREQ_HZ = 60.0     # Hardware control loop
 POLICY_FREQ_HZ = 30.0      # RL policy step rate
 
-# HIL throttle (cap/config.py:117)
+# HIL throttle (cap/config.py)
 HIL_POLICY_SLOWDOWN: int = 3  # RL step every 3rd step during takeover → ~10 Hz
 
-# Fello (cap/config.py:126)
+# Fello (cap/config.py)
 USE_FELLO = True
 ALWAYS_TAKEOVERABLE = False
 
-# RL policy server (cap/config.py:149)
+# RL policy server (cap/config.py)
 RL_POLICY_HOST = "localhost"
 RL_POLICY_PORT = 8965
 RL_EPISODE_MAX_STEPS = 1000
 RL_DATA_PATH = "/media/<user>/Extreme SSD/data/learn_skill_rl"
 
-# Reward server (cap/config.py:98)
+# Reward server (cap/config.py)
 REWARD_SERVER_PORT = 8500
 
-# Camera names (cap/config.py:222) — resolved from active station profile
+# Camera names (cap/config.py) — resolved from active station profile
 CAMERA_NAMES: tuple[str, ...] = ("top", "left", "right")  # default
 
-# Joint limits (cap/config.py:161) — from station.xml actuator ctrlrange
+# Joint limits (cap/config.py) — from station.xml actuator ctrlrange
 JOINT_LIMITS_LOW = np.array([...])   # 12-dim (6 per arm)
 JOINT_LIMITS_HIGH = np.array([...])
 
-# Gripper range (cap/config.py:173)
+# Gripper range (cap/config.py)
 GRIPPER_MIN = 0.0
 GRIPPER_MAX = 1.0
 ```
 
-**`cap_server.py` CLI arguments** (`cap/server/cap_server.py:3851`):
+**`cap_server.py` CLI arguments** (`cap/server/cap_server.py`):
 
 | Flag | Default | Description |
 |------|---------|-------------|
@@ -509,17 +509,17 @@ GRIPPER_MAX = 1.0
 > but does not write per-episode data to disk. The section below describes the
 > intended design; treat it as design-only until the call site is rewired.
 
-#### `_SkillDataRecorder` — `cap/server/cap_server.py:427` (class defined; not currently called)
+#### `_SkillDataRecorder` — `cap/server/cap_server.py` (class defined; not currently called)
 
 Per-episode recorder. Matches `RecordEpisodeWrapper` format for compatibility with offline training pipelines.
 
-**`record_step()` signature** (`cap/server/cap_server.py:459`):
+**`record_step()` signature** (`cap/server/cap_server.py`):
 ```python
 def record_step(self, obs: dict, left_jp, left_grip, right_jp, right_grip,
                 left_takeover: bool, right_takeover: bool, reward: float = 0.0)
 ```
 
-**Video encoding**: done on a background thread (`_frame_writer_loop` at `cap/server/cap_server.py:506`) to keep `cvtColor` + `VideoWriter.write` off the control-loop thread.
+**Video encoding**: done on a background thread (`_frame_writer_loop` at `cap/server/cap_server.py`) to keep `cvtColor` + `VideoWriter.write` off the control-loop thread.
 
 **Saved episode directory layout** (`$LEARN_SKILL_DATA_PATH/<skill_name>/YYYYMMDDTHHMMSS######/`):
 
@@ -544,7 +544,7 @@ right_camera-images-rgb.mp4
 
 ### 10. Agent Tools
 
-#### `LearnSkillTool` — `cap/agent/tools/skill.py:73`
+#### `LearnSkillTool` — `cap/agent/tools/skill.py`
 
 The agent-facing tool that calls `cap_server.learn_skill()` via Portal RPC.
 
@@ -558,7 +558,7 @@ class LearnSkillTool(Tool):
 - `skill_name` (str): Name/description of the RL skill
 - `params` (dict, optional): Overrides — `rl_host`, `rl_port`, `max_steps`, `control_mode`, `task_description`
 
-#### `ExecuteSkillTool` — `cap/agent/tools/skill.py:22`
+#### `ExecuteSkillTool` — `cap/agent/tools/skill.py`
 
 For running learned flow-matching policies (non-RL). Calls `cap_server.execute_skill()`.
 
@@ -570,7 +570,7 @@ For running learned flow-matching policies (non-RL). Calls `cap_server.execute_s
 
 #### Profiler — `cap/agent/profiler.py`
 
-`learn_skill` calls are wrapped with timing by `wrap_callables_with_timing()` (`cap/agent/profiler.py:162`). Logs call duration, idle gaps, and post-call robot state snapshots (for state-changing tools listed in `_STATE_SNAPSHOT_TOOLS` at `cap/agent/profiler.py:156`).
+`learn_skill` calls are wrapped with timing by `wrap_callables_with_timing()` (`cap/agent/profiler.py`). Logs call duration, idle gaps, and post-call robot state snapshots (for state-changing tools listed in `_STATE_SNAPSHOT_TOOLS` at `cap/agent/profiler.py`).
 
 ---
 
@@ -584,9 +584,9 @@ A React component that displays live `learn_skill` status. Shows:
 - Action source badge (RL = blue, Human = orange)
 - Expandable detail panel with progress bar
 
-Consumes `LearnSkillStatus` from `useRobotState` hook, which reads from `get_learn_skill_status` RPC (`cap/server/cap_server.py:3345`).
+Consumes `LearnSkillStatus` from `useRobotState` hook, which reads from `get_learn_skill_status` RPC (`cap/server/cap_server.py`).
 
-The status dict emitted by `learn_skill()` (`cap/server/cap_server.py:3315`):
+The status dict emitted by `learn_skill()` (`cap/server/cap_server.py`):
 ```python
 self._learn_skill_status = {
     "active": True,
@@ -658,12 +658,12 @@ emit("cap_server", "step_start", ep=3, step=142)
 emit("cap_server", "obs_built", ep=3, step=142, camera_read_ms=0.8)
 ```
 
-**Configuration** (env vars, `cap/diag/emitter.py:20`):
+**Configuration** (env vars, `cap/diag/emitter.py`):
 - `DIAG_ENABLED` — set to `"0"` to disable entirely
 - `DIAG_HOST` — target host (default `127.0.0.1`)
 - `DIAG_PORT` — target UDP port (default `9999`)
 
-The socket is set to non-blocking (`cap/diag/emitter.py:28`). All exceptions are silently caught.
+The socket is set to non-blocking (`cap/diag/emitter.py`). All exceptions are silently caught.
 
 **Events emitted by `learn_skill()`**:
 
@@ -698,23 +698,23 @@ Standalone FastAPI server with inline HTML dashboard (~1000 lines, no build step
 
 **Launch**:
 ```bash
-uv run cap/diag/dashboard.py [--udp-port 9999] [--http-port 8888] [--motor-host localhost]
+uv run enpire/env/forge/cap/diag/dashboard.py [--udp-port 9999] [--http-port 8888] [--motor-host localhost]
 ```
 
 **Components**:
 
-1. **UDP Collector** (`cap/diag/dashboard.py:374`): Background thread receiving msgpack UDP packets, dispatching to `Store`.
+1. **UDP Collector** (`cap/diag/dashboard.py`): Background thread receiving msgpack UDP packets, dispatching to `Store`.
 
-2. **Motor Temp Collector** (`cap/diag/dashboard.py:407`): Background thread polling arm RPC servers for motor temperatures at configurable rate (default 2 Hz). Polls all four arms: follower_left/right (ports 11333/11334), leader_left/right (ports 11335/11336).
+2. **Motor Temp Collector** (`cap/diag/dashboard.py`): Background thread polling arm RPC servers for motor temperatures at configurable rate (default 2 Hz). Polls all four arms: follower_left/right (ports 11333/11334), leader_left/right (ports 11335/11336).
 
-3. **Store** (`cap/diag/dashboard.py:84`): Thread-safe ring buffer holding raw events (10K), step data (2K), plus aux buffers for control ticks, fello ticks, camera frames, and motor temps.
+3. **Store** (`cap/diag/dashboard.py`): Thread-safe ring buffer holding raw events (10K), step data (2K), plus aux buffers for control ticks, fello ticks, camera frames, and motor temps.
 
-4. **FastAPI app** (`cap/diag/dashboard.py:435`):
+4. **FastAPI app** (`cap/diag/dashboard.py`):
    - `GET /` → inline HTML+JS dashboard
    - `WS /ws` → pushes snapshot JSON every 200ms
    - `GET /api/stats` → aggregate stats
 
-**Dashboard UI panels** (inline HTML at `cap/diag/dashboard.py:476`):
+**Dashboard UI panels** (inline HTML at `cap/diag/dashboard.py`):
 
 | Panel | Description |
 |-------|-------------|
@@ -723,7 +723,7 @@ uv run cap/diag/dashboard.py [--udp-port 9999] [--http-port 8888] [--motor-host 
 | **Latency Stats** | Rolling mean/P50/P95/max for all segments + RPC breakdown (base_action, sac_sample, buffer_insert, network_rtt) |
 | **Episode Overview** | Bar chart of step loop times, colored by action source (blue=rl, orange=human), red top border if over target |
 
-**Segment definitions** (`cap/diag/dashboard.py:50`):
+**Segment definitions** (`cap/diag/dashboard.py`):
 
 | Segment | Start Event | End Event |
 |---------|-------------|-----------|
@@ -740,7 +740,7 @@ uv run cap/diag/dashboard.py [--udp-port 9999] [--http-port 8888] [--motor-host 
 
 ## Step Latency Breakdown
 
-The `learn_skill` progress bar shows per-step timing (`cap/server/cap_server.py:2893`):
+The `learn_skill` progress bar shows per-step timing (`cap/server/cap_server.py`):
 
 ```
 [learn_skill] ep=0  ██ 42/1000  r=0.00 cumR=0.00 src=rl rl=7ms local=50ms (obs=12 rew=2 fello=0 act=1)
@@ -761,7 +761,9 @@ The `learn_skill` progress bar shows per-step timing (`cap/server/cap_server.py:
 
 ## Script Helper Structure
 
-RL training scripts live in `cap/saved_scripts/rl/`. They are executed inside `cap_agent` in "Oracle mode" with access to all registered tools.
+RL training scripts live in `cap/saved_scripts/rl/` (not shipped in this
+release). They are executed inside `cap_agent` in "Oracle mode" with access
+to all registered tools.
 
 **Common patterns across scripts**:
 - Scene setup: `clear_table()` → `setup_scene("stick_plate")` (sim only)
@@ -798,16 +800,16 @@ RL training scripts live in `cap/saved_scripts/rl/`. They are executed inside `c
 
 ```bash
 # Terminal 1: CAP Server (CONTROL_FREQ_HZ control loop)
-uv run cap/server/cap_server.py [--env yam]
+uv run enpire/env/forge/cap/server/cap_server.py [--env yam]
 
 # Terminal 2: Reward server (constant-0 or constant-1)
-uv run -m cap.reward.reward_server --mode constant-0
+uv run -m enpire.env.forge.cap.reward.reward_server --mode constant-0
 
 # Terminal 3: Dummy RL policy server (random delta actions)
-uv run scripts/serve_rl_policy.py --port 8965 --control-mode both
+uv run enpire/env/forge/scripts/serve_rl_policy.py --port 8965 --control-mode both
 
 # Terminal 4: (Optional) Diagnostics dashboard
-uv run cap/diag/dashboard.py
+uv run enpire/env/forge/cap/diag/dashboard.py
 ```
 
 Then trigger an RL episode from the CAP agent or via Portal RPC:
@@ -830,10 +832,10 @@ Or use the test script:
 ```bash
 # Robot machine (enpire/)
 # Terminal 1: CAP Server
-uv run cap/server/cap_server.py
+uv run enpire/env/forge/cap/server/cap_server.py
 
 # Terminal 2: Reward server (placeholder or real)
-uv run -m cap.reward.reward_server --mode insert_usb
+uv run -m enpire.env.forge.cap.reward.reward_server --mode insert_usb
 
 # GPU machine (bc_policy/)
 # Terminal 3: RL Learner (trains SAC from replay buffer)
@@ -871,7 +873,7 @@ Run RL evaluation in simulation with real Fello arms for human-in-the-loop takeo
 
 **Option A — Single command:**
 ```bash
-./tmux/launch_sim.sh --use-fello
+# NOTE: tmux/launch_sim.sh is not part of this release
 ```
 
 **Option B — Separate Fello servers:**
@@ -880,7 +882,7 @@ Run RL evaluation in simulation with real Fello arms for human-in-the-loop takeo
 uv run launch.py --mode=evaluation --fello-only
 
 # Session 2: Sim stack
-uv run cap/server/cap_server.py --env yam --use-fello
+uv run enpire/env/forge/cap/server/cap_server.py --env yam --use-fello
 ```
 
 > **Do not** combine `launch.py --fello-only` with `launch_sim.sh --use-fello` — both would try to launch Fello servers on the same ports.
@@ -888,19 +890,19 @@ uv run cap/server/cap_server.py --env yam --use-fello
 **Option C — Manual:**
 ```bash
 # Terminal 1: CAP Server (sim + Fello HIL)
-uv run cap/server/cap_server.py --env yam --use-fello
+uv run enpire/env/forge/cap/server/cap_server.py --env yam --use-fello
 
 # Terminal 2: Fello left leader
-uv run robot/fello/fello_server.py --side left --can-interface can_leader_l --port 11335
+uv run enpire/env/forge/robot/fello/fello_server.py --side left --can-interface can_leader_l --port 11335
 
 # Terminal 3: Fello right leader
-uv run robot/fello/fello_server.py --side right --can-interface can_leader_r --port 11336
+uv run enpire/env/forge/robot/fello/fello_server.py --side right --can-interface can_leader_r --port 11336
 
 # Terminal 4: Reward server
-uv run -m cap.reward.reward_server --mode constant-0
+uv run -m enpire.env.forge.cap.reward.reward_server --mode constant-0
 
 # Terminal 5: RL Policy Server (GPU machine or local)
-uv run scripts/serve_rl_policy.py --port 8965 --control-mode both
+uv run enpire/env/forge/scripts/serve_rl_policy.py --port 8965 --control-mode both
 
 # Terminal 6: Run evaluation episodes
 import portal
@@ -917,19 +919,19 @@ for ep in range(50):
 
 | Service | Port | Machine | File |
 |---------|------|---------|------|
-| CAP Server | 8300 | Robot | `cap/config.py:28` |
-| Reward Server | 8500 | Robot | `cap/config.py:98` |
-| RL Policy Server | 8965 | GPU (or local for testing) | `cap/config.py:152` |
+| CAP Server | 8300 | Robot | `cap/config.py` |
+| Reward Server | 8500 | Robot | `cap/config.py` |
+| RL Policy Server | 8965 | GPU (or local for testing) | `cap/config.py` |
 | Agentlace (data) | 8001 | GPU | `bc_policy/` config |
 | Agentlace (params) | 8002 | GPU | `bc_policy/` config |
-| Diagnostics Dashboard | 8888 | Robot | `cap/diag/dashboard.py:980` |
-| Diagnostics UDP | 9999 | Robot | `cap/diag/emitter.py:22` |
-| CAP Agent | 8200 | Robot | `cap/config.py:31` |
-| Policy Server (flow matching) | 8964 | GPU | `cap/config.py:66` |
-| Fello Left Leader | 11335 | Robot | `cap/config.py:24` |
-| Fello Right Leader | 11336 | Robot | `cap/config.py:25` |
-| Left Follower | 11333 | Robot | `cap/config.py:20` |
-| Right Follower | 11334 | Robot | `cap/config.py:21` |
+| Diagnostics Dashboard | 8888 | Robot | `cap/diag/dashboard.py` |
+| Diagnostics UDP | 9999 | Robot | `cap/diag/emitter.py` |
+| CAP Agent | 8200 | Robot | `cap/config.py` |
+| Policy Server (flow matching) | 8964 | GPU | `cap/config.py` |
+| Fello Left Leader | 11335 | Robot | `cap/config.py` |
+| Fello Right Leader | 11336 | Robot | `cap/config.py` |
+| Left Follower | 11333 | Robot | `cap/config.py` |
+| Right Follower | 11334 | Robot | `cap/config.py` |
 
 ---
 
@@ -1024,18 +1026,11 @@ for ep in range(50):
 
 ### Example RL Scripts
 
-| File | Description |
-|------|-------------|
-| `cap/saved_scripts/rl/test_learn_skill_with_dummy_rl_reward.py` | Smoke test with dummy RL + constant-0 reward |
-| `cap/saved_scripts/rl/learn_insert_usb.py` | USB insertion with real reward |
-| `cap/saved_scripts/rl/learn_insert_usb_from_home.py` | USB insertion starting from home |
-| `cap/saved_scripts/rl/claude_plate_and_stick_learn_insert_safe.py` | Stick insertion with safety zones |
-| `cap/saved_scripts/rl/claude_plate_and_stick_learn_insert_safe_regrasp.py` | + automated regrasp recovery |
-| `cap/saved_scripts/rl/claude_plate_and_stick_learn_insert_vlm_regrasp.py` | + VLM-based regrasp validation |
-| `cap/saved_scripts/rl/claude_learn_peg_insertion.py` | Peg insertion with motion helpers |
-| `cap/saved_scripts/rl/sim_peg_insertion_rl.py` | Sim-mode peg insertion |
-
----
+The `cap/saved_scripts/rl/` examples (USB insertion, plate-and-stick, peg
+insertion, and the dummy-reward smoke test) are **not** part of this release.
+The protocol and helper structure documented above are what you need to write
+your own; `cap/saved_scripts/examples/pick_object.py` is the closest shipped
+reference for the script conventions.
 
 ## Resolved Decisions
 

@@ -18,7 +18,7 @@ All poses in this repo use a **display RPY** convention (degrees) that is *not*
 standard Euler XYZ. The conversion lives in `freespace_move`:
 
 ```
-cap/agent/tools/freespace_move.py:635
+cap/agent/tools/freespace_move.py
 ```
 
 ```python
@@ -31,7 +31,7 @@ quat_xyzw = Rotation.from_euler("xyz", euler_xyz, degrees=True).as_quat()
 The inverse (quaternion -> display RPY) used by AnyGrasp output:
 
 ```
-cap/agent/tools/grasp_anygrasp.py:61-70
+cap/agent/tools/grasp_anygrasp.py
 ```
 
 ```python
@@ -70,13 +70,12 @@ SAM3 segmentation -> AnyGrasp detection server -> pose transform -> freespace_mo
 | Service | Port | File | Purpose |
 |---------|------|------|---------|
 | AnyGrasp detection server | 8122 | `tools/vision/serve_anygrasp.py` | Neural 6-DOF grasp inference |
-| AnyGrasp debug UI | 8121 | `tools/vision/serve_anygrasp_debug.py` | Visual debug dashboard |
 | SAM3 segmentation server | 6767 | (external) | Object segmentation mask |
 | CAP server | 8300 | `cap/server/cap_server.py` | Camera images, depth, extrinsics |
 
 ### 3.2 The `sample_grasp_pose_anygrasp` Tool
 
-Defined at `cap/agent/tools/grasp_anygrasp.py:109-520`.
+Defined at `cap/agent/tools/grasp_anygrasp.py`.
 
 **Parameters:**
 
@@ -96,7 +95,7 @@ score (best first). Position and RPY are in the same display-RPY convention
 expected by `freespace_move`.
 
 ```
-cap/agent/tools/grasp_anygrasp.py:89-97
+cap/agent/tools/grasp_anygrasp.py
 ```
 
 ```python
@@ -110,7 +109,7 @@ class GraspCandidate:
 
 ### 3.3 Internal Pipeline
 
-The tool executes this pipeline (`cap/agent/tools/grasp_anygrasp.py:326-502`):
+The tool executes this pipeline (`cap/agent/tools/grasp_anygrasp.py`):
 
 1. **Capture** RGB, depth, intrinsics from the specified camera via Portal RPC
 2. **Segment** the object using SAM3 (`/segment` endpoint on port 6767)
@@ -118,7 +117,7 @@ The tool executes this pipeline (`cap/agent/tools/grasp_anygrasp.py:326-502`):
 4. **Frame transform** AnyGrasp vendor frame -> planner/gripper frame -> world frame:
    - AnyGrasp vendor frame: +X approach, +Y finger opening, +Z gripper height
    - Planner frame: +X opening, +Y height, +Z approach
-   - The remapping matrix at `grasp_anygrasp.py:49-56`:
+   - The remapping matrix at `grasp_anygrasp.py`:
      ```python
      _ANYGRASP_TO_GRIPPER = np.array([
          [0.0, 0.0, 1.0],  # planner X = anygrasp Y
@@ -128,7 +127,7 @@ The tool executes this pipeline (`cap/agent/tools/grasp_anygrasp.py:326-502`):
      ```
    - Camera-to-world transform via `get_camera_extrinsics()`
 5. **TCP offset** applied along local +Z (configurable, default 0.0 m)
-6. **Planner Z clipping** to safety floor (default 0.80 m from `cap/config.py:52`)
+6. **Planner Z clipping** to safety floor (default 0.80 m from `cap/config.py`)
 7. **Top-down filtering** (optional) by dot product with world -Z
 8. **Sort by score** and convert rotation to display RPY
 
@@ -145,7 +144,7 @@ The tool executes this pipeline (`cap/agent/tools/grasp_anygrasp.py:326-502`):
 | `/health` | GET | Model status and config |
 | `/reset_state` | POST | Clear CUDA cache |
 
-**Request schema** (`tools/vision/serve_anygrasp.py:79-90`):
+**Request schema** (`tools/vision/serve_anygrasp.py`):
 
 ```python
 class PlanRequest(BaseModel):
@@ -167,7 +166,7 @@ class PlanRequest(BaseModel):
 - `--max-gripper-width 0.1` (clamped to [0.0, 0.1])
 - `--gripper-height 0.03`
 
-**object_input_mode options** (`tools/vision/serve_anygrasp.py:105-127`):
+**object_input_mode options** (`tools/vision/serve_anygrasp.py`):
 - `"segmented_object_cloud"` (default): only SAM3-segmented object points sent to AnyGrasp -- reduces pose ambiguity
 - `"roi_workspace"`: full scene cloud cropped by object workspace bounds -- deprecated, causes ambiguity
 
@@ -201,12 +200,11 @@ close_gripper("left")
 
 ### 3.7 Usage: Production Pick-and-Place with Batch Ranking
 
-The v7 table bussing scripts (`cap/saved_scripts/table_bussing/v7/nclass_sorting.py`)
-demonstrate the full production flow:
+The production pick-and-place flow, as used with batch ranking. (The v7
+table-bussing scripts this was extracted from are not part of this release.)
 
 ```python
 # 1. Get AnyGrasp candidates (SAM3 segmented cloud, no Z clipping)
-#    nclass_sorting.py:388-416
 grasps = sample_grasp_pose_anygrasp(
     object_name="plate",
     camera="top",
@@ -217,29 +215,25 @@ grasps = sample_grasp_pose_anygrasp(
 )
 
 # 2. Pick arm closest to best grasp candidate
-#    nclass_sorting.py:443-461
 chosen_side = detect_which_arm_closer_to_obj(grasps)
 
 # 3. Batch cuRobo grasp ranking -- sends candidates to freespace_move
 #    which runs IK + collision checking for all at once
-#    nclass_sorting.py:464-532
 selected = select_best_grasp_for_target(grasps[:16], side=chosen_side)
 # Returns SelectedGrasp with .trajectory_cache_key for replaying the plan
 
 # 4. Execute: open gripper, move to grasp, close, verify
-#    nclass_sorting.py:560-594
 open_gripper(chosen_side)
 freespace_move(preview_only=False, trajectory_cache_key=selected.trajectory_cache_key)
 close_gripper(chosen_side)
 
 # 5. Transport to birds-eye-view, then drop at target
-#    nclass_sorting.py:695-717
 safe_move(chosen_side, birdseye_pos, transport_rpy)
 safe_move(chosen_side, drop_pos, transport_rpy)
 open_gripper(chosen_side)
 ```
 
-**Batch grasp ranking** is a feature of `freespace_move` (`cap/agent/tools/freespace_move.py:1011-1130`):
+**Batch grasp ranking** is a feature of `freespace_move` (`cap/agent/tools/freespace_move.py`):
 
 ```python
 freespace_move(
@@ -293,12 +287,12 @@ Home orientation is approximately `[0, 90, 0]` degrees.
 
 ## 6. High-Level `grasp()` and `place()` Tools
 
-Defined at `cap/agent/tools/grasp.py:31-303`. These tools encapsulate the
+Defined at `cap/agent/tools/grasp.py`. These tools encapsulate the
 full approach-grasp-lift and move-place-release sequences.
 
 ### `grasp(side, position, rpy=None, pre_height=0.10, z_offset=0.05)`
 
-(`cap/agent/tools/grasp.py:31-191`)
+(`cap/agent/tools/grasp.py`)
 
 1. Open gripper
 2. Freespace move to hover position (object Z + z_offset + pre_height)
@@ -306,7 +300,7 @@ full approach-grasp-lift and move-place-release sequences.
 4. Close gripper
 5. Lift to hover
 
-Table surface constant: `_TABLE_Z = 0.75` (`grasp.py:28`).
+Table surface constant: `_TABLE_Z = 0.75` (`grasp.py`).
 
 ```python
 grasp(side="left", position=[0.5, 0.2, 0.82], rpy=[0, 90, 0], pre_height=0.10, z_offset=0.05)
@@ -316,7 +310,7 @@ If `rpy` is omitted, the current arm orientation is used.
 
 ### `place(side, position, rpy=None, pre_height=0.15)`
 
-(`cap/agent/tools/grasp.py:194-303`)
+(`cap/agent/tools/grasp.py`)
 
 1. Move to hover above target
 2. Descend to place height (position Z + 0.05)
@@ -383,62 +377,24 @@ close_gripper(side)
 
 ---
 
-## 8. AnyGrasp Debug UI
+## 8. AnyGrasp Runtime Setup
 
-`tools/vision/serve_anygrasp_debug.py` (port 8121) provides a web dashboard that:
+`cap/utils/anygrasp_runtime.py` prepares the SDK at startup: it symlinks the
+native `.so` extensions into `ANYGRASP_RUNTIME_DIR` (default
+`/tmp/anygrasp_sdk_runtime`), extracts the licence archive there, and puts the
+MinkowskiEngine / PointNet2 build roots on `sys.path`.
 
-- Shows two pose views per grasp: raw AnyGrasp world-frame and planner-aligned
-- Renders overlay images with gripper wireframes projected onto RGB
-- Supports testing individual grasps with cuRobo IK preview
-- Displays per-grasp thumbnails cropped around the object + gripper
+The SDK is **not** vendored in this repository — it is proprietary and
+machine-licensed. Point `ANYGRASP_SDK_ROOT` at your own checkout; see
+[`ANYGRASP_SETUP.md`](ANYGRASP_SETUP.md) for how to obtain a licence, build the
+extensions, and set every `ANYGRASP_*` variable.
 
-The Viser 3D visualizer (`cap/agent/visualizer.py:477-580`) also includes a
-"Grasp Planning" panel that calls `sample_grasp_pose_anygrasp` and renders
-candidates as coordinate frames with score labels.
+A warmup script at `tools/vision/warmup_anygrasp.py` primes the first inference
+path; cold start can take 60-300 s.
 
-### Key constants used by the debug UI
+## 9. Tool Registration
 
-(`tools/vision/serve_anygrasp_debug.py:66-80`):
-
-| Constant | Default | Env var |
-|----------|---------|---------|
-| Debug port | 8121 | `DEBUG_PORT` |
-| AnyGrasp URL | `http://localhost:8122` | `ANYGRASP_URL` or `ANYGRASP_SERVICE_URL` |
-| SAM3 URL | `http://localhost:6767` | `SAM3_URL` |
-| 2D top-down Z | 0.79 m | `ANYGRASP_2D_TOP_DOWN_Z_M` |
-
----
-
-## 9. AnyGrasp Runtime Setup
-
-The `cap/utils/anygrasp_runtime.py` module handles:
-
-- Resolving Git LFS binary objects for native `.so` extensions
-- Setting up MinkowskiEngine and PointNet2 prebuilt Python roots under `/tmp/anygrasp_sdk_runtime`
-- Extracting license files from the provided zip
-- Configuring `sys.path` for AnyGrasp SDK imports
-
-```python
-from cap.utils.anygrasp_runtime import prepare_anygrasp_runtime, configure_anygrasp_imports
-
-runtime = prepare_anygrasp_runtime(license_zip="license_<your_license>.zip")
-configure_anygrasp_imports(runtime)
-```
-
-The vendored AnyGrasp SDK lives at `third_party/anygrasp_sdk/` with:
-- `grasp_detection/` -- detection-only inference (`gsnet.so`)
-- `grasp_tracking/` -- tracking mode (`tracker.so`)
-- `dependencies/MinkowskiEngine/` -- sparse convolution backend
-- `pointnet2/` -- PointNet++ feature extraction
-
-A warmup script is provided at `tools/vision/warmup_anygrasp.py` to prime the
-first inference path (cold-start can take 60-300s).
-
----
-
-## 10. Tool Registration
-
-All grasp-related tools are registered in `cap/agent/tools/__init__.py:146-272`:
+All grasp-related tools are registered in `cap/agent/tools/__init__.py`:
 
 ```python
 from cap.agent.tools.grasp_anygrasp import SampleGraspPoseAnyGraspTool
@@ -450,7 +406,7 @@ registry.register(SampleGraspPoseAnyGraspTool(
 ))
 ```
 
-The bridge layer at `cap/bridge/agent_bridge.py:102-154` defines the
+The bridge layer at `cap/bridge/agent_bridge.py` defines the
 script-facing function signatures that CAP-generated code calls directly:
 
 | Function | Bridge line | Description |
@@ -466,7 +422,7 @@ script-facing function signatures that CAP-generated code calls directly:
 
 ---
 
-## 11. Common Mistakes
+## 10. Common Mistakes
 
 1. **Using quaternions directly** -- always use display RPY in degrees. The display RPY convention is *not* standard Euler XYZ (see Section 1).
 
@@ -484,7 +440,7 @@ script-facing function signatures that CAP-generated code calls directly:
 
 ---
 
-## 12. File Reference Index
+## 11. File Reference Index
 
 | File | Description |
 |------|-------------|
@@ -498,8 +454,5 @@ script-facing function signatures that CAP-generated code calls directly:
 | `cap/utils/anygrasp_runtime.py` | AnyGrasp SDK runtime preparation |
 | `cap/agent/visualizer.py` | Viser 3D grasp visualization |
 | `tools/vision/serve_anygrasp.py` | AnyGrasp detection server (port 8122) |
-| `tools/vision/serve_anygrasp_debug.py` | AnyGrasp debug UI (port 8121) |
 | `tools/vision/warmup_anygrasp.py` | Cold-start warmup script |
-| `cap/saved_scripts/table_bussing/v7/nclass_sorting.py` | Latest production pick-and-place script |
-| `cap/saved_scripts/rl/test_graspnet_pick.py` | Simple AnyGrasp pick test script |
-| `third_party/anygrasp_sdk/` | Vendored AnyGrasp SDK (detection + tracking + deps) |
+| `$ANYGRASP_SDK_ROOT` | Externally supplied AnyGrasp SDK — not vendored; see ANYGRASP_SETUP.md |
