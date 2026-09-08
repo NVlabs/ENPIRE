@@ -1,5 +1,7 @@
 # Grasp Orientation and Grasping Strategy
 
+> Paths written as `cap/…`, `robot/…`, `experimental/…`, `tmux/…` or
+> `experiments/…` are relative to `enpire/env/forge/`.
 Complete reference for grasp planning, orientation selection, and pick-and-place
 execution on the YAM bimanual robot. Covers both the **AnyGrasp 6-DOF neural
 grasp planner** (primary) and the **heuristic RPY approach** (fallback).

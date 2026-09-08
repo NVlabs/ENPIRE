@@ -1,5 +1,7 @@
 # Design Doc: CAP for RL Pipeline
 
+> Paths written as `cap/…`, `robot/…`, `experimental/…`, `tmux/…` or
+> `experiments/…` are relative to `enpire/env/forge/`.
 > **Last updated**: 2026-04-08
 > **Status**: Implemented and actively used
 

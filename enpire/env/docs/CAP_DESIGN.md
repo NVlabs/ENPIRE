@@ -5,8 +5,10 @@
 > CapServer). Companion docs hold the deeper material so this one stays focused:
 > physical-robot tools (GT-vs-real behavior, signatures) →
 > [`SKILL_LIBRARY.md`](SKILL_LIBRARY.md);
-> RL pipeline → [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md);
-> agent pipeline → `AGENT_PIPELINE_DESIGN.md`.
+> RL pipeline → [`RL_PIPELINE_DESIGN.md`](RL_PIPELINE_DESIGN.md).
+>
+> Paths written as `cap/…`, `robot/…`, `experimental/…`, `tmux/…` or
+> `experiments/…` are relative to `enpire/env/forge/`.
 
 ## Vision
 
@@ -53,8 +55,9 @@ The env layer is defined by protocols in `cap/env/base/protocols.py`:
 `EnvProtocol`, `EefControlProtocol`, `SceneProtocol`, `TaskProtocol`. Robot
 backends live under `cap/env/` (one file/package per robot). Per-robot runtime
 construction lives in Hydra-configurable adapters in
-`cap/agent/robot_adapters.py` — `RealYamAdapter` (`experiments/robot/real_yam.yaml`)
-for hardware, `RobocasaAdapter` for sim.
+`cap/agent/robot_adapters/` — `RealYamAdapter` (`experiments/robot/real_yam.yaml`)
+for hardware, plus a `study` adapter. The sim adapters are not part of this
+release.
 
 ### The env owns cameras + control
 
@@ -103,8 +106,7 @@ uv run python run_script.py \
 "The agent generates Python code, executes it via run_script.py subprocess,
 observes the result, and optionally re-generates in a loop." The agent never
 touches the robot directly; every code attempt is run as an isolated
-`run_script.py` subprocess. See `AGENT_PIPELINE_DESIGN.md`
-for pipeline steps, memory, and the log-folder layout.
+`run_script.py` subprocess.
 
 ```bash
 uv run python run_agent.py experiment=pick_place_sink_to_counter
@@ -138,8 +140,9 @@ inside a run log directory." It can also be run by hand:
 uv run python -m cap.debug_ui.app log_dir=logs/<run>...
 ```
 
-There is **no frontend build step** — the interactive React app has been removed
-(see *Legacy bridge mode* below).
+The interactive React app under `cap/ui/` is still in the tree but is part of
+the legacy bridge stack; the direct-mode pipelines documented here do not use
+it and need no frontend build step.
 
 ## Visual Pipeline (direct mode)
 
@@ -197,13 +200,10 @@ hardware), see [`SKILL_LIBRARY.md`](SKILL_LIBRARY.md).
 | policy server | Portal RPC | — | `use_policy_output`, skill execution |
 | reward server | Portal RPC | 8500 | RL reward evaluation |
 
-For real-YAM bringup, `tmux/launch_realworld_localserver_realsense.sh` launches
-**every CAP service that is NOT cap_server / cap_agent / cap_ui** — i.e. exactly
-the model servers above (serve_sam3, serve_bundlesdf, serve_anygrasp, cuRobo,
-pyroki, NVIDIA/VLM provider) — plus the robot bringup
-(`launch.py --mode=evaluation --no-attach`). See
-`VLM_QUERY.md`, `BUNDLESDF_OBJECT_DETECTION.md`,
-and `VISER_CUROBO_PLANNER.md` for cuRobo server detail.
+For real-YAM bringup use `uv run enpire services start` — `--profile cap-real`
+starts sam3, AnyGrasp, cuRobo and the NVIDIA/VLM provider, and `--services
+sam3,curobo,yam` starts the licence-free subset plus the arm servers. See
+[`CUROBO_SETUP.md`](CUROBO_SETUP.md) for the cuRobo server.
 
 ## Environments / Embodiments
 
@@ -239,8 +239,8 @@ Three steps — robot, servers, then the script driver:
 # 1. Robot
 uv run python launch.py --mode=evaluation --no-attach
 
-# 2. Servers (RealSense local server)
-bash tmux/launch_realworld_localserver_realsense.sh --no-evaluation --no-attach
+# 2. Services
+uv run enpire services start --services sam3,curobo --station <station>
 
 # 3. Run a code-as-policy script
 uv run python run_script.py \
@@ -258,8 +258,8 @@ Quick reference (three separate terminals):
 
 ```bash
 # 1. Robot-side runner (this repo)
-bash enpire/env/forge/tmux/realworld_rl/rl_gear.sh \
-  --task pin_insertion --station my-yam --use-spacemouse
+# NOTE: rl_gear.sh is not part of this release; drive the robot side
+# with your own supervisor.
 
 # 2. PLD learner (GPU machine)
 uv run enpire rl learner --task pin_insertion
@@ -271,8 +271,8 @@ uv run enpire rl actor --task pin_insertion
 ### Human demo collection (teleop)
 
 ```bash
-bash enpire/env/forge/tmux/realworld_rl/rl_gear.sh \
-  --station my-yam --use-fello --demo-collection
+# NOTE: rl_gear.sh is not part of this release; drive the robot side
+# with your own supervisor.
 ```
 
 ### Evaluate a trained checkpoint
@@ -326,13 +326,6 @@ For the deleted React UI, see the project git history.
 
 | Document | Topic |
 |----------|-------|
-| `SKILL_LIBRARY.md` | Physical-robot tool catalog, signatures, GT-vs-real behavior |
-| `docs/AGENT_PIPELINE_DESIGN.md` | Agent pipeline (run_agent.py): steps, memory, log folder |
-| `docs/RL_PIPELINE.md` | Practitioner RL guide: launch sequence, autoresearch loop, score |
-| `docs/RL_PIPELINE_DESIGN.md` | RL internal design: obs/action spaces, HIL timing, safety zones |
-| `docs/SAFETY_ZONE_DESIGN.md` | Task-aware EE safety zones for RL exploration |
-| `docs/SKILL_LIBRARY.md` | Skill library overview and tool catalog |
-| `docs/BUNDLESDF_OBJECT_DETECTION.md` | BundleSDF multi-object 6-DOF pose tracking |
-| `docs/VLM_QUERY.md` | VLM query tool: backends, media interface, configuration |
-| `docs/VISER_CUROBO_PLANNER.md` | Interactive cuRobo motion planning UI |
-| `docs/MULTI_CAMERA_CONFIG.md` | Multi-camera / per-station configuration |
+| `SKILL_LIBRARY.md` | Tool catalog, frame/RPY contract, GT-vs-real behavior |
+| `RL_PIPELINE_DESIGN.md` | RL internal design: obs/action spaces, HIL timing, safety zones |
+| `MULTI_CAMERA_CONFIG.md` | Multi-camera / per-station configuration |
