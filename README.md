@@ -122,7 +122,11 @@ If you use ENPIRE in your research, please cite the [paper](https://arxiv.org/ab
 ```bibtex
 @misc{xiao2026enpireagenticrobotpolicy,
       title={ENPIRE: Agentic Robot Policy Self-Improvement in the Real World},
-      author={Wenli Xiao and Jia Xie and Tonghe Zhang and Haotian Lin and Letian "Max" Fu and Haoru Xue and Jalen Lu and Yi Yang and Cunxi Dai and Zi Wang and Jimmy Wu and Guanzhi Wang and S. Shankar Sastry and Ken Goldberg and Linxi "Jim" Fan and Yuke Zhu and Guanya Shi},
+      author={Wenli Xiao and Jia Xie and Tonghe Zhang and Haotian Lin and
+              Letian "Max" Fu and Haoru Xue and Jalen Lu and Yi Yang and
+              Cunxi Dai and Zi Wang and Jimmy Wu and Guanzhi Wang and
+              S. Shankar Sastry and Ken Goldberg and Linxi "Jim" Fan and
+              Yuke Zhu and Guanya Shi},
       year={2026},
       eprint={2606.19980},
       archivePrefix={arXiv},
