@@ -16,8 +16,8 @@ to guide the next iteration.
 The framework connects four modules:
 
 - **Environment (EN):** reset the scene and verify task outcomes.
-- **Policy Improvement (PI):** refine Python policies or train neural policies.
-- **Rollout (R):** evaluate policies on one or more physical robots.
+- **Policy Improvement (PI):** Iteratively improve performance via different learning paradigms (RL, BC, Heuristic Learning, etc.)
+- **Rollout (R):** evaluate policies on one or more robots.
 - **Evolution (E):** analyze failures, develop hypotheses, and improve the next experiment.
 
 Together, they form the loop **reset → execute → verify → record → refine**.
@@ -68,33 +68,34 @@ transforms, and the task's perception and control services. Follow the
 The [real-world RL environment](enpire/policy/pld/runtime/README.md) uses an
 isolated dependency project for its actor and learner.
 
-### Reproduce full paper results
+### Set up a custom real-world environment for auto-research
 
-Choose the task and research mode first. The [paper](https://arxiv.org/abs/2606.19980)
-and [project page](https://research.nvidia.com/labs/gear/enpire/) describe the
-experiments and results; the guides below identify the implementations and
-configurations included in this repository.
+For each environment, the user must provide a **reset function** and a
+**reward/verification function**, using CaP or other task-specific scripts.
+A coding agent can help write and validate these during environment setup.
+The [project website](https://research.nvidia.com/labs/gear/enpire/) illustrates
+physical resets for Push-T, pin insertion, GPU insertion, and zip-tie tasks,
+along with vision-based reward evaluation.
 
-| Task | Research mode | Guide |
-|---|---|---|
-| Push-T | Heuristic learning with CaP | [Task and reset loop](enpire/env/docs/NEW_TASK.md#push-t-reference-implementation) |
-| Pin insertion | Real-world RL | [Actor/learner workflow](enpire/env/docs/REAL_WORLD_WORKFLOWS.md#5-pin-insertion-pld-pipeline) |
-| GPU insertion | Real-world RL | [Task configuration and deployment requirements](enpire/env/docs/REAL_WORLD_WORKFLOWS.md#7-gpu-insertion-and-zip-tie) |
-| Zip-tie fastening | Real-world RL | [Task configuration and deployment requirements](enpire/env/docs/REAL_WORLD_WORKFLOWS.md#7-gpu-insertion-and-zip-tie) |
+1. **Prepare the station.** Register the robot and cameras, calibrate the station,
+   and start the required services using the
+   [real-world setup guide](enpire/env/docs/REAL_WORLD_WORKFLOWS.md).
+2. **Define and validate the environment.** Specify observations and actions.
+   Write a reset that restores the scene and checks readiness, and a reward
+   function that scores progress or success from camera images, robot state,
+   or contact measurements. Follow the [task guide](enpire/env/docs/NEW_TASK.md)
+   for script templates and task registration.
+3. **Run auto-research.** Validate repeated reset and evaluation cycles on the
+   real station, then keep reset, reward, verification, and safety rules fixed
+   while the agent improves policy or training code. Set a trial budget and
+   retain outcomes, logs, and videos as described in the
+   [auto-research contract](enpire/policy/autoresearch_instruction.md).
 
-Full reproductions also require station-specific poses, task data and checkpoints,
-and robot-side launchers. The RL guides specify which launchers must be supplied
-separately. Push-T improves Python policies through heuristic learning and does
-not require neural-network training.
+Examples to build from:
 
-For an initial robot interaction, see the [prompted pickup example](enpire/env/examples/10_real_object_pick/README.md).
-The [CaP skill scripts](enpire/env/forge/cap/saved_scripts/skill_library/README.md)
-provide object observations and arm/gripper pose commands.
-
-To introduce another task, follow the [task guide](enpire/env/docs/NEW_TASK.md)
-to define reset, observations/actions, and verification. Each research iteration
-should retain its hypothesis, code diff, configuration, trial budget, measured
-success, and video evidence under the [auto-research contract](enpire/policy/autoresearch_instruction.md).
+- [Hello environment](enpire/env/examples/00_hello_environment/README.md): a minimal reset–execute–verify loop.
+- [Real object pickup](enpire/env/examples/10_real_object_pick/README.md): CaP composition of perception, planning, and robot control.
+- [Push-T](enpire/env/docs/NEW_TASK.md#push-t-reference-implementation): a physical reset workflow and heuristic policy improvement.
 
 ## Contribution Guidelines
 
