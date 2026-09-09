@@ -5,13 +5,6 @@ policy:
   credentials_allowed: false
 
 repositories:
-  agentlace_data_restoration:
-    path_hint: minimal_policy
-    branch: tonghe/ziptie-autorl-merge-wenlix
-    commit: 49813892194d9e85a2fa115e84440c0b2d1ccd76
-    include:
-      - third_party/agentlace/agentlace/data/data_store.py
-    note: Restore omitted dependency source intact; no algorithm changes.
   cap_atomic_scripts_baseline:
     path_hint: ENPIRE
     branch: revision-0901
