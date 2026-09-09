@@ -43,6 +43,7 @@ class YamSimEnv(_BaseYamEnv):
             0.0003,
             0.0006,
         ),
+        real_time: bool = True,
     ):
         if control_mode is None:
             raise ValueError("Control mode must be specified")
@@ -57,6 +58,9 @@ class YamSimEnv(_BaseYamEnv):
             delta_ee_translation_xyz_max=delta_ee_translation_xyz_max,
         )
         self.policy_control_freq = policy_control_freq
+        # Offline learning can omit wall-clock pacing; physics substeps and
+        # actuator integration remain identical to the default paced mode.
+        self.real_time = real_time
         self.control_period = 1.0 / policy_control_freq
         self.last_step_time = time.time()
 
@@ -122,13 +126,13 @@ class YamSimEnv(_BaseYamEnv):
 
         # Maintain desired control freq
         sleep_end_time = self.last_step_time + self.control_period
-        if time.time() > sleep_end_time:  # TODO: Resolve latency issues
+        if self.real_time and time.time() > sleep_end_time:  # TODO: Resolve latency issues
             print(
                 f"\rWarning: Control loop timing overrun (budget {self.control_period * 1000:.1f} ms, actual {1000 * (time.time() - self.last_step_time):.1f} ms)    ",
                 end="",
                 flush=True,
             )
-        while time.time() < sleep_end_time:
+        while self.real_time and time.time() < sleep_end_time:
             time.sleep(0.0001)
         self.last_step_time = time.time()
 

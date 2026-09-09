@@ -89,7 +89,7 @@ Either way, the **tool API is identical** — only the env behind it changes.
 ```bash
 # Standalone (config.yaml defaults)
 ENPIRE_PICK_PROMPT="blue cube" uv run python run_script.py \
-  script_file=cap/saved_scripts/examples/pick_object.py
+  script_file=cap/saved_scripts/skill_library/pick_object.py
 
 # With an experiment config (env, ports, seed, …)
 uv run python run_script.py experiment=my_task \

@@ -539,6 +539,17 @@ def main(cfg: DictConfig) -> None:
     code = script_path.read_text()
     print(f"[run_script] Script : {script_path}")
 
+    from omegaconf import OmegaConf
+
+    from enpire.env.forge.cap.agent.script_invocation import (
+        invoke_script_function,
+        validate_invocation,
+    )
+
+    script_function = cfg.script_function
+    script_kwargs = OmegaConf.to_container(cfg.script_kwargs, resolve=True)
+    validate_invocation(script_function, script_kwargs)
+
     # --- Seed ---
     if cfg.env.seed is not None:
         print(f"[run_script] Seed   : {cfg.env.seed}")
@@ -846,6 +857,9 @@ def main(cfg: DictConfig) -> None:
         builtins.print = _script_print
         with backend.exec_context(namespace, script_path):
             exec(compile(code, str(script_path), "exec"), namespace)  # noqa: S102
+            if script_function is not None:
+                result = invoke_script_function(namespace, script_function, script_kwargs, script_path)
+                print("[run_script] return_value=" + json.dumps(result, allow_nan=False))
     except KeyboardInterrupt:
         print("\n[run_script] Interrupted")
         exec_error = "KeyboardInterrupt"

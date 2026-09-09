@@ -10,6 +10,8 @@ bin/
 # datasets & artifacts
 .data/
 data/
+!enpire/policy/pld/runtime/vendor/agentlace/agentlace/data/
+!enpire/policy/pld/runtime/vendor/agentlace/agentlace/data/*.py
 artifacts/
 videos/
 .pretrained/

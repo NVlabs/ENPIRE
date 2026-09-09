@@ -28,7 +28,7 @@ _TASKS = {
     for item in (
         TaskDefinition(
             "pickup",
-            "cap/saved_scripts/examples/pick_object.py",
+            "cap/saved_scripts/skill_library/pick_object.py",
             "Pick the visible object described by a text prompt.",
         ),
     )

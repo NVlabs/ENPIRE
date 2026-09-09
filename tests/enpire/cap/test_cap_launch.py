@@ -11,10 +11,9 @@ from types import ModuleType
 from enpire.policy.cap.launcher import build_cap_launch, list_tasks
 
 
-def test_release_has_one_generic_pickup_example() -> None:
+def test_release_registers_the_moved_pickup_script() -> None:
     launch = build_cap_launch("pickup", station="test-station", prompt="blue cube")
-    examples = sorted((launch.cwd / "cap/saved_scripts/examples").glob("*.py"))
-    assert [path.name for path in examples] == ["pick_object.py"]
+    assert launch.task.script == "cap/saved_scripts/skill_library/pick_object.py"
     assert [task.name for task in list_tasks()] == ["pickup"]
 
 

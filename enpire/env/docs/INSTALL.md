@@ -77,7 +77,18 @@ externally obtained files before launching the local grasp service — see
 [`ANYGRASP_SETUP.md`](ANYGRASP_SETUP.md) for how to apply for a license, build
 the SDK, and the license-free 2D alternative.
 
-## PLD learner/actor runtime
+## Real-world RL environment
+
+ENPIRE's real-world RL environment uses a simplified version of the RL
+infrastructure from [PLD (Probe, Learn, Distill)](https://wenlixiao.com/self-improve-VLA-PLD),
+introduced in *Self-Improving Vision-Language-Action Models with Data Generation
+via Residual RL*. ENPIRE reuses its actor/learner infrastructure for neural
+policy improvement within the environment-owned reset, rollout, and verification
+loop.
+
+The actor executes the policy using robot observations, while the learner
+consumes recorded experience, updates the policy, and sends updated parameters
+to the actor. This runtime lives under `enpire/policy/pld/runtime`.
 
 The JAX learner is isolated from the robot environment because its NumPy,
 Gymnasium, JAX, and protobuf constraints differ:
@@ -88,6 +99,11 @@ uv run enpire rl learner --task pin_insertion --dry-run
 uv run enpire rl actor --task pin_insertion --dry-run
 ```
 
+The `--dry-run` commands display the launch commands. For deployment and
+actor/learner startup order, follow the
+[real-world workflows](REAL_WORLD_WORKFLOWS.md#5-pin-insertion-pld-pipeline)
+and [auto-research instructions](../../policy/autoresearch_instruction.md).
+
 ## Everything represented by the root lock
 
 ```bash
@@ -95,6 +111,6 @@ uv sync --all-extras
 ```
 
 This installs all root capabilities, but not licensed model files, camera SDK
-drivers, station calibration, datasets, checkpoints, or the isolated PLD
-runtime. See [DEPENDENCIES.md](DEPENDENCIES.md) for the complete inventory and
+drivers, station calibration, datasets, checkpoints, or the isolated real-world
+RL environment. See [DEPENDENCIES.md](DEPENDENCIES.md) for the complete inventory and
 [REAL_WORLD_WORKFLOWS.md](REAL_WORLD_WORKFLOWS.md) for station setup.

@@ -451,6 +451,8 @@ class AgentConfig:
 
     # Script-only fields (used by run_script.py, ignored by run_agent.py)
     script_file: Optional[str] = None
+    script_function: Optional[str] = None
+    script_kwargs: dict[str, Any] = field(default_factory=dict)
     script_output_dir: Optional[str] = None
     script_no_log: bool = False
     skill_library_path: Optional[str] = None

@@ -5,6 +5,28 @@ policy:
   credentials_allowed: false
 
 repositories:
+  agentlace_data_restoration:
+    path_hint: minimal_policy
+    branch: tonghe/ziptie-autorl-merge-wenlix
+    commit: 49813892194d9e85a2fa115e84440c0b2d1ccd76
+    include:
+      - third_party/agentlace/agentlace/data/data_store.py
+    note: Restore omitted dependency source intact; no algorithm changes.
+  cap_atomic_scripts_baseline:
+    path_hint: ENPIRE
+    branch: revision-0901
+    commit: 70f3d95d0df4db1ee2e07aa1368d4f66c12093fd
+    license_status: Apache-2.0
+    include:
+      - enpire/env/forge/run_script.py
+      - enpire/env/forge/cap/agent/agent_config.py
+      - enpire/env/forge/cap/agent/tools/grasp_3d_bb.py
+      - enpire/env/forge/cap/saved_scripts/skill_library/move_to_pose.py
+      - enpire/env/forge/cap/saved_scripts/skill_library/set_gripper.py
+    characterization:
+      - tests/enpire/cap/test_move_to_pose.py
+      - tests/test_run_script_resolve_file.py
+
   cap_generic_motion_baseline:
     path_hint: ENPIRE
     branch: revision-0901

@@ -1,5 +1,8 @@
 # Design Doc: CAP for RL Pipeline
 
+> For the included PLD actor/learner setup, see the
+> [PLD runtime README](../../policy/pld/runtime/README.md).
+
 > Paths written as `cap/…`, `robot/…`, `experimental/…`, `tmux/…` or
 > `experiments/…` are relative to `enpire/env/forge/`.
 > **Last updated**: 2026-04-08
@@ -1029,7 +1032,7 @@ for ep in range(50):
 The `cap/saved_scripts/rl/` examples (USB insertion, plate-and-stick, peg
 insertion, and the dummy-reward smoke test) are **not** part of this release.
 The protocol and helper structure documented above are what you need to write
-your own; `cap/saved_scripts/examples/pick_object.py` is the closest shipped
+your own; `cap/saved_scripts/skill_library/pick_object.py` is the closest shipped
 reference for the script conventions.
 
 ## Resolved Decisions

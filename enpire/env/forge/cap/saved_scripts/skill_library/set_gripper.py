@@ -3,12 +3,8 @@
 import math
 
 
-def set_gripper(side, pos, *, vel_limit=None, torque_limit=None):
-    """Command normalized opening (0=closed, 1=open), preserving tool behavior.
-
-    This is not an object-retention verifier. A closed gripper can be empty.
-    Omitted velocity/torque limits retain the configured station limits.
-    """
+def gripper_kwargs(side, pos, *, vel_limit=None, torque_limit=None):
+    """Validate a command without contacting hardware."""
     if side not in ("left", "right"):
         raise ValueError("side must be left or right")
     if not math.isfinite(pos) or not 0 <= pos <= 1:
@@ -19,6 +15,16 @@ def set_gripper(side, pos, *, vel_limit=None, torque_limit=None):
             if not math.isfinite(value) or value <= 0:
                 raise ValueError(f"{name} must be positive and finite")
             kwargs[name] = float(value)
+    return kwargs
+
+
+def set_gripper(side, pos, *, vel_limit=None, torque_limit=None):
+    """Command normalized opening (0=closed, 1=open), preserving tool behavior.
+
+    This is not an object-retention verifier. A closed UMI gripper can hold an
+    object. Omitted velocity/torque limits retain the configured station limits.
+    """
+    kwargs = gripper_kwargs(side, pos, vel_limit=vel_limit, torque_limit=torque_limit)
     import skill_library.namespace as tools
 
     return tools.set_gripper(**kwargs)

@@ -114,6 +114,11 @@ Only tasks whose complete, reviewed source is distributed are exposed by
 not part of this release. The separately licensed PLD configurations for
 `gpu_insertion` and `ziptie` remain available through the PLD entry points.
 
+For individual observation and motion calls, see the
+[atomic CaP skill examples](../forge/cap/saved_scripts/skill_library/README.md).
+They use the same `run_script.py` runner with `script_function` and
+`+script_kwargs`, and return JSON through its normal `result.json` artifact.
+
 ## 5. Pin-insertion PLD pipeline
 
 Install the isolated runtime once, choose an external dataset root, and supply
