@@ -21,7 +21,7 @@ from third_party.overlay_viz.app import (
     value_prediction_cache_matches_server,
     write_local_value_prediction_cache,
 )
-from third_party.overlay_viz.scanner import CAMERA_FILENAMES, EpisodeScanner, VIDEO_FILENAME
+from third_party.overlay_viz.scanner import CAMERA_FILENAMES, VIDEO_FILENAME, EpisodeScanner
 
 
 class _ScannerStub:

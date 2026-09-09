@@ -5,8 +5,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from enpire.policy.rl.config import load_yaml_defaults
-
 ROOT = Path(__file__).resolve().parents[3]
 TASKS = ROOT / "enpire/env/forge/tmux/realworld_rl/tasks_config"
 

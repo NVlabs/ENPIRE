@@ -11,10 +11,9 @@ from types import ModuleType
 from enpire.policy.cap.launcher import build_cap_launch, list_tasks
 
 
-def test_release_has_one_generic_pickup_example() -> None:
+def test_release_registers_the_moved_pickup_script() -> None:
     launch = build_cap_launch("pickup", station="test-station", prompt="blue cube")
-    examples = sorted((launch.cwd / "cap/saved_scripts/examples").glob("*.py"))
-    assert [path.name for path in examples] == ["pick_object.py"]
+    assert launch.task.script == "cap/saved_scripts/skill_library/pick_object.py"
     assert [task.name for task in list_tasks()] == ["pickup"]
 
 
@@ -61,6 +60,10 @@ def test_pickup_script_passes_prompt_to_existing_pick_skill(monkeypatch) -> None
     monkeypatch.setitem(sys.modules, "skill_library.pick", pick)
     launch = build_cap_launch("pickup", station="test-station", prompt="blue cube")
     monkeypatch.setenv("ENPIRE_PICK_PROMPT", launch.env["ENPIRE_PICK_PROMPT"])
+    # The script reads these from the ambient environment, so an operator shell
+    # that exports them (station.env does) must not change what this asserts.
+    monkeypatch.delenv("ENPIRE_PICK_GRASP_MODE", raising=False)
+    monkeypatch.delenv("ENPIRE_PICK_CAMERA", raising=False)
     script = launch.cwd / next(
         task.script for task in list_tasks() if task.name == "pickup"
     )

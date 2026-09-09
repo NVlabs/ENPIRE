@@ -6,9 +6,16 @@ set -euo pipefail
 
 # Optionally set RL_KEYBOARD_DEVICE to a station-local logical input alias.
 
-source "$(dirname "$0")/assert_env_var.sh" || exit 1
+HERE="$(cd "$(dirname "$0")" && pwd)"
+
+source "$HERE/assert_env_var.sh" || exit 1
+
+# The supervisor's default script paths (cap/saved_scripts/..., tasks_config/...)
+# are relative to the Forge root, so run from there rather than from wherever
+# the operator invoked this script.
+cd "$HERE/../.."
 
 ROBOT_INTERFACE_PROFILE=1 uv run python tmux/realworld_rl/pusht_supervisor.py \
-  --config-file "$(dirname "$0")/tasks_config/pusht/pusht.yaml" \
+  --config-file "$HERE/tasks_config/pusht/pusht.yaml" \
   --data-saving-path "$RL_DATA_PATH" \
   "$@"

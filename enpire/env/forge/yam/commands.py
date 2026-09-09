@@ -99,6 +99,10 @@ def station_calibrate(args: argparse.Namespace) -> int:
         resolution=args.resolution,
         launch_server=not args.no_launch_server,
         confirm_motion=args.confirm_motion,
+        squares_x=args.squares_x,
+        squares_y=args.squares_y,
+        square_length=args.square_length,
+        marker_length=args.marker_length,
     )
 
 
@@ -138,6 +142,28 @@ def station_calibrate_all(args: argparse.Namespace) -> int:
         confirm_motion=args.confirm_motion,
         station=args.station,
         resolution=args.resolution,
+        squares_x=args.squares_x,
+        squares_y=args.squares_y,
+        square_length=args.square_length,
+        marker_length=args.marker_length,
+    )
+
+
+def _add_board_arguments(parser: argparse.ArgumentParser) -> None:
+    """Attach ChArUco board overrides shared by calibrate and calibrate-all.
+
+    Defaults stay ``None`` so an unset flag leaves the calibration ``config``
+    defaults in force rather than pinning today's values at the CLI layer.
+    """
+    parser.add_argument("--squares-x", type=int, default=None, help="Board columns")
+    parser.add_argument("--squares-y", type=int, default=None, help="Board rows")
+    parser.add_argument(
+        "--square-length", type=float, default=None, metavar="METERS",
+        help="Checker square width in meters (e.g. 0.020 for a 20mm square)",
+    )
+    parser.add_argument(
+        "--marker-length", type=float, default=None, metavar="METERS",
+        help="ArUco marker width inside each square, in meters (e.g. 0.015)",
     )
 
 
@@ -201,6 +227,7 @@ def add_station_parser(commands: argparse._SubParsersAction) -> None:
     calibrate.add_argument("--output-xml", default=None)
     calibrate.add_argument("--no-launch-server", action="store_true")
     calibrate.add_argument("--confirm-motion", action="store_true")
+    _add_board_arguments(calibrate)
     calibrate.set_defaults(handler=station_calibrate)
 
     calibrate_all = station_commands.add_parser(
@@ -212,6 +239,7 @@ def add_station_parser(commands: argparse._SubParsersAction) -> None:
     calibrate_all.add_argument("--model-root", default=None)
     calibrate_all.add_argument("--output-xml", default=None)
     calibrate_all.add_argument("--confirm-motion", action="store_true")
+    _add_board_arguments(calibrate_all)
     calibrate_all.set_defaults(handler=station_calibrate_all)
 
     validate = station_commands.add_parser(

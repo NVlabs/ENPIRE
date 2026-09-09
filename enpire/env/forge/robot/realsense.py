@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
+import os
 from dataclasses import dataclass
 from typing import Dict, Optional, Tuple
 
@@ -9,6 +10,22 @@ import numpy as np
 import pyrealsense2 as rs
 import tyro
 from packaging import version
+
+
+def allow_untested_d405_firmware() -> bool:
+    """Whether a D405 newer than the tested 5.13.0.50 firmware may be opened.
+
+    The guard exists because some later D405 firmware has auto-exposure issues.
+    A station that has verified exposure on its own hardware can opt in rather
+    than downgrade firmware. Read at call time so tests and operators can toggle
+    it without reimporting.
+    """
+    return os.environ.get("ENPIRE_ALLOW_D405_FIRMWARE", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 
 def get_device_info() -> Dict[str, str]:
@@ -74,8 +91,17 @@ class RealSenseCamera:
                 None,
             )
             if product_id == "0B5B" and version.parse(firmware_version) > version.parse("5.13.0.50"):
-                raise RuntimeWarning(
-                    f"Firmware {firmware_version} might have auto exposure issues. "
+                if not allow_untested_d405_firmware():
+                    raise RuntimeWarning(
+                        f"Firmware {firmware_version} might have auto exposure issues. "
+                        "Downgrade the D405 to 5.13.0.50 or earlier, or set "
+                        "ENPIRE_ALLOW_D405_FIRMWARE=1 to use it anyway and verify "
+                        "exposure yourself."
+                    )
+                print(
+                    f"[RealSenseCamera] {self.device_id}: firmware {firmware_version} is newer "
+                    "than the tested 5.13.0.50 and may have auto-exposure issues; allowed by "
+                    "ENPIRE_ALLOW_D405_FIRMWARE."
                 )
 
         config.enable_stream(

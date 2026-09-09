@@ -221,6 +221,10 @@ explicit = true
 [tool.pytest.ini_options]
 addopts = "-ra"
 testpaths = ["tests"]
+# Vendored packages such as third_party.overlay_viz are imported directly by
+# tests. Put the repo root on sys.path explicitly rather than relying on an
+# unrelated test module doing the insertion as an import side effect.
+pythonpath = ["."]
 markers = [
     "hardware: requires connected robot or camera hardware",
     "integration: requires optional services or multiple processes",

@@ -1,8 +1,10 @@
 # Adding a New Task to ENPIRE
 
 This document is the single reference for setting up a new task and launching
-auto-research on it.  It is machine-readable; an agent given only this file
-can work end-to-end.
+auto-research on it.
+
+Paths written as `cap/…`, `tmux/…`, or `skill_library/…` are relative to
+`enpire/env/forge/`; paths starting `enpire/` are relative to the repo root.
 
 ---
 
@@ -16,7 +18,7 @@ reset()  →  policy.act(obs)  →  step(action)  →  verify()
 
 | Primitive | Contract | Where it lives |
 |-----------|----------|----------------|
-| `reset` | Bring world to a known initial state | `cap/saved_scripts/<task>/` or `tmux/realworld_rl/` |
+| `reset` | Bring world to a known initial state | `cap/saved_scripts/<task>/` or `tmux/realworld_rl/` (both under `enpire/env/forge/`) |
 | `policy` | Choose the next action | CaP script **or** PLD actor |
 | `step` | Execute the action on the robot | Forge runtime (YAM arm servers, tool registry) |
 | `verify` | Return a scalar success signal | Task-specific verifier (visual, contact, geometry) |
@@ -64,16 +66,19 @@ result = freespace_move(side="left", left_target_pos=[0.5, 0.0, 0.9], ...)
 print(f"done status={result.status}")
 ```
 
-Available tools (from `uv run enpire tools list`):
+The callables in scope inside a script come from the CaP script namespace —
+`freespace_move`, `nudge`, `set_gripper`, `segment_object`,
+`sample_grasp_pose_2d`, `get_robot_state`, and the rest. The full list, the
+world-frame and display-RPY contract, and which calls are sim-only are in
+[`SKILL_LIBRARY.md`](SKILL_LIBRARY.md).
 
-| Category | Tools |
-|----------|-------|
-| Arm control | `freespace_move`, `goto_bev`, `nudge`, `follow_traj` |
-| Gripper | `grasp_slip` |
-| Perception | `get_camera_image`, `get_camera_intrinsics`, `get_camera_extrinsics` |
-| Grasping | `sample_grasp_pose_anygrasp`, `sample_grasp_pose_2d` |
-| State | `get_robot_state`, `go_home` |
-| Detection | `detect_objects` |
+Do not confuse that with `uv run enpire tools list`, which prints the much
+smaller *registry* surface used by the agent and CLI:
+
+```
+control.get_state     control.set_gripper     planning.freespace
+vision.detect         vision.segment          vlm.query
+```
 
 ### `verify.py` template
 
@@ -97,20 +102,40 @@ and robot state, never internal policy variables.
 
 ## Step 2 — register the task
 
-Add an entry to `enpire/env/forge/yam/commands.py` under the `cap run`
-subparser, or create `enpire/env/examples/<NN>_<task>/example.yaml`:
+`enpire cap run` takes its task name from a hardcoded table in
+`enpire/policy/cap/launcher.py`. Add a `TaskDefinition` to `_TASKS`, with the
+script path relative to `enpire/env/forge/`:
 
-```yaml
-name: my-new-task
-description: Brief human-readable description.
-hardware: yam
-entrypoint: cap/saved_scripts/my_task/main.py
-motion: true
-install_extras: [vision, planning, control-yam, camera-realsense]
+```python
+_TASKS = {
+    item.name: item
+    for item in (
+        TaskDefinition(
+            "pickup",
+            "cap/saved_scripts/skill_library/pick_object.py",
+            "Pick the visible object described by a text prompt.",
+        ),
+        TaskDefinition(
+            "my-new-task",
+            "cap/saved_scripts/my_task/main.py",
+            "Brief human-readable description.",
+        ),
+    )
+}
 ```
 
-Then register it in `enpire/env/examples/__init__.py` (if the example loader
-does not auto-discover yaml files, add the path there).
+The `run` subparser derives its `choices` from `list_tasks()`, so until the
+entry exists the CLI rejects the name outright:
+
+```
+$ uv run enpire cap run my-new-task --station my-yam --dry-run
+enpire cap run: error: argument task: invalid choice: 'my-new-task'
+                (choose from 'pickup')
+```
+
+Writing an `example.yaml` under `enpire/env/examples/` does **not** register a
+task. That directory backs `enpire examples run`, which is a separate,
+hardware-free learning path.
 
 ---
 
@@ -143,13 +168,18 @@ uv run enpire services start --profile robot --station my-yam --confirm-motion
 uv run enpire cap run my-new-task --station my-yam --confirm-motion
 ```
 
-Logs and camera frames are written to:
+Logs and camera frames are written under `enpire/env/forge/logs/`, one
+directory per run named `<timestamp>_<first-line-of-script>`:
+
 ```
-enpire/env/forge/logs/<task>_<timestamp>/
-├── events.jsonl     # timestamped tool calls and results
-├── result.json      # final success/score from verify()
-└── images/          # per-step camera snapshots
+enpire/env/forge/logs/20260907T232655_freespace_move(left_target_pos=[0.22,_0./
+├── debug_events.jsonl   # timestamped tool calls and results
+├── result.json          # final success/score from verify()
+└── images/              # per-step camera snapshots
 ```
+
+The event log is only written when the debug UI is enabled
+(`debug_ui.enabled=true`); its name comes from `debug_ui.event_log_name`.
 
 ---
 
@@ -165,7 +195,7 @@ hypothesis → edit CaP script → run task → read logs → measure success �
 
 ```bash
 # 1. Understand the current failure from logs
-#    → read enpire/env/forge/logs/<task>_<timestamp>/events.jsonl
+#    → read enpire/env/forge/logs/<run>/debug_events.jsonl
 #    → look at images/, read result.json
 
 # 2. Form a falsifiable hypothesis (one sentence, in a comment at the top of main.py)
@@ -178,7 +208,7 @@ hypothesis → edit CaP script → run task → read logs → measure success �
 uv run enpire cap run my-new-task --station my-yam --confirm-motion
 
 # 5. Run the verifier independently to get a clean score
-uv run python cap/saved_scripts/<task>/verify.py
+uv run python enpire/env/forge/cap/saved_scripts/<task>/verify.py
 
 # 6. Keep the change only if it passes success threshold
 #    → revert with git checkout if it regresses
@@ -202,7 +232,7 @@ Safety invariants that must not change across iterations:
 
 Each iteration must record:
 1. **Hypothesis** — one falsifiable sentence
-2. **Diff** — `git diff cap/saved_scripts/<task>/`
+2. **Diff** — `git diff enpire/env/forge/cap/saved_scripts/<task>/`
 3. **Result** — success boolean + score from `result.json`
 4. **Decision** — keep / revert
 
@@ -231,7 +261,7 @@ export RL_DATA_PATH=/path/outside/repo/rl-data
 # Start the supervisor — it runs place_grasped_t_reset.py in a loop,
 # calls verify automatically after each trial, and restarts when the
 # reset_ok score crosses the threshold.
-bash tmux/realworld_rl/rl_pusht.sh --station my-yam --use-spacemouse
+bash enpire/env/forge/tmux/realworld_rl/rl_pusht.sh
 
 # The agent edits cap/saved_scripts/pusht/reset_t_skill.py to improve the
 # reset success rate; the supervisor picks up changes on the next trial.
@@ -267,7 +297,9 @@ uv run enpire rl control pause --confirm-control
 uv run enpire rl control restart --confirm-control   # → prints run_dir=...
 uv run enpire rl learner --task pin_insertion
 uv run enpire rl actor  --task pin_insertion
-bash tmux/realworld_rl/rl_gear.sh --task pin_insertion --station my-yam
+# NOTE: the robot-side launcher for these tasks (rl_gear.sh) is not part
+# of this release. Run the actor and learner above, then drive the robot
+# side with your own supervisor.
 uv run enpire rl control resume --confirm-control
 # ... at budget boundary ...
 uv run enpire rl control pause --confirm-control

@@ -15,6 +15,7 @@ import base64
 import io
 import json
 import logging
+import os
 from dataclasses import dataclass
 from typing import Any
 
@@ -31,7 +32,13 @@ from enpire.env.forge.cap.config import (
 logger = logging.getLogger(__name__)
 
 _ANYGRASP_Z_RANGE = (1e-6, 1.5)
-_TWO_D_GRASP_PLANNER_Z_M = float(TABLE_SURFACE_Z_M) + 0.03
+# Height above the table plane at which 2D top-down grasps are commanded. This
+# value IS the grasp z: it is written straight into every candidate's planner
+# position, not used as a clearance floor. Defaults to 0.0 -- fingertips at the
+# table plane -- which is what flat and short objects need; a positive offset
+# lifts the grasp toward the middle of a taller object.
+_TWO_D_GRASP_Z_OFFSET_M = float(os.environ.get("ENPIRE_2D_GRASP_Z_OFFSET_M", "0.0"))
+_TWO_D_GRASP_PLANNER_Z_M = float(TABLE_SURFACE_Z_M) + _TWO_D_GRASP_Z_OFFSET_M
 _TWO_D_MAJOR_AXIS_RATIO_THRESHOLD = 1.10
 _TWO_D_GRASP_WIDTH_M = 0.08
 _TWO_D_CENTER_ONLY_YAWS_DEG = (0.0, 180.0, 90.0, -90.0)

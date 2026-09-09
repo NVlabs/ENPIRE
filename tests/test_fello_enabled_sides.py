@@ -7,7 +7,6 @@ import numpy as np
 
 from enpire.env.forge.robot.fello import fello_teleop_policy as fello_module
 
-
 IDENTITY_ROT6D = np.array([1.0, 0.0, 0.0, 0.0, 1.0, 0.0], dtype=np.float32)
 
 

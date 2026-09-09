@@ -83,12 +83,21 @@ def _newest_calibration_json(out_root: Path, before: set[Path]) -> Path | None:
     return max(jsons, key=lambda p: p.stat().st_mtime)
 
 
-def run_sequence(resolution: str | None = None) -> None:
+def run_sequence(
+    resolution: str | None = None,
+    squares_x: int | None = None,
+    squares_y: int | None = None,
+    square_length: float | None = None,
+    marker_length: float | None = None,
+) -> None:
     """Run all three calibrations in order. Called inside the calibrator tmux session."""
     import json
 
     from . import config
     from .calibrator import main as calibrator_main
+    from .run import board_argv
+
+    board = board_argv(squares_x, squares_y, square_length, marker_length)
 
     out_root = config.OUTPUT_ROOT
     json_paths: dict[str, str] = {}
@@ -112,6 +121,7 @@ def run_sequence(resolution: str | None = None) -> None:
         argv = ["--camera", camera, "--no-interactive", "--confirm-motion"]
         if cam_resolution:
             argv.extend(["--resolution", cam_resolution])
+        argv.extend(board)
 
         rc = int(calibrator_main(argv))
         if rc != 0:
@@ -139,7 +149,16 @@ def _env_prefix(station: str) -> str:
     return "env " + " ".join(pairs)
 
 
-def launch(*, confirm_motion: bool, station: str, resolution: str | None = None) -> int:
+def launch(
+    *,
+    confirm_motion: bool,
+    station: str,
+    resolution: str | None = None,
+    squares_x: int | None = None,
+    squares_y: int | None = None,
+    square_length: float | None = None,
+    marker_length: float | None = None,
+) -> int:
     """Start arm servers in tmux, then run the full calibration sequence."""
     if not confirm_motion:
         raise RuntimeError("Pass --confirm-motion after clearing the robot workspace.")
@@ -169,9 +188,15 @@ def launch(*, confirm_motion: bool, station: str, resolution: str | None = None)
     _tmux("send-keys", "-t", SESSION_ROBOT, f"{pfx} {server_cmd} --side right", "Enter")
 
     # Calibration sequence in 'calibrator' session
+    from .run import board_argv
+
     sequence_cmd = (
         f"{pfx} {sys.executable} -m enpire.env.forge.yam.calibration.launch --sequence"
         + (f" --resolution {resolution}" if resolution else "")
+        + "".join(
+            f" {part}"
+            for part in board_argv(squares_x, squares_y, square_length, marker_length)
+        )
     )
     _tmux("new-session", "-d", "-s", SESSION_CAL)
     _tmux("send-keys", "-t", SESSION_CAL, sequence_cmd, "Enter")
@@ -195,9 +220,19 @@ def _sequence_entry() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--sequence", action="store_true")
     parser.add_argument("--resolution", default=None)
+    parser.add_argument("--squares-x", type=int, default=None)
+    parser.add_argument("--squares-y", type=int, default=None)
+    parser.add_argument("--square-length", type=float, default=None)
+    parser.add_argument("--marker-length", type=float, default=None)
     args = parser.parse_args()
     if args.sequence:
-        run_sequence(resolution=args.resolution)
+        run_sequence(
+            resolution=args.resolution,
+            squares_x=args.squares_x,
+            squares_y=args.squares_y,
+            square_length=args.square_length,
+            marker_length=args.marker_length,
+        )
     else:
         print("Use 'enpire station calibrate-all' to launch.")
         sys.exit(1)

@@ -7,19 +7,9 @@ versions are defined by [`pyproject.toml`](../../../pyproject.toml) and
 
 ## Install
 
-```bash
-# Development and hardware-free tests
-uv sync --extra dev
-
-# Real YAM with CaP, perception, planning, and robot-side RL
-uv sync --extra dev --extra cap --extra vision --extra vision-local \
-  --extra grasping-local --extra planning --extra planning-local \
-  --extra control-yam --extra control-i2rt --extra camera-realsense \
-  --extra calibration --extra real-rl
-
-# PLD learner/actor environment
-uv sync --project enpire/policy/pld/runtime --extra dev
-```
+See [`INSTALL.md`](INSTALL.md) — it is the single source for the clone-with-
+submodules step and the extras matrix. This file covers what those dependencies
+*are*, not how to install them.
 
 ## Major third-party projects
 
@@ -50,7 +40,10 @@ the complete locked package graph.
 
 - Linux x86-64, Git, Git LFS, tmux, FFmpeg, curl, and uv.
 - SocketCAN/udev support for YAM hardware.
-- NVIDIA driver and CUDA toolkit for cuRobo, local vision, AnyGrasp, or PLD.
+- NVIDIA driver for cuRobo, local vision, AnyGrasp, or PLD. A *system* CUDA
+  toolkit is not required for cuRobo — `nvidia-curobo[cu12]` installs its own
+  toolchain as wheels (see [`CUROBO_SETUP.md`](CUROBO_SETUP.md)). Building the
+  AnyGrasp SDK yourself does need a local toolkit.
 - Librealsense-compatible host support or the ZED SDK for those cameras.
 
 ## Important compatibility pins

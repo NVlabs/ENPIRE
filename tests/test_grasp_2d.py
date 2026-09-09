@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 
 from enpire.env.forge.cap.agent.tools.grasp_2d import (
+    _TWO_D_GRASP_PLANNER_Z_M,
     SampleGraspPose2DTool,
     compute_segmented_cloud_height_m,
     estimate_local_tangent_from_mask,
@@ -164,9 +165,42 @@ def test_plan_top_down_grasps_from_mask_isotropic_returns_center_only_yaws() -> 
     zs = {cand.position[2] for cand in result.candidates}
     assert len(xs) == 1
     assert len(ys) == 1
-    assert zs == {round(float(TABLE_SURFACE_Z_M) + 0.03, 5)}
+    # Grasp z is the table plane plus ENPIRE_2D_GRASP_Z_OFFSET_M (default 0.0),
+    # resolved at import time. Assert against the resolved constant rather than a
+    # literal so the test tracks the configured offset instead of pinning one.
+    assert zs == {round(float(_TWO_D_GRASP_PLANNER_Z_M), 5)}
     assert result.overlay_jpeg is not None
     assert len(result.overlay_jpeg) > 0
+
+
+def test_two_d_grasp_z_offset_defaults_to_table_plane(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An unset ENPIRE_2D_GRASP_Z_OFFSET_M grasps at the table plane, not above it.
+
+    The offset IS the grasp z, not a clearance floor, so a non-zero default would
+    silently lift every 2D grasp off flat objects. It is read at import time, so
+    reload the module to exercise the environment contract.
+    """
+    import importlib
+
+    from enpire.env.forge.cap.agent.tools import grasp_2d
+
+    monkeypatch.delenv("ENPIRE_2D_GRASP_Z_OFFSET_M", raising=False)
+    reloaded = importlib.reload(grasp_2d)
+    assert reloaded._TWO_D_GRASP_Z_OFFSET_M == 0.0
+    assert reloaded._TWO_D_GRASP_PLANNER_Z_M == pytest.approx(float(TABLE_SURFACE_Z_M))
+
+    monkeypatch.setenv("ENPIRE_2D_GRASP_Z_OFFSET_M", "0.03")
+    reloaded = importlib.reload(grasp_2d)
+    assert reloaded._TWO_D_GRASP_Z_OFFSET_M == pytest.approx(0.03)
+    assert reloaded._TWO_D_GRASP_PLANNER_Z_M == pytest.approx(
+        float(TABLE_SURFACE_Z_M) + 0.03
+    )
+
+    # Leave the module in its default state for tests that import it afterwards.
+    monkeypatch.delenv("ENPIRE_2D_GRASP_Z_OFFSET_M", raising=False)
+    importlib.reload(grasp_2d)
 
 
 def test_sample_grasp_pose_2d_accepts_side_camera(monkeypatch: pytest.MonkeyPatch) -> None:

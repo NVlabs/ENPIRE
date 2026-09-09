@@ -1,5 +1,7 @@
 # Reward Module — Task-success Evaluators
 
+> Paths written as `cap/…`, `robot/…`, `experimental/…`, `tmux/…` or
+> `experiments/…` are relative to `enpire/env/forge/`.
 `cap/reward/` hosts **two independent layers** that share a package name:
 
 1. **RL reward servers** (`gemini_reward.py`, `smolvlm_reward.py`, `reward_server.py`, `reward_client.py`, `serve_reward.py`) — per-step scalar-reward servers for the RL training loop. Not covered here.

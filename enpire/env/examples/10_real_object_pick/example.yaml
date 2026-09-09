@@ -1,6 +1,6 @@
 name: real-object-pick
 description: Pick a visible object from a text prompt with ENPIRE vision, planning, and control skills.
 hardware: yam
-entrypoint: cap/saved_scripts/examples/pick_object.py
+entrypoint: cap/saved_scripts/skill_library/pick_object.py
 motion: true
 install_extras: [vision, planning, control-yam, camera-realsense]

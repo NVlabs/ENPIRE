@@ -17,7 +17,6 @@ from enpire.env.forge.experimental.key_remapping_utils import map_action, map_ob
 from enpire.env.forge.experimental.rl_interface import PolicyAdapters, RLInterface
 from enpire.env.forge.experimental.robot_interface import RobotInterface
 
-
 SERVER_ADDRESS = "<robot-server-ip>:8965"
 TASK_NAME = "Plug the pin into the socket"
 RESOLUTION = 256

@@ -10,7 +10,6 @@ from fastapi.testclient import TestClient
 
 import enpire.env.forge.cap.bridge.agent_bridge as agent_bridge
 
-
 pytestmark = pytest.mark.skipif(
     shutil.which("codex") is None,
     reason="codex CLI is not installed",

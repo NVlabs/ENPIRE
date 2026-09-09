@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import ast
-from pathlib import Path
 import unittest
-
+from pathlib import Path
 
 SCRIPT_PATH = (
     Path(__file__).resolve().parents[1]

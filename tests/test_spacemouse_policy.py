@@ -3,7 +3,10 @@
 
 import numpy as np
 
-from enpire.env.forge.robot.spacemouse.spacemouse_policy import SpaceMouseState, SpaceMouseTeleopPolicy
+from enpire.env.forge.robot.spacemouse.spacemouse_policy import (
+    SpaceMouseState,
+    SpaceMouseTeleopPolicy,
+)
 from enpire.policy.rl.policy import PolicyRouter, _stub_fello_action, _stub_fello_info
 
 

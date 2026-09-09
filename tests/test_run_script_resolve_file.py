@@ -16,7 +16,7 @@ EXPECTED_SCRIPT = (
     FORGE_ROOT
     / "cap"
     / "saved_scripts"
-    / "examples"
+    / "skill_library"
     / "pick_object.py"
 ).resolve()
 
@@ -80,10 +80,21 @@ def _load_run_script_module() -> types.ModuleType:
     return module
 
 
+def test_saved_result_preserves_structured_task_info(tmp_path):
+    import json
+
+    module = _load_run_script_module()
+    info = {"success": True, "reward": 0.0, "pose": {"position": [0.4, 0.1, 0.9]}}
+    module._save_result(tmp_path, lambda: info, None)
+    result = json.loads((tmp_path / "result.json").read_text())
+    assert result["success"] is True
+    assert result["details"] == info
+
+
 def test_resolve_file_accepts_repo_prefixed_saved_script_path() -> None:
     module = _load_run_script_module()
     resolved = module.resolve_file(
-        "enpire/cap/saved_scripts/examples/pick_object.py"
+        "enpire/cap/saved_scripts/skill_library/pick_object.py"
     )
     assert resolved == EXPECTED_SCRIPT
 
@@ -95,7 +106,7 @@ def test_resolve_file_accepts_repo_relative_path_outside_repo_cwd(
     module = _load_run_script_module()
     monkeypatch.chdir(tmp_path)
     resolved = module.resolve_file(
-        "cap/saved_scripts/examples/pick_object.py"
+        "cap/saved_scripts/skill_library/pick_object.py"
     )
     assert resolved == EXPECTED_SCRIPT
 
