@@ -58,6 +58,15 @@ repositories:
       - tmux/realworld_rl/rl_pusht.sh
       - tmux/realworld_rl/tasks_config/pusht/
 
+  so_arm100_so101_model:
+    path_hint: TheRobotStudio/SO-ARM100
+    branch: main
+    commit: a758567c3978dfeefe282ede0500085a48fe8f78
+    license_status: Apache-2.0
+    include:
+      - Simulation/SO101/so101_new_calib.xml
+    note: Kinematic tree only, meshes and visual geoms removed. Vendored as enpire/env/forge/robot/models/so101/so101.xml.
+
   minimal_policy_pld:
     path_hint: minimal_policy
     branches:
