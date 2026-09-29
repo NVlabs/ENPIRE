@@ -216,6 +216,51 @@ def yam_profile() -> RobotProfile:
     )
 
 
+def so101_profile(side: str = "left") -> RobotProfile:
+    """Single SO-101 arm driven through LeRobot.
+
+    The STS3215 servos only run their internal position loop, so the real
+    driver ignores ``interp_kp`` and ``interp_kd``. The gains here only shape
+    simulated tracking. No cameras are configured.
+    """
+    from enpire.env.forge.robot.so101.constants import (
+        SO101_DOF,
+        SO101_EE_SITE,
+        SO101_GRIPPER_MAX,
+        SO101_GRIPPER_MIN,
+        SO101_HOME_GRIPPER_POS,
+        SO101_HOME_JOINT_POS,
+        SO101_JOINT_LIMITS_HIGH,
+        SO101_JOINT_LIMITS_LOW,
+    )
+
+    arm = ArmProfile(
+        name=side,
+        dof=SO101_DOF,
+        joint_limits_low=SO101_JOINT_LIMITS_LOW.copy(),
+        joint_limits_high=SO101_JOINT_LIMITS_HIGH.copy(),
+        home_joint_pos=SO101_HOME_JOINT_POS.copy(),
+        home_gripper_pos=SO101_HOME_GRIPPER_POS.copy(),
+        gripper_min=SO101_GRIPPER_MIN,
+        gripper_max=SO101_GRIPPER_MAX,
+        interp_kp=np.full(SO101_DOF + 1, 16.0),
+        interp_kd=np.full(SO101_DOF + 1, 0.5),
+        ee_frame_name=SO101_EE_SITE,
+        q_slice=slice(0, SO101_DOF),
+    )
+
+    from enpire.env.forge.robot.models.so101.paths import get_so101_xml
+
+    return RobotProfile(
+        name="so101",
+        arms={side: arm},
+        camera_names=(),
+        control_freq_hz=30.0,
+        policy_freq_hz=30.0,
+        xml_path=get_so101_xml(),
+    )
+
+
 def _robocasa_panda_omron_profile() -> RobotProfile:
     """PandaOmron single-arm mobile manipulator for RoboCasa365.
 
