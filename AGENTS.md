@@ -35,13 +35,16 @@ the lines below in sequence would leave you with only the last one:
 
 ```
 vision  vision-local  grasping-local  planning  planning-local
-control-yam  control-i2rt  camera-realsense  camera-zed  calibration
+control-yam  control-i2rt  control-so101  camera-realsense  camera-zed  calibration
 vlm  cap  real-rl  pld
 ```
 
 `control-i2rt` is separate from `control-yam` and is required for leader-arm
 and teaching-handle modes. See `enpire/env/docs/INSTALL.md` for the full
 real-robot command.
+
+SO-101 arms use `control-so101` instead of `control-yam`; see
+`enpire/env/docs/SO101_SETUP.md`.
 
 The JAX PLD learner has an isolated project under
 `enpire/policy/pld/runtime`; do not merge its lock into the root environment.

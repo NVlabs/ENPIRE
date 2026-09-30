@@ -18,12 +18,13 @@ submodules step and the extras matrix. This file covers what those dependencies
 | cuRobo v0.8.0 | GPU IK, collision checking, and trajectory generation | `planning-local`; Apache-2.0 submodule in `third_party/curobo` | [NVlabs/curobo](https://github.com/NVlabs/curobo) |
 | CUDA Python (`cuda.core`) | Runtime compilation and launch of cuRobo v0.8 CUDA kernels | `planning-local`; selected through `nvidia-curobo[cu12]` | [NVIDIA/cuda-python](https://github.com/NVIDIA/cuda-python) |
 | NVIDIA Warp | cuRobo geometry and perception utilities | `planning-local`; pinned to `1.12.0` | [NVIDIA/warp](https://github.com/NVIDIA/warp) |
-| MuJoCo | YAM simulation, models, gravity compensation, and IK | `planning`, `control-yam` | [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) |
-| Mink | MuJoCo differential IK | `planning`, `control-yam` | [kevinzakka/mink](https://github.com/kevinzakka/mink) |
+| MuJoCo | YAM simulation, models, gravity compensation, and IK | `planning`, `control-yam`, `control-so101` | [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) |
+| Mink | MuJoCo differential IK | `planning`, `control-yam`, `control-so101` | [kevinzakka/mink](https://github.com/kevinzakka/mink) |
 | Pink / Pinocchio | Alternate rigid-body kinematics | `planning` | [stephane-caron/pink](https://github.com/stephane-caron/pink) |
 | PyRoki | JAX kinematic optimization | `planning`; vendored in `third_party/pyroki` | [chungmin99/pyroki](https://github.com/chungmin99/pyroki) |
 | I2RT | YAM leader/handle control and gravity models | `control-i2rt`; vendored in `third_party/i2rt` | [i2rt-robotics/i2rt](https://github.com/i2rt-robotics/i2rt) |
 | damiao-motor | DaMiao motor and SocketCAN control | `control-yam` | [jia-xie/python-damiao-driver](https://github.com/jia-xie/python-damiao-driver) |
+| LeRobot | SO-101 Feetech follower and leader drivers | `control-so101` | [huggingface/lerobot](https://github.com/huggingface/lerobot) |
 | SAM3 / Transformers | Text-prompted object segmentation | `vision-local`; weights external | [facebookresearch/sam3](https://github.com/facebookresearch/sam3) |
 | AnyGrasp / GraspNetAPI | Learned 6-DoF grasp proposals | `grasping-local`; SDK and license external | [graspnet/anygrasp_sdk](https://github.com/graspnet/anygrasp_sdk) |
 | BundleSDF | Optional unknown-object pose tracking | External runtime; ENPIRE supplies adapters | [NVlabs/BundleSDF](https://github.com/NVlabs/BundleSDF) |
@@ -40,6 +41,7 @@ the complete locked package graph.
 
 - Linux x86-64, Git, Git LFS, tmux, FFmpeg, curl, and uv.
 - SocketCAN/udev support for YAM hardware.
+- Serial port access (usually the `dialout` group) for SO-101 hardware.
 - NVIDIA driver for cuRobo, local vision, AnyGrasp, or PLD. A *system* CUDA
   toolkit is not required for cuRobo — `nvidia-curobo[cu12]` installs its own
   toolchain as wheels (see [`CUROBO_SETUP.md`](CUROBO_SETUP.md)). Building the
@@ -52,6 +54,7 @@ the complete locked package graph.
 - Warp `==1.12.0` for the vendored cuRobo API
 - RealSense Python `==2.56.5.9235`
 - Mink `==0.0.12`; yourdfpy `==0.0.59`
+- LeRobot `<0.5` for `control-so101`, which conflicts with `vision-local`
 - PLD JAX/JAXlib `==0.6.1`, NumPy `<2`, protobuf `==5.29.6`
 
 ## Not stored in Git

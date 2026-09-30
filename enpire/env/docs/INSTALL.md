@@ -63,6 +63,9 @@ Omitting it leaves leader-arm and teaching-handle modes to fail at runtime with
 `Leader/teaching-handle mode needs the optional i2rt package`, which is what the
 `--use-spacemouse` data-collection workflows depend on.
 
+For an SO-101 arm instead of a YAM station, see
+[`SO101_SETUP.md`](SO101_SETUP.md).
+
 A working NVIDIA driver must already be present. A system CUDA toolkit is *not*
 required for the standard path: `nvidia-curobo[cu12]` brings `cuda-core` and
 `nvidia-cuda-nvcc-cu12` in as wheels, and `torch` comes from the `pytorch-cu128`
