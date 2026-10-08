@@ -20,6 +20,9 @@ from enpire.env.forge.robot.so101.constants import (
     SO101_FOLLOWER_ID,
     SO101_FOLLOWER_PORT,
     SO101_FOLLOWER_SERIAL,
+    SO101_LEADER_ID,
+    SO101_LEADER_PORT,
+    SO101_LEADER_SERIAL,
 )
 
 FOLLOWER_RPCS = (
@@ -29,6 +32,12 @@ FOLLOWER_RPCS = (
     "get_observations",
     "get_motor_temperatures",
 )
+LEADER_RPCS = ("get_info", "get_motor_temperatures")
+
+_DEFAULTS = {
+    "follower": (SO101_FOLLOWER_SERIAL, SO101_FOLLOWER_ID, SO101_FOLLOWER_PORT),
+    "leader": (SO101_LEADER_SERIAL, SO101_LEADER_ID, SO101_LEADER_PORT),
+}
 
 
 def _wrap_rpc(label: str, method_name: str, fn: Callable) -> Callable:
@@ -79,15 +88,21 @@ class So101ArmServer:
 
 @dataclass
 class Args:
-    mode: Literal["follower"] = "follower"
-    serial: str = SO101_FOLLOWER_SERIAL
-    robot_id: str = SO101_FOLLOWER_ID
-    port: int = SO101_FOLLOWER_PORT
+    mode: Literal["follower", "leader"] = "follower"
+    serial: str | None = None
+    robot_id: str | None = None
+    port: int | None = None
     calibration_dir: str | None = None
     max_relative_target: float | None = None
-    """Per-step joint change limit in degrees, enforced by LeRobot."""
+    """Per-step joint change limit in degrees, enforced by LeRobot. Follower only."""
     dry_run: bool = False
     """Print the resolved configuration and exit without opening the serial port."""
+
+    def __post_init__(self) -> None:
+        serial, robot_id, port = _DEFAULTS[self.mode]
+        self.serial = self.serial or serial
+        self.robot_id = self.robot_id or robot_id
+        self.port = self.port or port
 
 
 def describe(args: Args) -> str:
@@ -107,20 +122,29 @@ def main(args: Args) -> None:
     if args.dry_run:
         return
 
-    from enpire.env.forge.robot.so101.so101_controller import So101Robot
+    from enpire.env.forge.robot.so101.so101_controller import So101LeaderArm, So101Robot
 
-    robot = So101Robot(
-        port=args.serial,
-        robot_id=args.robot_id,
-        calibration_dir=args.calibration_dir,
-        max_relative_target=args.max_relative_target,
-    )
-    robot.connect()
+    if args.mode == "follower":
+        device = So101Robot(
+            port=args.serial,
+            robot_id=args.robot_id,
+            calibration_dir=args.calibration_dir,
+            max_relative_target=args.max_relative_target,
+        )
+        rpcs = FOLLOWER_RPCS
+    else:
+        device = So101LeaderArm(
+            port=args.serial,
+            robot_id=args.robot_id,
+            calibration_dir=args.calibration_dir,
+        )
+        rpcs = LEADER_RPCS
+    device.connect()
     try:
-        So101ArmServer(robot, args.port, FOLLOWER_RPCS, "SO-101 follower").serve()
+        So101ArmServer(device, args.port, rpcs, f"SO-101 {args.mode}").serve()
     finally:
         try:
-            robot.disconnect()
+            device.disconnect()
         except Exception:
             logging.exception("[%s] failed to release motors on shutdown", args.serial)
 

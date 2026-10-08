@@ -8,6 +8,7 @@ import pytest
 
 from enpire.env.forge.robot.so101.constants import SO101_JOINT_LIMITS_HIGH, SO101_MOTOR_NAMES
 from enpire.env.forge.robot.so101.so101_controller import (
+    So101LeaderArm,
     So101Robot,
     action_from_joint_pos,
     joint_pos_from_observation,
@@ -131,3 +132,30 @@ def test_motor_temperatures_follow_motor_order():
     robot, _ = _connected_robot()
 
     np.testing.assert_array_equal(robot.get_motor_temperatures(), [30, 31, 32, 33, 34, 35])
+
+
+class FakeLeader(FakeFollower):
+    def get_action(self):
+        return dict(self.observation)
+
+
+def test_leader_get_info_returns_joint_pos_and_no_buttons():
+    fake = FakeLeader()
+    fake.observation["wrist_roll.pos"] = -90.0
+    fake.observation["gripper.pos"] = 100.0
+    leader = So101LeaderArm(port="/dev/null", robot_id="lead", teleop=fake)
+    leader.connect()
+
+    qpos, buttons = leader.get_info()
+
+    assert qpos.shape == (6,)
+    assert qpos[4] == pytest.approx(-np.pi / 2)
+    assert qpos[5] == pytest.approx(1.0)
+    assert buttons.shape == (0,)
+
+
+def test_leader_calibration_hint_uses_teleop_flags():
+    leader = So101LeaderArm(port="/dev/ttyACM1", robot_id="lead", teleop=FakeLeader(calibrated=False))
+
+    with pytest.raises(RuntimeError, match="--teleop.type=so101_leader"):
+        leader.connect()

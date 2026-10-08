@@ -1,10 +1,10 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-"""SO-101 follower driver built on the LeRobot SO follower.
+"""SO-101 follower and leader drivers built on LeRobot.
 
-Exposes the same surface as ``YamRobot`` so the portal arm server and
-``FollowerRobotClient`` work unchanged. Joint values are radians and the
+The follower exposes the same surface as ``YamRobot`` so the portal arm
+server and ``FollowerRobotClient`` work unchanged. Joint values are radians and the
 gripper is normalized to [0, 1]. LeRobot works in degrees and a 0 to 100
 gripper range, so all conversion happens here.
 """
@@ -32,6 +32,12 @@ logger = logging.getLogger(__name__)
 _GRIPPER_SCALE = 100.0
 
 
+_LEROBOT_MISSING = (
+    "SO-101 control needs LeRobot with Feetech support. "
+    "Install it with: uv pip install 'lerobot[feetech]'"
+)
+
+
 def _import_lerobot_follower() -> tuple[type, type]:
     try:
         from lerobot.robots.so_follower import SO101Follower, SO101FollowerConfig
@@ -39,11 +45,46 @@ def _import_lerobot_follower() -> tuple[type, type]:
         try:
             from lerobot.robots.so101_follower import SO101Follower, SO101FollowerConfig
         except ImportError as exc:
-            raise RuntimeError(
-                "SO-101 control needs LeRobot with Feetech support. "
-                "Install it with: uv pip install 'lerobot[feetech]'"
-            ) from exc
+            raise RuntimeError(_LEROBOT_MISSING) from exc
     return SO101Follower, SO101FollowerConfig
+
+
+def _import_lerobot_leader() -> tuple[type, type]:
+    try:
+        from lerobot.teleoperators.so_leader import SO101Leader, SO101LeaderConfig
+    except ImportError:
+        try:
+            from lerobot.teleoperators.so101_leader import SO101Leader, SO101LeaderConfig
+        except ImportError as exc:
+            raise RuntimeError(_LEROBOT_MISSING) from exc
+    return SO101Leader, SO101LeaderConfig
+
+
+def _connect_calibrated(device: Any, port: str, robot_id: str, device_type: str) -> None:
+    """Connect without LeRobot's interactive calibration prompt.
+
+    A stored calibration file is written to the motors when they disagree
+    with it. With no calibration file the arm must be calibrated first via
+    ``lerobot-calibrate``.
+    """
+    device.connect(calibrate=False)
+    if device.is_calibrated:
+        return
+    if not device.calibration:
+        device.disconnect()
+        kind = "teleop" if device_type.endswith("leader") else "robot"
+        raise RuntimeError(
+            f"[{port}] no LeRobot calibration for id {robot_id!r}. Run "
+            f"lerobot-calibrate --{kind}.type={device_type} --{kind}.port={port} "
+            f"--{kind}.id={robot_id}"
+        )
+    logger.info("[%s] writing stored calibration to motors", port)
+    device.bus.write_calibration(device.calibration)
+
+
+def _read_temperatures(device: Any) -> np.ndarray:
+    temps = device.bus.sync_read("Present_Temperature", normalize=False)
+    return np.asarray([float(temps[name]) for name in SO101_MOTOR_NAMES], dtype=np.float32)
 
 
 def action_from_joint_pos(joint_pos: np.ndarray) -> dict[str, float]:
@@ -91,24 +132,7 @@ class So101Robot:
         self._robot = robot
 
     def connect(self) -> None:
-        """Connect without LeRobot's interactive calibration prompt.
-
-        A stored calibration file is written to the motors when they disagree
-        with it. With no calibration file the arm must be calibrated first via
-        ``lerobot-calibrate``.
-        """
-        robot = self._robot
-        robot.connect(calibrate=False)
-        if not robot.is_calibrated:
-            if not robot.calibration:
-                robot.disconnect()
-                raise RuntimeError(
-                    f"[{self.port}] no LeRobot calibration for id {self.robot_id!r}. Run "
-                    f"lerobot-calibrate --robot.type=so101_follower --robot.port={self.port} "
-                    f"--robot.id={self.robot_id}"
-                )
-            logger.info("[%s] writing stored calibration to motors", self.port)
-            robot.bus.write_calibration(robot.calibration)
+        _connect_calibrated(self._robot, self.port, self.robot_id, "so101_follower")
         self._connected = True
 
     def disconnect(self) -> None:
@@ -136,8 +160,7 @@ class So101Robot:
     def get_motor_temperatures(self) -> np.ndarray:
         self._require_connected()
         with self._lock:
-            temps = self._robot.bus.sync_read("Present_Temperature", normalize=False)
-        return np.asarray([float(temps[name]) for name in SO101_MOTOR_NAMES], dtype=np.float32)
+            return _read_temperatures(self._robot)
 
     def command_joint_pos(
         self,
@@ -163,3 +186,48 @@ class So101Robot:
 
     def command_joint_state(self, joint_state: dict) -> None:
         self.command_joint_pos(joint_state["pos"])
+
+
+class So101LeaderArm:
+    """SO-101 leader arm read through the LeRobot SO leader teleoperator.
+
+    ``get_info`` matches the YAM leader RPC. The SO-101 leader has no buttons,
+    so the second element is always empty.
+    """
+
+    def __init__(
+        self,
+        port: str,
+        robot_id: str,
+        calibration_dir: str | Path | None = None,
+        teleop: Any = None,
+    ):
+        self.port = port
+        self.robot_id = robot_id
+        self._lock = threading.Lock()
+        if teleop is None:
+            leader_cls, config_cls = _import_lerobot_leader()
+            config = config_cls(
+                port=port,
+                id=robot_id,
+                calibration_dir=Path(calibration_dir) if calibration_dir else None,
+                use_degrees=True,
+            )
+            teleop = leader_cls(config)
+        self._teleop = teleop
+
+    def connect(self) -> None:
+        _connect_calibrated(self._teleop, self.port, self.robot_id, "so101_leader")
+
+    def disconnect(self) -> None:
+        with self._lock:
+            self._teleop.disconnect()
+
+    def get_info(self) -> tuple[np.ndarray, np.ndarray]:
+        with self._lock:
+            action = self._teleop.get_action()
+        return joint_pos_from_observation(action), np.zeros(0, dtype=bool)
+
+    def get_motor_temperatures(self) -> np.ndarray:
+        with self._lock:
+            return _read_temperatures(self._teleop)

@@ -12,6 +12,11 @@ import pytest
 
 from enpire.env.forge.robot.so101 import arm_server
 from enpire.env.forge.robot.so101.arm_server import FOLLOWER_RPCS, Args, So101ArmServer
+from enpire.env.forge.robot.so101.constants import (
+    SO101_LEADER_ID,
+    SO101_LEADER_PORT,
+    SO101_LEADER_SERIAL,
+)
 
 
 class FakeRobot:
@@ -49,6 +54,21 @@ def test_dry_run_does_not_touch_hardware(capsys, monkeypatch):
     assert "serial=/dev/ttyTEST" in out
     assert "id=bench" in out
     assert "enpire.env.forge.robot.so101.so101_controller" not in sys.modules
+
+
+def test_leader_mode_uses_leader_defaults():
+    args = Args(mode="leader")
+
+    assert args.port == SO101_LEADER_PORT
+    assert args.robot_id == SO101_LEADER_ID
+    assert args.serial == SO101_LEADER_SERIAL
+
+
+def test_explicit_values_override_mode_defaults():
+    args = Args(mode="leader", serial="/dev/ttyUSB3", port=12000)
+
+    assert args.serial == "/dev/ttyUSB3"
+    assert args.port == 12000
 
 
 def test_follower_client_round_trip():
