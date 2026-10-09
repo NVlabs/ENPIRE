@@ -89,6 +89,19 @@ control-yam = [
     "pyzmq>=27",
 ]
 
+# SO-101 follower and leader arms through LeRobot's Feetech driver. Kept
+# separate from control-yam so SO-101 stations skip the Damiao CAN stack.
+# LeRobot 0.5 needs Python 3.12, and 0.4 pins an older huggingface-hub than
+# vision-local, so the two extras are declared as conflicting below.
+control-so101 = [
+    "lerobot[feetech]>=0.4,<0.5",
+    "mink==0.0.12",
+    "mujoco>=3.5",
+    "portal>=3.7.3",
+    "scipy>=1.15",
+    "tyro>=0.9",
+]
+
 # Optional I2RT leader/teaching-handle support. The MIT-licensed source and
 # YAM gravity-compensation model are vendored so this does not depend on a
 # sibling Forge checkout.
@@ -202,6 +215,9 @@ nvidia-curobo = ["setuptools"]
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
 no-build-isolation-package = ["nvidia-curobo"]
+conflicts = [
+    [{ extra = "control-so101" }, { extra = "vision-local" }],
+]
 override-dependencies = [
     "mujoco>=3.5",
     "numpy>=1.26",
